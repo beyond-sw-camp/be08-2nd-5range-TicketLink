@@ -3,6 +3,7 @@ package com.beyond.ticketLink.common.advice;
 import com.beyond.ticketLink.common.exception.MessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
 import com.beyond.ticketLink.common.view.ApiErrorView;
+import org.apache.catalina.connector.ClientAbortException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ import java.util.Collections;
 public class TicketLinkControllerAdvice extends ResponseEntityExceptionHandler {
 
 
-    @ExceptionHandler(TicketLinkException.class)
+    @ExceptionHandler(ClientAbortException.class)
     public ResponseEntity<?> clientAbortException() {
         return new ResponseEntity<>(new ApiErrorView(Collections.singletonList(MessageType.INTERNAL_SERVER_ERROR)),
                 HttpStatus.INTERNAL_SERVER_ERROR);
