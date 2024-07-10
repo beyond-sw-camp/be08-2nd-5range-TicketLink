@@ -1,18 +1,15 @@
 package com.beyond.ticketLink.user.ui.requestbody;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Length;
 
 public record UserCreateRequest(
         @NotEmpty
-        @Min(value = 6)
-        @Max(value = 20)
+        @Length(min = 6, max = 20)
         String id,
 
         @NotEmpty
-        @Min(value = 8)
-        @Max(value = 12)
+        @Length(min = 8, max = 12)
         String pw,
 
         @NotEmpty
