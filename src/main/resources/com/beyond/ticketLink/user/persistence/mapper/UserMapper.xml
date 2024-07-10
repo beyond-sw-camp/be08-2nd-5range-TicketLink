@@ -1,0 +1,20 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beyond.ticketLink.user.persistence.mapper.UserMapper">
+    <insert id="save" keyColumn="userNo">
+        insert into tb_user(userNo, id, pw, name, email, useYn, roleNo)
+        values (GET_NO('tb_user'), #{id}, #{pw}, #{name}, #{email}, #{useYn}, #{roleNo})
+    </insert>
+
+    <select id="findUserById">
+        select u.userNo,
+               u.id,
+               u.pw,
+               u.name,
+               u.email,
+               u.useYn,
+               r.name as 'role'
+        from tb_user u
+                 inner join tb_role r on u.roleNo = r.roleNo
+        where u.id = #{id};
+    </select>
+</mapper>
