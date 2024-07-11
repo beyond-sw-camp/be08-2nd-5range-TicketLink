@@ -1,10 +1,13 @@
 package com.beyond.ticketLink.user.ui.controller;
 
 import com.beyond.ticketLink.common.view.ApiResponseView;
+import com.beyond.ticketLink.user.application.domain.JwtToken;
 import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
 import com.beyond.ticketLink.user.application.service.UserService;
 import com.beyond.ticketLink.user.ui.requestbody.CheckDuplicateIdRequest;
 import com.beyond.ticketLink.user.ui.requestbody.UserCreateRequest;
+import com.beyond.ticketLink.user.ui.requestbody.UserLoginRequest;
+import com.beyond.ticketLink.user.ui.view.LoginView;
 import com.beyond.ticketLink.user.ui.view.UserView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,6 +30,15 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
+    }
+
+    @PostMapping("/user/login")
+    ResponseEntity<ApiResponseView<LoginView>> login(@RequestBody @Validated UserLoginRequest request) {
+
+        JwtToken jwtToken = service.login(request);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponseView<>(new LoginView(jwtToken)));
     }
 
     @PostMapping("/user/check-duplicate")
