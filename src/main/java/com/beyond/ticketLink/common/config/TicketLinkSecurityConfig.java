@@ -24,6 +24,15 @@ public class TicketLinkSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .anonymous(AbstractHttpConfigurer::disable);
 
+        http.authorizeHttpRequests((registry -> {
+            registry.requestMatchers(
+                    "/api/v1/user/register",
+                    "/api/v1/user/check-duplicate",
+                    "/api/v1/user/**"
+            ).permitAll();
+
+        }));
+
         return http.build();
     }
 

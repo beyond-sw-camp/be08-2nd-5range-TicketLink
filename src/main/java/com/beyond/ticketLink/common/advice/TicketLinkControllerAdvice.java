@@ -3,6 +3,7 @@ package com.beyond.ticketLink.common.advice;
 import com.beyond.ticketLink.common.exception.MessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
 import com.beyond.ticketLink.common.view.ApiErrorView;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.ClientAbortException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -20,12 +22,14 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.Collections;
 
+@Slf4j
 @RestControllerAdvice
 public class TicketLinkControllerAdvice extends ResponseEntityExceptionHandler {
 
 
     @ExceptionHandler(ClientAbortException.class)
     public ResponseEntity<?> clientAbortException() {
+        log.error("clientAbortException");
         return new ResponseEntity<>(new ApiErrorView(Collections.singletonList(MessageType.INTERNAL_SERVER_ERROR)),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -62,6 +66,14 @@ public class TicketLinkControllerAdvice extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
+
+        if (ex instanceof MethodArgumentNotValidException) {
+            return new ResponseEntity<>(new ApiErrorView(MessageType.ARGUMENT_NOT_VALID,
+                    MessageType.ARGUMENT_NOT_VALID.getMessage()), statusCode);
+        }
+        log.info("handleExceptionInternal");
+        log.info(String.valueOf(ex));
+
         return new ResponseEntity<>(new ApiErrorView(MessageType.INTERNAL_SERVER_ERROR, ex.getMessage()), statusCode);
     }
 }
