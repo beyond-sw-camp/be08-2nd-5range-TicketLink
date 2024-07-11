@@ -28,7 +28,8 @@ public class TicketLinkSecurityConfig {
             registry.requestMatchers(
                     "/api/v1/user/register",
                     "/api/v1/user/check-duplicate",
-                    "/api/v1/user/**"
+                    "/api/v1/user/**",
+                    "/api/v1/mail/**"
             ).permitAll();
 
         }));
