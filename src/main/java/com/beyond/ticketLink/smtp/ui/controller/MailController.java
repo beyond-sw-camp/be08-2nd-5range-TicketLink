@@ -15,7 +15,7 @@ public class MailController {
 
     private final MailService service;
 
-    @GetMapping("/mail/verification-code")
+    @PostMapping("/mail/verification-code")
     public ResponseEntity<Void> getAuthenticationNumber(@RequestBody @Validated EmailVerificationRequest request) {
         service.sendMail(request);
         return ResponseEntity.ok()
