@@ -4,9 +4,13 @@ import com.beyond.ticketLink.common.exception.MessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
 import com.beyond.ticketLink.smtp.persistence.entity.VerifiedEmail;
 import com.beyond.ticketLink.smtp.persistence.repository.VerifiedEmailRepository;
+import com.beyond.ticketLink.user.application.domain.JwtToken;
 import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
+import com.beyond.ticketLink.user.application.utils.JwtUtil;
+import com.beyond.ticketLink.user.persistence.repository.JwtRepository;
 import com.beyond.ticketLink.user.persistence.repository.UserRepository;
 import com.beyond.ticketLink.user.ui.requestbody.UserCreateRequest;
+import com.beyond.ticketLink.user.ui.requestbody.UserLoginRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,6 +36,12 @@ class UserServiceImplTest {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    JwtUtil jwtUtil;
+
+    @Autowired
+    JwtRepository jwtRepository;
 
     @Test
     @Transactional
@@ -80,6 +90,43 @@ class UserServiceImplTest {
         assertThatThrownBy(() -> service.register(registerRequest))
                 .isInstanceOf(TicketLinkException.class)
                 .hasMessage(MessageType.EMAIL_UNAUTHORIZED.getMessage());
+    }
+
+    @Test
+    @Transactional
+    void login_shouldLoginSuccessfullyWithJwtTokenSaved() {
+        // given
+        String dummyId = "dummyUserA";
+        String dummyPw = "test1234!";
+        String dummyUserNo = "DUMMYA";
+
+        UserLoginRequest loginRequest = new UserLoginRequest(dummyId, dummyPw);
+        // when
+        JwtToken jwtToken = service.login(loginRequest);
+
+        String parsedUsername = jwtUtil.getUsername(jwtToken.getAccessToken());
+
+        Optional<JwtToken> savedJwtToken = jwtRepository.findByUserNo(dummyUserNo);
+        // then
+        assertThat(parsedUsername).isEqualTo(loginRequest.id());
+        assertThat(savedJwtToken.isPresent()).isTrue();
+        assertThat(savedJwtToken.get().getAccessToken()).isEqualTo(jwtToken.getAccessToken());
+        assertThat(savedJwtToken.get().getRefreshToken()).isEqualTo(jwtToken.getRefreshToken());
+    }
+
+    @Test
+    void login_shouldLoginThrowErrorWithPasswordInvalid() {
+        // given
+        String dummyId = "dummyUserA";
+        String invalidPw = "53453434";
+
+        UserLoginRequest loginRequest = new UserLoginRequest(dummyId, invalidPw);
+        // when
+
+        // then
+        assertThatThrownBy(() -> service.login(loginRequest))
+                .isInstanceOf(TicketLinkException.class)
+                .hasMessage(MessageType.INVALID_PASSWORD.getMessage());
     }
 
     @Test
