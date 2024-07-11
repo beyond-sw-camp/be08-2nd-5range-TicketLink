@@ -16,6 +16,7 @@ public enum MessageType {
     DUPLICATE_USER_ID("Duplicate id.", HttpStatus.CONFLICT),
     ARGUMENT_NOT_VALID("The format of the argument passed is invalid.", HttpStatus.BAD_REQUEST),
     USER_ROLE_NOT_FOUND("The role matching the name doesn't exist.", HttpStatus.INTERNAL_SERVER_ERROR),
+    INVALID_PASSWORD("The passwords don't match.", HttpStatus.BAD_REQUEST),
 
     // email
     VERIFICATION_EXPIRED("Your email verification has expired.", HttpStatus.REQUEST_TIMEOUT),
