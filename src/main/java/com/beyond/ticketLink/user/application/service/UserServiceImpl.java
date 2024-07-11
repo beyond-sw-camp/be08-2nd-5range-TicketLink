@@ -4,11 +4,17 @@ import com.beyond.ticketLink.common.exception.MessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
 import com.beyond.ticketLink.smtp.persistence.entity.VerifiedEmail;
 import com.beyond.ticketLink.smtp.persistence.repository.VerifiedEmailRepository;
+import com.beyond.ticketLink.user.application.domain.JwtToken;
+import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
 import com.beyond.ticketLink.user.application.domain.UserRole;
+import com.beyond.ticketLink.user.application.utils.JwtUtil;
+import com.beyond.ticketLink.user.persistence.dto.JwtCreateDto;
 import com.beyond.ticketLink.user.persistence.dto.UserCreateDto;
+import com.beyond.ticketLink.user.persistence.repository.JwtRepository;
 import com.beyond.ticketLink.user.persistence.repository.UserRepository;
 import com.beyond.ticketLink.user.persistence.repository.UserRoleRepository;
 import com.beyond.ticketLink.user.ui.requestbody.UserCreateRequest;
+import com.beyond.ticketLink.user.ui.requestbody.UserLoginRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,6 +35,10 @@ public class UserServiceImpl implements UserService {
     private final VerifiedEmailRepository verifiedEmailRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final JwtRepository jwtRepository;
+
+    private final JwtUtil jwtUtil;
 
     @Override
     @Transactional
@@ -70,6 +80,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public JwtToken login(UserLoginRequest request) {
+
+        // 로그인 요청한 유저가 존재하지 않을 경우 404_Error throw
+        TicketLinkUserDetails loginUser = userRepository.findUserById(request.id())
+                .orElseThrow(() -> new TicketLinkException(MessageType.USER_NOT_FOUND));
+
+        // 비밀번호 검증
+        if (invalidPassword(request, loginUser)) {
+            throw new TicketLinkException(MessageType.INVALID_PASSWORD);
+        }
+
+        // JwtToken 생성
+        String accessToken = jwtUtil.createAccessToken(loginUser);
+        String refreshToken = jwtUtil.createRefreshToken(loginUser);
+
+        // JwtToken 저장
+        jwtRepository.save(JwtCreateDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .userNo(loginUser.getUserNo())
+                .build()
+        );
+
+        return new JwtToken(accessToken, refreshToken);
+    }
+
+
+    @Override
     public void checkIdDuplicated(String id) {
 
         if (userRepository.findUserById(id).isPresent()) {
@@ -86,5 +124,9 @@ public class UserServiceImpl implements UserService {
 
     private String encryptPassword(UserCreateRequest request) {
         return passwordEncoder.encode(request.pw());
+    }
+
+    private boolean invalidPassword(UserLoginRequest request, TicketLinkUserDetails loginUser) {
+        return !passwordEncoder.matches(request.pw(), loginUser.getPassword());
     }
 }
