@@ -1,0 +1,14 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beyond.ticketLink.user.persistence.mapper.JwtMapper">
+    <insert id="save" keyColumn="tokenNo">
+        insert into tb_jwt(tokenNo, accessToken, refreshToken, userNo)
+        values (GET_NO('tb_jwt'), #{accessToken}, #{refreshToken}, #{userNo})
+    </insert>
+
+    <select id="findByUserNo" resultType="JwtToken">
+        select accessToken,
+               refreshToken
+        from tb_jwt
+        where userNo = #{userNo}
+    </select>
+</mapper>
