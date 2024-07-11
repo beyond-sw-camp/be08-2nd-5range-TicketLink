@@ -11,12 +11,18 @@ public enum MessageType {
     NOT_FOUND("No data was found for the server. Please refer  to parameter description.", HttpStatus.NOT_FOUND),
     INTERNAL_SERVER_ERROR("An error occurred inside the server.", HttpStatus.INTERNAL_SERVER_ERROR),
 
-    // add additional errors
-    ARGUMENT_NOT_VALID("The format of the argument passed is invalid.", HttpStatus.BAD_REQUEST),
+    // user
     USER_NOT_FOUND("The user matching the ID doesn't exist.", HttpStatus.NOT_FOUND),
     DUPLICATE_USER_ID("Duplicate id.", HttpStatus.CONFLICT),
+    ARGUMENT_NOT_VALID("The format of the argument passed is invalid.", HttpStatus.BAD_REQUEST),
     USER_ROLE_NOT_FOUND("The role matching the name doesn't exist.", HttpStatus.INTERNAL_SERVER_ERROR),
+
+    // email
+    VERIFICATION_EXPIRED("Your email verification has expired.", HttpStatus.REQUEST_TIMEOUT),
+    VERIFICATION_CODE_INVALID("The verification code doesn't match.", HttpStatus.BAD_REQUEST)
     ;
+
+
 
     private final String message;
     private final HttpStatus status;
