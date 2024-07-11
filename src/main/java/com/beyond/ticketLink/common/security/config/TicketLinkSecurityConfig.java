@@ -1,4 +1,4 @@
-package com.beyond.ticketLink.common.config;
+package com.beyond.ticketLink.common.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
