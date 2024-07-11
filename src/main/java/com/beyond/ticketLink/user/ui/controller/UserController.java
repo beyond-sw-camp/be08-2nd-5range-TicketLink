@@ -32,7 +32,7 @@ public class UserController {
     @PostMapping("/user/check-duplicate")
     ResponseEntity<ApiResponseView<UserView>> checkDuplicate(@RequestBody @Validated CheckDuplicateIdRequest request) {
 
-        service.throwErrorWithDuplicateId(request.id());
+        service.checkIdDuplicated(request.id());
 
         return ResponseEntity.ok()
                 .build();

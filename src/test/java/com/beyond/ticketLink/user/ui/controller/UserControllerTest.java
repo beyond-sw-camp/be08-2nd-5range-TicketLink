@@ -1,9 +1,12 @@
 package com.beyond.ticketLink.user.ui.controller;
 
 import com.beyond.ticketLink.common.exception.MessageType;
+import com.beyond.ticketLink.smtp.persistence.entity.VerifiedEmail;
+import com.beyond.ticketLink.smtp.persistence.repository.VerifiedEmailRepository;
 import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
 import com.beyond.ticketLink.user.ui.requestbody.CheckDuplicateIdRequest;
 import com.beyond.ticketLink.user.ui.requestbody.UserCreateRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -30,116 +33,164 @@ class UserControllerTest {
     @Autowired
     MockMvc mvc;
 
+    @Autowired
+    private VerifiedEmailRepository verifiedEmailRepository;
+
     ObjectMapper mapper = new ObjectMapper();
 
-    public static final String VALID_ID = "validId";
-    public static final String VALID_PW = "qwer1234!";
-
-    public static final String SHOR_ID = "q";
-    public static final String SHORT_PW = "q";
-
-    public static final String LONG_ID = "qwerqqweqwewqewqewqeqweqwe";
-    public static final String LONG_PW = "qwerqqweqwewqewqewqeqweqwe";
-
-    public static final String DUMMY_NAME = "createUser";
-    public static final String DUMMY_EMAIL_SUFFIX = "@beyond.com";
-
-    public static final String DUMMY_USER_A_ID = "dummyUserA";
-
-    public static final String DUPLICATE_ID = "dummyUserA";
-
     @Test
-    @DisplayName("회원가입 요청 테스트")
     @Transactional
-    void registerUser() throws Exception {
+    void registerUser_shouldRegisterUserRespondWith201() throws Exception {
         // given
-        UserCreateRequest REQUEST_200 = new UserCreateRequest(VALID_ID, VALID_PW, DUMMY_NAME + 1, VALID_ID + DUMMY_EMAIL_SUFFIX);
-        UserCreateRequest REQUEST_400_SHORT_ID_LENGTH = new UserCreateRequest(SHOR_ID, VALID_PW , DUMMY_NAME + 2, SHOR_ID + DUMMY_EMAIL_SUFFIX);
-        UserCreateRequest REQUEST_400_SHORT_PW_LENGTH = new UserCreateRequest(VALID_ID + 2, SHORT_PW, DUMMY_NAME + 3, VALID_ID + 2 + DUMMY_EMAIL_SUFFIX);
-        UserCreateRequest REQUEST_400_LONG_ID_LENGTH = new UserCreateRequest(LONG_ID, VALID_PW, DUMMY_NAME + 4, LONG_ID + DUMMY_EMAIL_SUFFIX);
-        UserCreateRequest REQUEST_400_LONG_PW_LENGTH = new UserCreateRequest(VALID_ID + 3, LONG_PW, DUMMY_NAME + 5, VALID_ID + 3 + DUMMY_EMAIL_SUFFIX);
+        String id = "validId";
+        String pw = "qwer1234!";
+        String name = "createUser";
+        String email = id + "@beyond.com";
+
+        UserCreateRequest request200 = new UserCreateRequest(id, pw, name, email);
+
+        verifiedEmailRepository.save(VerifiedEmail.builder()
+                .email(email)
+                .build()
+        );
 
         // when
-        ResultActions PERFORM_200 = mvc.perform(post("/api/v1/user/register")
+        ResultActions perform200 = mvc.perform(post("/api/v1/user/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(REQUEST_200))
-        );
-        ResultActions PERFORM_400_SHORT_ID_LENGTH = mvc.perform(post("/api/v1/user/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(REQUEST_400_SHORT_ID_LENGTH))
-        );
-        ResultActions PERFORM_400_SHORT_PW_LENGTH = mvc.perform(post("/api/v1/user/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(REQUEST_400_SHORT_PW_LENGTH))
-        );
-        ResultActions PERFORM_400_LONG_ID_LENGTH = mvc.perform(post("/api/v1/user/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(REQUEST_400_LONG_ID_LENGTH))
-        );
-        ResultActions PERFORM_400_LONG_PW_LENGTH = mvc.perform(post("/api/v1/user/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(REQUEST_400_LONG_PW_LENGTH))
+                .content(mapper.writeValueAsString(request200))
         );
 
         // then
-        PERFORM_200.andExpect(status().isCreated());
+        perform200.andExpect(status().isCreated());
+    }
 
-        PERFORM_400_SHORT_ID_LENGTH.andExpect(status().isBadRequest())
+    @Test
+    void registerUser_shouldRegisterUserRespondWith401() throws Exception {
+        // given
+        String id = "validId";
+        String pw = "qwer1234!";
+        String name = "createUser";
+        String email = id + "@beyond.com";
+
+        UserCreateRequest request401 = new UserCreateRequest(id, pw, name, email);
+
+        // when
+        ResultActions perform401 = mvc.perform(post("/api/v1/user/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(request401))
+        );
+
+        // then
+        perform401.andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.errors[0].errorType")
+                        .value(equalTo(MessageType.EMAIL_UNAUTHORIZED.name()))
+                );
+    }
+
+    @Test
+    void registerUser_shouldRegisterUserRespondWith400() throws Exception {
+        // given
+        String id = "validId";
+        String pw = "qwer1234!";
+        String name = "createUser";
+        String emailSuffix = "@beyond.com";
+
+        String shortId = "q";
+        String shortPw = "q";
+
+        String longId = "qwerqqweqwewqewqewqeqweqwe";
+        String longPw = "qwerqqweqwewqewqewqeqweqwe";
+
+        UserCreateRequest request400ShortId = new UserCreateRequest(shortId, pw, name + 1, shortId + emailSuffix);
+        UserCreateRequest request400ShortPw = new UserCreateRequest(id + 1, shortPw, name + 2, id + 1 + emailSuffix);
+        UserCreateRequest request400LongId = new UserCreateRequest(longId, pw, name + 3, longId + emailSuffix);
+        UserCreateRequest request400LongPw = new UserCreateRequest(id + 2, longPw, name + 4, id + 2 + emailSuffix);
+
+        // when
+        ResultActions perform400ShortId = mvc.perform(post("/api/v1/user/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(request400ShortId))
+        );
+
+        ResultActions perform400ShortPw = mvc.perform(post("/api/v1/user/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(request400ShortPw))
+        );
+
+        ResultActions perform400LongId = mvc.perform(post("/api/v1/user/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(request400LongId))
+        );
+
+        ResultActions perform400LongPw = mvc.perform(post("/api/v1/user/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(request400LongPw))
+        );
+
+
+        // then
+        perform400ShortId.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors[0].errorType")
                         .value(equalTo(MessageType.ARGUMENT_NOT_VALID.name()))
                 );
 
-        PERFORM_400_SHORT_PW_LENGTH.andExpect(status().isBadRequest())
+        perform400ShortPw.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors[0].errorType")
                         .value(equalTo(MessageType.ARGUMENT_NOT_VALID.name()))
                 );
 
-        PERFORM_400_LONG_ID_LENGTH.andExpect(status().isBadRequest())
+        perform400LongId.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors[0].errorType")
                         .value(equalTo(MessageType.ARGUMENT_NOT_VALID.name()))
                 );
 
-        PERFORM_400_LONG_PW_LENGTH.andExpect(status().isBadRequest())
+        perform400LongPw.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors[0].errorType")
                         .value(equalTo(MessageType.ARGUMENT_NOT_VALID.name()))
                 );
-
 
     }
 
     @Test
-    @DisplayName("아이디 중복확인 요청 테스트")
-    void checkDuplicate() throws Exception {
+    void checkDuplicate_shouldCheckDuplicateRespond200() throws Exception {
         // given
-        final String NOT_EXIST_USER_ID = "weurioewruiowe";
-        CheckDuplicateIdRequest REQUEST_200 = new CheckDuplicateIdRequest(NOT_EXIST_USER_ID);
-        CheckDuplicateIdRequest REQUEST_409 = new CheckDuplicateIdRequest(DUPLICATE_ID);
+        String notExistId = "notExist1241412";
+        CheckDuplicateIdRequest request200 = new CheckDuplicateIdRequest(notExistId);
 
         // when
-        ResultActions PERFORM_200 = mvc.perform(post("/api/v1/user/check-duplicate")
+        ResultActions perform200 = mvc.perform(post("/api/v1/user/check-duplicate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(REQUEST_200))
-        );
-
-        ResultActions PERFORM_409 = mvc.perform(post("/api/v1/user/check-duplicate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(REQUEST_409))
+                .content(mapper.writeValueAsString(request200))
         );
 
         // then
-        PERFORM_200.andExpect(status().isOk());
+        perform200.andExpect(status().isOk());
 
-        PERFORM_409.andExpect(status().isConflict())
+    }
+
+    @Test
+    void checkDuplicate_shouldCheckDuplicateRespond403() throws Exception {
+        // given
+        String existId = "dummyUserA";
+        CheckDuplicateIdRequest request409 = new CheckDuplicateIdRequest(existId);
+
+        // when
+        ResultActions perform409 = mvc.perform(post("/api/v1/user/check-duplicate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(request409))
+        );
+
+        // then
+        perform409.andExpect(status().isConflict())
                 .andExpect(jsonPath("$.errors[0].errorType")
                         .value(equalTo(MessageType.DUPLICATE_USER_ID.name()))
                 );
     }
 
     @Test
-    @DisplayName("유저 조회 요청 테스트")
-    void getUser() throws Exception {
+    void getUser_shouldGetUserRespond200() throws Exception {
         // given
-        final String NOT_EXIST_USER_ID = "jrqijeiowfjioasj";
+        String existId = "dummyUserA";
 
         final TicketLinkUserDetails DUMMY_USER_A = new TicketLinkUserDetails(
                 "DUMMYA",
@@ -152,8 +203,7 @@ class UserControllerTest {
         );
 
         // when
-        ResultActions PERFORM_200 = mvc.perform(get("/api/v1/user/" + DUMMY_USER_A_ID));
-        ResultActions PERFORM_403 = mvc.perform(get("/api/v1/user/" + NOT_EXIST_USER_ID));
+        ResultActions PERFORM_200 = mvc.perform(get("/api/v1/user/" + existId));
 
         // then
         PERFORM_200.andExpect(status().isOk())
@@ -162,6 +212,19 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.data.email").value(equalTo(DUMMY_USER_A.getEmail())))
                 .andExpect(jsonPath("$.data.role").value(equalTo(DUMMY_USER_A.getRole())));
 
+    }
+
+    @Test
+    void getUser_shouldGetUserRespond403() throws Exception {
+        // given
+        String notExistId = "jrqijeiowfjioasj";
+
+        // when
+        ResultActions PERFORM_403 = mvc.perform(get("/api/v1/user/" + notExistId));
+
+        // then
         PERFORM_403.andExpect(status().isForbidden());
     }
+
+
 }

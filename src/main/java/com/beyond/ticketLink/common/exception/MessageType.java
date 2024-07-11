@@ -19,7 +19,8 @@ public enum MessageType {
 
     // email
     VERIFICATION_EXPIRED("Your email verification has expired.", HttpStatus.REQUEST_TIMEOUT),
-    VERIFICATION_CODE_INVALID("The verification code doesn't match.", HttpStatus.BAD_REQUEST)
+    VERIFICATION_CODE_INVALID("The verification code doesn't match.", HttpStatus.BAD_REQUEST),
+    EMAIL_UNAUTHORIZED("This is an unauthenticated email.", HttpStatus.UNAUTHORIZED),
     ;
 
 

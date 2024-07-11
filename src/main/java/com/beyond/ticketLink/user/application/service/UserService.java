@@ -7,5 +7,5 @@ public interface UserService extends UserDetailsService {
 
     void register(UserCreateRequest request);
 
-    void throwErrorWithDuplicateId(String id);
+    void checkIdDuplicated(String id);
 }
