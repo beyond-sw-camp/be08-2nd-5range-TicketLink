@@ -25,8 +25,8 @@ public class JwtUtil {
 
     public JwtUtil(
             @Value("${jwt.secret}") String secret,
-            @Value("${jwt.access-token.exp-time}") long accessTokenExpTime,
-            @Value("${jwt.refresh-token.exp-time}") long refreshTokenExpTime
+            @Value("${jwt.access-token-exp-time}") long accessTokenExpTime,
+            @Value("${jwt.refresh-token-exp-time}") long refreshTokenExpTime
     ) {
 
         secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8),
