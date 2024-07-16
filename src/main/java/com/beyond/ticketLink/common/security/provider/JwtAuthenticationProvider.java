@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtProvider implements AuthenticationProvider {
+public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     private final JwtUtil jwtUtil;
     private final UserService service;
