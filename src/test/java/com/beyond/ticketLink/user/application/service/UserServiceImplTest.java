@@ -6,13 +6,15 @@ import com.beyond.ticketLink.smtp.persistence.entity.VerifiedEmail;
 import com.beyond.ticketLink.smtp.persistence.repository.VerifiedEmailRepository;
 import com.beyond.ticketLink.user.application.domain.JwtToken;
 import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
+import com.beyond.ticketLink.user.application.service.UserService.FindJwtResult;
 import com.beyond.ticketLink.user.application.utils.JwtUtil;
+import com.beyond.ticketLink.user.persistence.entity.ExpiredAccessToken;
+import com.beyond.ticketLink.user.persistence.repository.ExpiredAccessTokenRepository;
 import com.beyond.ticketLink.user.persistence.repository.JwtRepository;
 import com.beyond.ticketLink.user.persistence.repository.UserRepository;
 import com.beyond.ticketLink.user.ui.requestbody.UserCreateRequest;
 import com.beyond.ticketLink.user.ui.requestbody.UserLoginRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static com.beyond.ticketLink.user.application.service.UserService.*;
 import static org.assertj.core.api.Assertions.*;
 
 @Slf4j
@@ -42,6 +45,9 @@ class UserServiceImplTest {
 
     @Autowired
     JwtRepository jwtRepository;
+
+    @Autowired
+    ExpiredAccessTokenRepository expiredAccessTokenRepository;
 
     @Test
     @Transactional
@@ -102,7 +108,7 @@ class UserServiceImplTest {
 
         UserLoginRequest loginRequest = new UserLoginRequest(dummyId, dummyPw);
         // when
-        JwtToken jwtToken = service.login(loginRequest);
+        FindJwtResult jwtToken = service.login(loginRequest);
 
         String parsedUsername = jwtUtil.getUsername(jwtToken.getAccessToken());
 
@@ -110,7 +116,6 @@ class UserServiceImplTest {
         // then
         assertThat(parsedUsername).isEqualTo(loginRequest.id());
         assertThat(savedJwtToken.isPresent()).isTrue();
-        assertThat(savedJwtToken.get().getAccessToken()).isEqualTo(jwtToken.getAccessToken());
         assertThat(savedJwtToken.get().getRefreshToken()).isEqualTo(jwtToken.getRefreshToken());
     }
 
@@ -127,6 +132,34 @@ class UserServiceImplTest {
         assertThatThrownBy(() -> service.login(loginRequest))
                 .isInstanceOf(TicketLinkException.class)
                 .hasMessage(MessageType.INVALID_PASSWORD.getMessage());
+    }
+
+    @Test
+    @Transactional
+    void logout_shouldLogoutSuccessfully() {
+        // given
+        String dummyId = "dummyUserA";
+        String dummyPw = "test1234!";
+        String dummyUserNo = "DUMMYA";
+
+        UserLoginRequest loginRequest = new UserLoginRequest(dummyId, dummyPw);
+
+        FindJwtResult jwtResult = service.login(loginRequest);
+        String accessToken = jwtResult.getAccessToken();
+        // when & then
+        assertThatCode(() -> service.logout(
+                LogoutCommand.builder()
+                .userNo(dummyUserNo)
+                .accessToken(accessToken)
+                .build()
+                )
+        ).doesNotThrowAnyException();
+
+        assertThat(jwtRepository.findByUserNo(dummyUserNo).isEmpty()).isTrue();
+
+        Optional<ExpiredAccessToken> expiredAccessToken = expiredAccessTokenRepository.findById(accessToken);
+        assertThat(expiredAccessToken.isPresent()).isTrue();
+        assertThat(expiredAccessToken.get().getAccessToken()).isEqualTo(accessToken);
     }
 
     @Test

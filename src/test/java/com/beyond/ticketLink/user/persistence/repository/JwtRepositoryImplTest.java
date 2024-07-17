@@ -12,8 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 class JwtRepositoryImplTest {
@@ -28,7 +27,6 @@ class JwtRepositoryImplTest {
         String dummyUserNo = "DUMMYA";
 
         JwtCreateDto jwtCreateDto = JwtCreateDto.builder()
-                .accessToken("testAccessToken")
                 .refreshToken("testRefreshToken")
                 .userNo(dummyUserNo)
                 .build();
@@ -45,7 +43,6 @@ class JwtRepositoryImplTest {
         String notExistDummyNo = "qweqrr2r43";
 
         JwtCreateDto jwtCreateDto = JwtCreateDto.builder()
-                .accessToken("testAccessToken")
                 .refreshToken("testRefreshToken")
                 .userNo(notExistDummyNo)
                 .build();
@@ -54,6 +51,27 @@ class JwtRepositoryImplTest {
         // then
         assertThatThrownBy(() -> repository.save(jwtCreateDto))
                 .isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    @Test
+    @Transactional
+    void delete_shouldDeleteSuccessfully() {
+        // given
+        String dummyUserNo = "DUMMYA";
+
+        JwtCreateDto jwtCreateDto = JwtCreateDto.builder()
+                .refreshToken("testRefreshToken")
+                .userNo(dummyUserNo)
+                .build();
+
+        repository.save(jwtCreateDto);
+
+        // when & Then
+        assertThatCode(() -> repository.delete(dummyUserNo))
+                .doesNotThrowAnyException();
+
+        assertThat(repository.findByUserNo(dummyUserNo).isEmpty())
+                .isTrue();
     }
 
 }

@@ -5,6 +5,7 @@ import com.beyond.ticketLink.smtp.persistence.entity.VerifiedEmail;
 import com.beyond.ticketLink.smtp.persistence.repository.VerifiedEmailRepository;
 import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
 import com.beyond.ticketLink.user.application.mock.WithTicketLinkMockUser;
+import com.beyond.ticketLink.user.application.service.UserService;
 import com.beyond.ticketLink.user.ui.requestbody.CheckDuplicateIdRequest;
 import com.beyond.ticketLink.user.ui.requestbody.UserCreateRequest;
 import com.beyond.ticketLink.user.ui.requestbody.UserLoginRequest;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.beyond.ticketLink.user.application.service.UserService.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -34,6 +36,9 @@ class UserControllerTest {
 
     @Autowired
     MockMvc mvc;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private VerifiedEmailRepository verifiedEmailRepository;
@@ -222,6 +227,22 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.errors[0].errorType")
                         .value(equalTo(MessageType.ARGUMENT_NOT_VALID.name())
                         ));
+    }
+
+    @Test
+    @Transactional
+    @WithTicketLinkMockUser
+    void logout_logoutShouldRespond200() throws Exception {
+        // given
+        String dummyId = "dummyUserA";
+        String dummyPw = "test1234!";
+        FindJwtResult jwtResult = userService.login(new UserLoginRequest(dummyId, dummyPw));
+        // when
+        ResultActions PERFORM_200 = mvc.perform(post("/api/v1/user/logout")
+                .header("Authorization", jwtResult.getAccessToken())
+        );
+        // then
+        PERFORM_200.andExpect(status().isOk());
     }
 
     @Test
