@@ -16,7 +16,7 @@ class JwtUtilTest {
     private JwtUtil jwtUtil;
 
     @Test
-    public void getUsername_shouldGetUsernameSuccessfully() {
+    public void getUserNo_shouldGetUserNoSuccessfully() {
         // given
         TicketLinkUserDetails member = new TicketLinkUserDetails("test",
                 "testUserA",
@@ -28,9 +28,9 @@ class JwtUtilTest {
         );
         String accessToken = jwtUtil.createAccessToken(member);
         // when
-        String username = jwtUtil.getUsername(accessToken);
+        String userNo = jwtUtil.getUserNo(accessToken);
         // then
-        assertThat(username).isEqualTo(member.getUsername());
+        assertThat(userNo).isEqualTo(member.getUserNo());
     }
 
     @Test

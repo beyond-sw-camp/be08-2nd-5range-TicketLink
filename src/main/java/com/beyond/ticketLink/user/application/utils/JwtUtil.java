@@ -11,6 +11,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * [JWT 관련 메서드를 제공하는 클래스]
@@ -25,8 +27,8 @@ public class JwtUtil {
 
     public JwtUtil(
             @Value("${jwt.secret}") String secret,
-            @Value("${jwt.access-token.exp-time}") long accessTokenExpTime,
-            @Value("${jwt.refresh-token.exp-time}") long refreshTokenExpTime
+            @Value("${jwt.access-token-exp-time}") long accessTokenExpTime,
+            @Value("${jwt.refresh-token-exp-time}") long refreshTokenExpTime
     ) {
 
         secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8),
@@ -36,6 +38,15 @@ public class JwtUtil {
         this.accessTokenExpTime = accessTokenExpTime;
         this.refreshTokenExpTime = refreshTokenExpTime;
     }
+
+    public String getUserNo(String token) {
+        return Jwts.parser().verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("userNo", String.class);
+    }
+
     public String getUsername(String token) {
 
         return Jwts.parser().verifyWith(secretKey)
@@ -56,11 +67,22 @@ public class JwtUtil {
     }
 
     public String createAccessToken(TicketLinkUserDetails member) {
-        return createJwt(member, accessTokenExpTime);
+        HashMap<String, String> claims = new HashMap<>();
+
+        claims.put("userNo", member.getUserNo());
+        claims.put("username", member.getUsername());
+        claims.put("role", member.getRole());
+
+        return createJwt(claims, accessTokenExpTime);
+
     }
 
     public String createRefreshToken(TicketLinkUserDetails member) {
-        return createJwt(member, refreshTokenExpTime);
+        HashMap<String, String> claims = new HashMap<>();
+
+        claims.put("username", member.getUsername());
+
+        return createJwt(claims, accessTokenExpTime);
     }
 
     public Boolean isExpired(String token) {
@@ -74,11 +96,9 @@ public class JwtUtil {
                 .before(new Date());
     }
 
-    public String createJwt(TicketLinkUserDetails member, Long expiredMs) {
-
+    private String createJwt(Map<String, String> claims, Long expiredMs) {
         return Jwts.builder()
-                .claim("username", member.getUsername())
-                .claim("role", member.getRole())
+                .claims(claims)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(secretKey)

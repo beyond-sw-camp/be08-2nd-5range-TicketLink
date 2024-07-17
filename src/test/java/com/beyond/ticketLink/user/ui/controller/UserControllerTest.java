@@ -4,6 +4,7 @@ import com.beyond.ticketLink.common.exception.MessageType;
 import com.beyond.ticketLink.smtp.persistence.entity.VerifiedEmail;
 import com.beyond.ticketLink.smtp.persistence.repository.VerifiedEmailRepository;
 import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
+import com.beyond.ticketLink.user.application.mock.WithTicketLinkMockUser;
 import com.beyond.ticketLink.user.ui.requestbody.CheckDuplicateIdRequest;
 import com.beyond.ticketLink.user.ui.requestbody.UserCreateRequest;
 import com.beyond.ticketLink.user.ui.requestbody.UserLoginRequest;
@@ -260,6 +261,7 @@ class UserControllerTest {
     }
 
     @Test
+    @WithTicketLinkMockUser(role="관리자")
     void getUser_shouldGetUserRespond200() throws Exception {
         // given
         String existId = "dummyUserA";
@@ -287,6 +289,7 @@ class UserControllerTest {
     }
 
     @Test
+    @WithTicketLinkMockUser(role="일반사용자")
     void getUser_shouldGetUserRespond403() throws Exception {
         // given
         String notExistId = "jrqijeiowfjioasj";

@@ -3,7 +3,7 @@ package com.beyond.ticketLink.common.security.config;
 import com.beyond.ticketLink.common.security.exception.JwtAccessDeniedHandler;
 import com.beyond.ticketLink.common.security.exception.JwtAuthenticationEntryPoint;
 import com.beyond.ticketLink.common.security.filter.JwtAuthenticationFilter;
-import com.beyond.ticketLink.common.security.provider.JwtProvider;
+import com.beyond.ticketLink.common.security.provider.JwtAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +28,7 @@ public class TicketLinkSecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
-    public SecurityFilterChain apiFilterChain(HttpSecurity http, JwtProvider jwtProvider) throws Exception {
+    public SecurityFilterChain apiFilterChain(HttpSecurity http, JwtAuthenticationProvider jwtAuthenticationProvider) throws Exception {
         http.httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
@@ -38,7 +38,7 @@ public class TicketLinkSecurityConfig {
                 })
                 .anonymous(AbstractHttpConfigurer::disable)
                 .addFilterBefore(
-                        jwtAuthenticationFilter(jwtProvider),
+                        jwtAuthenticationFilter(jwtAuthenticationProvider),
                         UsernamePasswordAuthenticationFilter.class
                 );
 
@@ -81,8 +81,8 @@ public class TicketLinkSecurityConfig {
     }
 
     @Bean
-    JwtAuthenticationFilter jwtAuthenticationFilter(JwtProvider jwtProvider) {
-        return new JwtAuthenticationFilter(jwtProvider);
+    JwtAuthenticationFilter jwtAuthenticationFilter(JwtAuthenticationProvider jwtAuthenticationProvider) {
+        return new JwtAuthenticationFilter(jwtAuthenticationProvider);
     }
 
 }
