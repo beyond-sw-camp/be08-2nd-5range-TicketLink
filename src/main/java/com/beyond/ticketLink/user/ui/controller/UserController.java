@@ -26,6 +26,8 @@ public class UserController {
     @PostMapping("/user/register")
     ResponseEntity<ApiResponseView<UserView>> registerUser(@RequestBody @Validated UserCreateRequest request) {
 
+        // controller -> postmapping -> view -> request
+
         service.register(request);
 
         return ResponseEntity.status(HttpStatus.CREATED)
