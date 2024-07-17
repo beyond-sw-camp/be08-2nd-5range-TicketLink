@@ -8,7 +8,6 @@ import lombok.ToString;
 @Builder
 @ToString
 public class JwtCreateDto {
-    private final String accessToken;
     private final String refreshToken;
     private final String userNo;
 }

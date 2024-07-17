@@ -8,6 +8,5 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public class JwtToken {
-    private final String accessToken;
     private final String refreshToken;
 }
