@@ -4,12 +4,13 @@ import com.beyond.ticketLink.common.exception.MessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
 import com.beyond.ticketLink.smtp.persistence.entity.VerifiedEmail;
 import com.beyond.ticketLink.smtp.persistence.repository.VerifiedEmailRepository;
-import com.beyond.ticketLink.user.application.domain.JwtToken;
 import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
 import com.beyond.ticketLink.user.application.domain.UserRole;
 import com.beyond.ticketLink.user.application.utils.JwtUtil;
 import com.beyond.ticketLink.user.persistence.dto.JwtCreateDto;
 import com.beyond.ticketLink.user.persistence.dto.UserCreateDto;
+import com.beyond.ticketLink.user.persistence.entity.ExpiredAccessToken;
+import com.beyond.ticketLink.user.persistence.repository.ExpiredAccessTokenRepository;
 import com.beyond.ticketLink.user.persistence.repository.JwtRepository;
 import com.beyond.ticketLink.user.persistence.repository.UserRepository;
 import com.beyond.ticketLink.user.persistence.repository.UserRoleRepository;
@@ -33,6 +34,8 @@ public class UserServiceImpl implements UserService {
     private final UserRoleRepository userRoleRepository;
 
     private final VerifiedEmailRepository verifiedEmailRepository;
+
+    private final ExpiredAccessTokenRepository expiredAccessTokenRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -80,7 +83,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public JwtToken login(UserLoginRequest request) {
+    public FindJwtResult login(UserLoginRequest request) {
 
         // 로그인 요청한 유저가 존재하지 않을 경우 404_Error throw
         TicketLinkUserDetails loginUser = userRepository.findUserById(request.id())
@@ -97,15 +100,32 @@ public class UserServiceImpl implements UserService {
 
         // JwtToken 저장
         jwtRepository.save(JwtCreateDto.builder()
-                .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .userNo(loginUser.getUserNo())
                 .build()
         );
 
-        return new JwtToken(accessToken, refreshToken);
+        return FindJwtResult.findByAll(accessToken, refreshToken);
     }
 
+    @Override
+    @Transactional
+    public void logout(LogoutCommand command) {
+        String accessToken = command.getAccessToken();
+        String userNo = command.getUserNo();
+
+        // 현재 로그아웃 하는 accessToken 만료 토큰으로 등록
+        expiredAccessTokenRepository.save(
+                ExpiredAccessToken.builder()
+                        .accessToken(accessToken)
+                        // 8분으로 지정
+                        .ttl(480L)
+                        .build()
+        );
+
+        // 로그아웃 요청한 유저의 리프레시 토큰 삭제
+        jwtRepository.delete(userNo);
+    }
 
     @Override
     public void checkIdDuplicated(String id) {

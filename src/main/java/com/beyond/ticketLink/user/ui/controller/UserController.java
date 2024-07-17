@@ -9,11 +9,15 @@ import com.beyond.ticketLink.user.ui.requestbody.UserCreateRequest;
 import com.beyond.ticketLink.user.ui.requestbody.UserLoginRequest;
 import com.beyond.ticketLink.user.ui.view.LoginView;
 import com.beyond.ticketLink.user.ui.view.UserView;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import static com.beyond.ticketLink.user.application.service.UserService.*;
 
 
 @RestController
@@ -24,7 +28,7 @@ public class UserController {
     private final UserService service;
 
     @PostMapping("/user/register")
-    ResponseEntity<ApiResponseView<UserView>> registerUser(@RequestBody @Validated UserCreateRequest request) {
+    ResponseEntity<ApiResponseView<Void>> registerUser(@RequestBody @Validated UserCreateRequest request) {
 
         service.register(request);
 
@@ -35,14 +39,32 @@ public class UserController {
     @PostMapping("/user/login")
     ResponseEntity<ApiResponseView<LoginView>> login(@RequestBody @Validated UserLoginRequest request) {
 
-        JwtToken jwtToken = service.login(request);
+        FindJwtResult jwtResult = service.login(request);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new ApiResponseView<>(new LoginView(jwtToken)));
+                .body(new ApiResponseView<>(new LoginView(jwtResult)));
+    }
+
+    @PostMapping("/user/logout")
+    ResponseEntity<ApiResponseView<Void>> logout(HttpServletRequest request, @AuthenticationPrincipal String userNo) {
+
+        String authorization = request.getHeader("Authorization");
+
+        String accessToken = authorization.substring(7);
+
+        service.logout(
+                LogoutCommand.builder()
+                        .accessToken(accessToken)
+                        .userNo(userNo)
+                        .build()
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+
     }
 
     @PostMapping("/user/check-duplicate")
-    ResponseEntity<ApiResponseView<UserView>> checkDuplicate(@RequestBody @Validated CheckDuplicateIdRequest request) {
+    ResponseEntity<ApiResponseView<Void>> checkDuplicate(@RequestBody @Validated CheckDuplicateIdRequest request) {
 
         service.checkIdDuplicated(request.id());
 

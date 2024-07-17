@@ -12,15 +12,20 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class JwtRepositoryImpl implements JwtRepository {
 
-    private final JwtMapper mapper;
+    private final JwtMapper jwtMapper;
 
     @Override
     public void save(JwtCreateDto jwtToken) {
-        mapper.save(jwtToken);
+        jwtMapper.save(jwtToken);
     }
 
     @Override
     public Optional<JwtToken> findByUserNo(String userNo) {
-        return mapper.findByUserNo(userNo);
+        return jwtMapper.findByUserNo(userNo);
+    }
+
+    @Override
+    public void delete(String userNo) {
+        jwtMapper.delete(userNo);
     }
 }
