@@ -21,6 +21,9 @@ public enum MessageType {
     // board
     BOARD_NOT_FOUND("", HttpStatus.NOT_FOUND),
 
+    // boardCategory
+    BOARD_CATEGORY_NOT_FOUND("", HttpStatus.NOT_FOUND),
+
     // email
     VERIFICATION_EXPIRED("Your email verification has expired.", HttpStatus.REQUEST_TIMEOUT),
     VERIFICATION_CODE_INVALID("The verification code doesn't match.", HttpStatus.BAD_REQUEST),
