@@ -47,7 +47,8 @@ public class TicketLinkSecurityConfig {
                     "/api/v1/user/register",
                     "/api/v1/user/check-duplicate",
                     "/api/v1/user/login",
-                    "/api/v1/mail/**"
+                    "/api/v1/mail/**",
+                    "/api/v1/board-categories"
             ).permitAll();
 
             registry.requestMatchers("/api/v1/user/**").hasRole("관리자");
