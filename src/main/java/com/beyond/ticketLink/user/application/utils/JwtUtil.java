@@ -71,7 +71,7 @@ public class JwtUtil {
 
         claims.put("userNo", member.getUserNo());
         claims.put("username", member.getUsername());
-        claims.put("role", member.getRole());
+        claims.put("role", member.getRole().getName());
 
         return createJwt(claims, accessTokenExpTime);
 

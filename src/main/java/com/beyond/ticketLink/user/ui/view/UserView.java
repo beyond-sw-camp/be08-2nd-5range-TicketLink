@@ -12,6 +12,6 @@ public record UserView(
         String role
 ) {
     public UserView(TicketLinkUserDetails user) {
-        this(user.getId(), user.getName(), user.getEmail(), user.getUseYn(), user.getRole());
+        this(user.getId(), user.getName(), user.getEmail(), user.getUseYn(), user.getRole().getName());
     }
 }

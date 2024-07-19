@@ -4,7 +4,7 @@ import com.beyond.ticketLink.common.exception.MessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
 import com.beyond.ticketLink.smtp.persistence.entity.VerifiedEmail;
 import com.beyond.ticketLink.smtp.persistence.repository.VerifiedEmailRepository;
-import com.beyond.ticketLink.user.application.domain.JwtToken;
+import com.beyond.ticketLink.user.application.domain.RefreshToken;
 import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
 import com.beyond.ticketLink.user.application.domain.UserRole;
 import com.beyond.ticketLink.user.application.utils.JwtUtil;
@@ -65,14 +65,14 @@ public class UserServiceImpl implements UserService {
 
         // 유저 저장
         userRepository.save(
-                UserCreateDto.builder()
-                        .id(request.id())
-                        .pw(encryptedPassword)
-                        .name(request.name())
-                        .email(request.email())
-                        .useYn(ENABLE_USER)
-                        .roleNo(userRole.getId())
-                        .build()
+                new UserCreateDto(
+                        request.id(),
+                        encryptedPassword,
+                        request.name(),
+                        request.email(),
+                        ENABLE_USER,
+                        userRole.getId()
+                )
         );
 
         // 유저 저장 이후 이메일 인증 완료 정보 삭제
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public JwtToken login(UserLoginRequest request) {
+    public FindJwtResult login(UserLoginRequest request) {
 
         // 로그인 요청한 유저가 존재하지 않을 경우 404_Error throw
         TicketLinkUserDetails loginUser = userRepository.findUserById(request.id())
@@ -96,14 +96,11 @@ public class UserServiceImpl implements UserService {
         String refreshToken = jwtUtil.createRefreshToken(loginUser);
 
         // JwtToken 저장
-        jwtRepository.save(JwtCreateDto.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .userNo(loginUser.getUserNo())
-                .build()
+        jwtRepository.save(
+                new JwtCreateDto(accessToken,refreshToken, loginUser.getUserNo())
         );
 
-        return new JwtToken(accessToken, refreshToken);
+        return FindJwtResult.findByAll(accessToken, refreshToken);
     }
 
 

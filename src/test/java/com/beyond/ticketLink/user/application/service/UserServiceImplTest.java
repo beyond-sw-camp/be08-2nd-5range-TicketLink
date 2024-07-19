@@ -4,15 +4,15 @@ import com.beyond.ticketLink.common.exception.MessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
 import com.beyond.ticketLink.smtp.persistence.entity.VerifiedEmail;
 import com.beyond.ticketLink.smtp.persistence.repository.VerifiedEmailRepository;
-import com.beyond.ticketLink.user.application.domain.JwtToken;
+import com.beyond.ticketLink.user.application.domain.RefreshToken;
 import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
+import com.beyond.ticketLink.user.application.service.UserService.FindJwtResult;
 import com.beyond.ticketLink.user.application.utils.JwtUtil;
 import com.beyond.ticketLink.user.persistence.repository.JwtRepository;
 import com.beyond.ticketLink.user.persistence.repository.UserRepository;
 import com.beyond.ticketLink.user.ui.requestbody.UserCreateRequest;
 import com.beyond.ticketLink.user.ui.requestbody.UserLoginRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -72,7 +72,7 @@ class UserServiceImplTest {
         assertThat(user.get().getPassword()).isNotEqualTo(registerRequest.pw());
         assertThat(user.get().getUsername()).isEqualTo(registerRequest.name());
         assertThat(user.get().getEmail()).isEqualTo(registerRequest.email());
-        assertThat(user.get().getRole()).isEqualTo("일반사용자");
+        assertThat(user.get().getRole().getName()).isEqualTo("일반사용자");
     }
 
     @Test
@@ -102,15 +102,14 @@ class UserServiceImplTest {
 
         UserLoginRequest loginRequest = new UserLoginRequest(dummyId, dummyPw);
         // when
-        JwtToken jwtToken = service.login(loginRequest);
+        FindJwtResult jwtToken = service.login(loginRequest);
 
         String parsedUsername = jwtUtil.getUsername(jwtToken.getAccessToken());
 
-        Optional<JwtToken> savedJwtToken = jwtRepository.findByUserNo(dummyUserNo);
+        Optional<RefreshToken> savedJwtToken = jwtRepository.findByUserNo(dummyUserNo);
         // then
         assertThat(parsedUsername).isEqualTo(loginRequest.id());
         assertThat(savedJwtToken.isPresent()).isTrue();
-        assertThat(savedJwtToken.get().getAccessToken()).isEqualTo(jwtToken.getAccessToken());
         assertThat(savedJwtToken.get().getRefreshToken()).isEqualTo(jwtToken.getRefreshToken());
     }
 

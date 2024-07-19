@@ -1,6 +1,6 @@
 package com.beyond.ticketLink.user.ui.view;
 
-import com.beyond.ticketLink.user.application.domain.JwtToken;
+import com.beyond.ticketLink.user.application.service.UserService.FindJwtResult;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -9,7 +9,7 @@ public record LoginView(
         String refreshToken
 ) {
 
-    public LoginView(JwtToken jwtToken) {
+    public LoginView(FindJwtResult jwtToken) {
         this(jwtToken.getAccessToken(), jwtToken.getRefreshToken());
     }
 }
