@@ -1,0 +1,71 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.beyond.ticketLink.reply.persistence.mapper.ReplyMapper">
+
+    <sql id="selectReplySql">
+        SELECT replyNo,
+               cnt,
+               content,
+               insDate,
+               uptDate,
+               boardNo,
+               userNo
+        FROM tb_reply
+    </sql>
+
+    <resultMap id="replyResultMap" type="Reply">
+        <id property="replyNo" column="replyNo"/>
+        <result property="cnt" column="cnt"/>
+        <result property="content" column="content"/>
+        <result property="insDate" column="insDate"/>
+        <result property="uptDate" column="uptDate"/>
+        <result property="boardNo" column="boardNo"/>
+        <result property="userNo" column="userNo"/>
+    </resultMap>
+
+    <insert id="insertReply" parameterType="ReplyCreateDto">
+        <selectKey keyProperty="replyNo,cnt"
+                   keyColumn="replyNo,cnt"
+                   resultType="com.beyond.ticketLink.reply.persistence.dto.ReplyCreateDto$SelectKeyResult"
+                   order="BEFORE">
+            SELECT  GET_NO('tb_reply') AS 'replyNo',
+                    COUNT(replyNo) + 1 AS 'cnt'
+            FROM tb_reply tb_r
+            WHERE boardNo = #{boardNo}
+        </selectKey>
+
+        INSERT INTO tb_reply (replyNo, cnt, content, insDate, uptDate, boardNo, userNo)
+        VALUES (#{replyNo},
+                #{cnt},
+                #{content},
+                NOW(),
+                NOW(),
+                #{boardNo},
+                #{userNo}
+               );
+    </insert>
+
+    <select id="selectReplyByReplyNo" parameterType="string" resultMap="replyResultMap">
+        <include refid="selectReplySql"/>
+        WHERE replyNo = #{replyNo}
+    </select>
+
+    <update id="updateReply" parameterType="ReplyUpdateDto">
+        <selectKey keyProperty="uptDate"
+                   keyColumn="uptDate"
+                   resultType="com.beyond.ticketLink.reply.persistence.dto.ReplyUpdateDto$SelectKeyResult"
+                    order="BEFORE">
+            SELECT NOW() AS 'uptDate';
+        </selectKey>
+        UPDATE tb_reply
+        SET content=#{content},
+            uptDate=#{uptDate}
+        WHERE replyNo = #{replyNo}
+    </update>
+
+    <delete id="deleteReply">
+        DELETE FROM tb_reply
+        WHERE replyNo = #{replyNo}
+    </delete>
+
+</mapper>
