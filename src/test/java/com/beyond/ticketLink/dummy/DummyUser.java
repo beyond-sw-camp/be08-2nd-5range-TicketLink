@@ -6,4 +6,5 @@ public enum DummyUser {
     DM_U_03,
     DM_U_04,
     DM_U_05,
+    DM_NOT_EXIST
 }

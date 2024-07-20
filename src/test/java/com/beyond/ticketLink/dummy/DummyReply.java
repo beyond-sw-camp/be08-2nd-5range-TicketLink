@@ -11,4 +11,5 @@ public enum DummyReply {
     DM_R_08,
     DM_R_09,
     DM_R_10,
+    DM_NOT_EXIST,
 }
