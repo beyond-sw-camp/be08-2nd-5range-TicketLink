@@ -57,6 +57,7 @@ class ReplyRepositoryImplTest {
                 GENERATED_REPLY_NO,
                 "test content",
                 GENERATED_CNT,
+                GENERATED_DATE,
                 DummyUser.DM_U_01.name(),
                 DummyBoard.DM_B_01.name()
         );
@@ -74,6 +75,7 @@ class ReplyRepositoryImplTest {
                 GENERATED_REPLY_NO,
                 "test",
                 GENERATED_CNT,
+                GENERATED_DATE,
                 DummyUser.DM_U_03.name(),
                 DummyBoard.DM_B_01.name()
         );
@@ -82,6 +84,7 @@ class ReplyRepositoryImplTest {
                 GENERATED_REPLY_NO,
                 "test",
                 GENERATED_CNT,
+                GENERATED_DATE,
                 DummyUser.DM_U_04.name(),
                 DummyBoard.DM_B_01.name()
         );
@@ -110,6 +113,7 @@ class ReplyRepositoryImplTest {
                 GENERATED_REPLY_NO,
                 "test",
                 GENERATED_CNT,
+                GENERATED_DATE,
                 userNo,
                 notExistBoardNo
         );
@@ -117,6 +121,7 @@ class ReplyRepositoryImplTest {
                 GENERATED_REPLY_NO,
                 "test",
                 GENERATED_CNT,
+                GENERATED_DATE,
                 notExistUserNo,
                 boardNo
         );
