@@ -1,5 +1,6 @@
 package com.beyond.ticketLink.reply.application.domain;
 
+import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
 import lombok.*;
 
 import java.sql.Date;
@@ -16,5 +17,5 @@ public class Reply {
     private Date insDate;
     private Date uptDate;
     private String boardNo;
-    private String userNo;
+    private TicketLinkUserDetails user;
 }

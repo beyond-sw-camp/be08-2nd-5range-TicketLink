@@ -8,8 +8,7 @@
                content,
                insDate,
                uptDate,
-               boardNo,
-               userNo
+               boardNo
         FROM tb_reply
     </sql>
 
@@ -20,16 +19,20 @@
         <result property="insDate" column="insDate"/>
         <result property="uptDate" column="uptDate"/>
         <result property="boardNo" column="boardNo"/>
-        <result property="userNo" column="userNo"/>
+        <association property="user"
+                     columnPrefix="u_"
+                     javaType="TicketLinkUserDetails"
+                     resultMap="com.beyond.ticketLink.user.persistence.mapper.UserMapper.userResultMap"/>
     </resultMap>
 
     <insert id="insertReply" parameterType="ReplyCreateDto">
-        <selectKey keyProperty="replyNo,cnt"
-                   keyColumn="replyNo,cnt"
+        <selectKey keyProperty="replyNo,cnt,insDate"
+                   keyColumn="replyNo,cnt,insDate"
                    resultType="com.beyond.ticketLink.reply.persistence.dto.ReplyCreateDto$SelectKeyResult"
                    order="BEFORE">
             SELECT  GET_NO('tb_reply') AS 'replyNo',
-                    COUNT(replyNo) + 1 AS 'cnt'
+                    COUNT(replyNo) + 1 AS 'cnt',
+                    NOW() AS 'insDate'
             FROM tb_reply tb_r
             WHERE boardNo = #{boardNo}
         </selectKey>
@@ -38,7 +41,7 @@
         VALUES (#{replyNo},
                 #{cnt},
                 #{content},
-                NOW(),
+                #{insDate},
                 NOW(),
                 #{boardNo},
                 #{userNo}
@@ -46,8 +49,25 @@
     </insert>
 
     <select id="selectReplyByReplyNo" parameterType="string" resultMap="replyResultMap">
-        <include refid="selectReplySql"/>
-        WHERE replyNo = #{replyNo}
+        SELECT tb_r.replyNo,
+               tb_r.cnt,
+               tb_r.content,
+               tb_r.insDate,
+               tb_r.uptDate,
+               tb_r.boardNo,
+               tb_u.userNo  AS 'u_userNo',
+               tb_u.id      AS 'u_id',
+               tb_u.pw      AS 'u_pw',
+               tb_u.name    AS 'u_name',
+               tb_u.email   AS 'u_email',
+               tb_u.useYn   AS 'u_useYn',
+               tb_ur.roleNo AS 'u_ur_roleNo',
+               tb_ur.name   AS 'u_ur_name'
+        FROM tb_reply tb_r
+                 INNER JOIN tb_user tb_u ON tb_r.userNo = tb_u.userNo
+                 INNER JOIN tb_role tb_ur ON tb_u.roleNo = tb_ur.roleNo
+        WHERE tb_r.replyNo = #{replyNo};
+
     </select>
 
     <update id="updateReply" parameterType="ReplyUpdateDto">

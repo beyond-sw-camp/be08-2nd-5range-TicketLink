@@ -10,7 +10,7 @@
         <result property="useYn" column="useYn"/>
         <association property="role"
                      javaType="UserRole"
-                     columnPrefix="r_"
+                     columnPrefix="ur_"
                      resultMap="com.beyond.ticketLink.user.persistence.mapper.UserRoleMapper.userRoleResultMap"
         />
     </resultMap>
@@ -28,8 +28,8 @@
                u.name,
                u.email,
                u.useYn,
-               r.roleNo AS 'r_roleNo',
-               r.name   AS 'r_name'
+               r.roleNo AS 'ur_roleNo',
+               r.name   AS 'ur_name'
         FROM tb_user u
                  INNER JOIN tb_role r ON u.roleNo = r.roleNo
         WHERE u.id = #{id};
