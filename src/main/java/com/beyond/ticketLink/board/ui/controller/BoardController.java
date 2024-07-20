@@ -1,14 +1,14 @@
 package com.beyond.ticketLink.board.ui.controller;
 
-import com.beyond.ticketLink.board.application.domain.Board;
+
 import com.beyond.ticketLink.board.application.service.BoardService;
-import com.beyond.ticketLink.board.ui.view.BoardView;
+import com.beyond.ticketLink.board.ui.requestbody.BoardCreateRequest;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -27,15 +27,15 @@ public class BoardController {
      * ex) ResponseEntity<Void>
      */
 
-    @PostMapping("/board")
-    public ResponseEntity<BoardView> addBoard() {
+    @PostMapping("/board/create")
+    public ResponseEntity<Void> addBoard(@RequestBody BoardCreateRequest request, @AuthenticationPrincipal String userNo) {
         // 실제 서비스 로직을 호출하여 BoardView 객체를 생성하는 부분이 필요
         // 예: BoardView boardView = boardService.createBoard(...);
 
-        // 현재는 단순히 빈 BoardView 객체를 반환
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new BoardView(new Board()));
+        boardService.createBoard(request, userNo);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+
     }
 
 }

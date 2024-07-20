@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class BoardCategoryImpl implements BoardCategoryRepository {
+public class BoardCategoryRepositoryImpl implements BoardCategoryRepository {
 
     private final BoardCategoryMapper boardCategoryMapper;
 

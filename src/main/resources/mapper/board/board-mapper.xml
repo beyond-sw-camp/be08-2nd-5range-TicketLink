@@ -1,5 +1,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.beyond.ticketLink.board.persistence.mapper.BoardMapper">
-
+    <insert id="save" keyColumn="boardNo">
+        insert into tb_board(boardNo, title, content, rating, insDate, uptDate, userNo, eventNo, bCategoryNo)
+        values (GET_NO('tb_board'), #{title}, #{content}, #{rating}, #{insDate}, #{uptDate}, #{userNo}, #{eventNo}, #{bCategoryNo})
+    </insert>
 </mapper>
+
+
