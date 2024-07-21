@@ -23,7 +23,7 @@ public interface ReplyService {
     @EqualsAndHashCode
     class FindReplyResult {
         private final String replyNo;
-        private final int cnt;
+        private final Integer cnt;
         private final String content;
         private final Date insDate;
         private final Date uptDate;
