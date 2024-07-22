@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beyond.ticketLink.reservation.persistence.mapper.PayMapper">
+
+    <resultMap id="payMap" type="PayInfo">
+        <id property="payNo" column="payNo" />
+        <result property="payDate" column="payDate" />
+        <result property="status" column="status" />
+        <result property="price" column="price" />
+        <result property="fee" column="fee" />
+        <result property="deliveryCost" column="deliveryCost" />
+        <result property="discount" column="discount" />
+        <result property="totalAmt" column="totalAmt" />
+        <result property="userNo" column="userNo" />
+    </resultMap>
+
+    <resultMap id="payMapWithRes" type="PayInfo" extends="payMap">
+        <collection property="reservations" ofType="Reservation"
+                    resultMap="com.beyond.ticketLink.reservation.persistence.mapper.ReservationMapper.resMap" columnPrefix="rs_"/>
+    </resultMap>
+
+    <select id="getList" resultMap="payMap">
+    </select>
+
+    <select id="getData" resultMap="payMapWithRes">
+    </select>
+    
+    <insert id="insData">
+        INSERT INTO tb_payinfo(
+                payNo
+              , payment
+              , payDate
+              , status
+              , price
+              , fee
+              , deliveryCost
+              , discount
+              , totalAmt
+              , userNo
+        )
+        VALUES(
+                payNo
+              , payment
+              , payDate
+              , status
+              , price
+              , fee
+              , deliveryCost
+              , discount
+              , totalAmt
+              , userNo
+              )
+    </insert>
+</mapper>
