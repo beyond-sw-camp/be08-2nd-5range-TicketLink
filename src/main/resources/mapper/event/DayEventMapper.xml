@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beyond.ticketLink.event.persistence.mapper.DayEventMapper">
+    <resultMap id="dayEventMap" type="DailyEvent">
+        <id property="dayEventNo" column="dayEventNo" />
+        <result property="eventDate" column="eventDate" />
+        <result property="day7" column="day7" />
+        <result property="cnt" column="cnt" />
+        <result property="deTime" column="deTime" />
+        <result property="castInfo" column="castInfo" />
+        <result property="eventNo" column="eventNo" />
+    </resultMap>
+
+    <select id="getList" resultType="DailyEvent">
+    </select>
+
+    <select id="getData" resultType="DailyEvent">
+    </select>
+    
+    <insert id="insData">
+        INSERT INTO tb_dailyEvent(
+               dailyEventNo
+             , eventDate
+             , day7
+             , cnt
+             , deTime
+             , castInfo
+             , eventNo
+        )
+        VALUES
+            (
+              #{dayEventNo}
+            , #{eventDate}
+            , #{day7}
+            , #{cnt}
+            , #{deTime}
+            , #{castInfo}
+            , #{eventNo}
+            )
+    </insert>
+</mapper>
