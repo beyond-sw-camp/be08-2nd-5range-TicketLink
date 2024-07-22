@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beyond.ticketLink.event.persistence.mapper.TicketMapper">
+
+    <select id="getList" resultType="Ticket">
+    </select>
+
+    <select id="getData" resultType="Ticket">
+    </select>
+    
+    <insert id="insData">
+        INSERT INTO tb_ticket(
+               ticketNo
+             , seatRate
+             , seatNum
+             , price
+             , dailyEventNo
+        )
+        VALUES
+            (
+              #{ticketNo}
+            , #{seatRate}
+            , #{seatNum}
+            , #{price}
+            , #{dayEventNo}
+            )
+    </insert>
+</mapper>
