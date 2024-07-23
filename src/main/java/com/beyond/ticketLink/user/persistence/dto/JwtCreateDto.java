@@ -10,6 +10,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class JwtCreateDto {
-    private final String refreshToken;
-    private final String userNo;
+    private String refreshToken;
+    private String userNo;
 }

@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
 
         // JwtToken 저장
         jwtRepository.save(
-                new JwtCreateDto(accessToken,refreshToken, loginUser.getUserNo())
+                new JwtCreateDto(refreshToken, loginUser.getUserNo())
         );
 
         return FindJwtResult.findByAll(accessToken, refreshToken);

@@ -39,10 +39,10 @@ public class UserController {
     @PostMapping("/user/login")
     ResponseEntity<ApiResponseView<LoginView>> login(@RequestBody @Validated UserLoginRequest request) {
 
-        FindJwtResult jwtToken = service.login(request);
+        FindJwtResult result = service.login(request);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new ApiResponseView<>(new LoginView(jwtResult)));
+                .body(new ApiResponseView<>(new LoginView(result)));
     }
 
     @PostMapping("/user/logout")

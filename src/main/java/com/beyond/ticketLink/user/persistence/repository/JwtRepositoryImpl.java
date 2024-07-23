@@ -21,7 +21,7 @@ public class JwtRepositoryImpl implements JwtRepository {
 
     @Override
     public Optional<RefreshToken> findByUserNo(String userNo) {
-        return mapper.findByUserNo(userNo);
+        return jwtMapper.findByUserNo(userNo);
     }
 
     @Override

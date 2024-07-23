@@ -10,4 +10,9 @@
         from tb_jwt
         where userNo = #{userNo}
     </select>
+
+    <delete id="delete">
+        DELETE FROM tb_jwt
+        WHERE userNo = #{userNo}
+    </delete>
 </mapper>
