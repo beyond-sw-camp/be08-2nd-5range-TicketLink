@@ -31,10 +31,12 @@
                    resultType="com.beyond.ticketLink.reply.persistence.dto.ReplyCreateDto$SelectKeyResult"
                    order="BEFORE">
             SELECT  GET_NO('tb_reply') AS 'replyNo',
-                    COUNT(replyNo) + 1 AS 'cnt',
+                    IFNULL(cnt + 1, 1) AS 'cnt',
                     NOW() AS 'insDate'
-            FROM tb_reply tb_r
+            FROM tb_reply
             WHERE boardNo = #{boardNo}
+            ORDER BY cnt DESC
+            LIMIT 1
         </selectKey>
 
         INSERT INTO tb_reply (replyNo, cnt, content, insDate, uptDate, boardNo, userNo)

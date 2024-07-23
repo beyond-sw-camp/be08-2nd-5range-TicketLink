@@ -29,6 +29,8 @@ public class ReplyController {
             @RequestBody @Validated ReplyCreateRequest request
     ) {
 
+        // TODO boardNo 검증
+
         ReplyCreateCommand command = ReplyCreateCommand.builder()
                 .userNo(userNo)
                 .boardNo(boardNo)
@@ -49,7 +51,7 @@ public class ReplyController {
             @RequestBody @Validated ReplyCreateRequest request
     ) {
 
-        log.info("userNo = {} boardNo = {} request = {}", userNo, boardNo, request);
+        // TODO boardNo 검증 로직
 
         ReplyUpdateCommand command = ReplyUpdateCommand.builder()
                 .userNo(userNo)
@@ -69,6 +71,8 @@ public class ReplyController {
             @PathVariable String boardNo,
             @PathVariable String replyNo
     ) {
+
+        // TODO boardNo 검증 로직
 
         ReplyDeleteCommand command = ReplyDeleteCommand.builder()
                 .userNo(userNo)

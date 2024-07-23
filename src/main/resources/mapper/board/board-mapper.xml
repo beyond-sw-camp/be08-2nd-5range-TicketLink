@@ -1,10 +1,85 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.beyond.ticketLink.board.persistence.mapper.BoardMapper">
+
+    <resultMap id="boardResultMap" type="Board">
+        <id property="boardNo" column="boardNo"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="rating" column="rating"/>
+        <result property="insDate" column="insDate"/>
+        <result property="uptDate" column="uptDate"/>
+        <result property="userNo" column="userNo"/>
+        <result property="eventNo" column="eventNo"/>
+        <result property="title" column="bCategoryNo"/>
+
+        <association property="category"
+                     javaType="BoardCategory"
+                     columnPrefix="bc_"
+                     resultMap="com.beyond.ticketLink.board.persistence.mapper.BoardCategoryMapper.boardCategoryResultMap"
+        />
+    </resultMap>
+
     <insert id="save" keyColumn="boardNo">
         insert into tb_board(boardNo, title, content, rating, insDate, uptDate, userNo, eventNo, bCategoryNo)
         values (GET_NO('tb_board'), #{title}, #{content}, #{rating}, #{insDate}, #{uptDate}, #{userNo}, #{eventNo}, #{bCategoryNo})
     </insert>
+
+    <select id="selectBoardByBoardNo" parameterType="string" resultMap="boardResultMap">
+        SELECT tb_b.boardNo,
+               tb_b.title,
+               tb_b.content,
+               tb_b.rating,
+               tb_b.insDate,
+               tb_b.uptDate,
+               tb_b.userNo,
+               tb_b.eventNo,
+               tb_bc.bCategoryNo AS 'bc_bCategoryNo',
+               tb_bc.name        AS 'bc_name'
+        FROM tb_board tb_b
+                 INNER JOIN tb_boardCategory tb_bc ON tb_b.bCategoryNo = tb_bc.bCategoryNo
+        WHERE tb_b.boardNo = #{boardNo};
+    </select>
+
+    <select id="selectBoardAll" parameterType="BoardFindQuery" resultMap="boardResultMap">
+        SELECT tb_b.boardNo,
+               tb_b.title,
+               tb_b.content,
+               tb_b.rating,
+               tb_b.insDate,
+               tb_b.uptDate,
+               tb_b.userNo,
+               tb_b.eventNo,
+               tb_bc.bCategoryNo AS 'bc_bCategoryNo',
+               tb_bc.name        AS 'bc_name'
+        FROM tb_board tb_b
+                 INNER JOIN tb_boardCategory tb_bc ON tb_b.bCategoryNo = tb_bc.bCategoryNo
+        <where>
+            <if test="bCategoryNo != null">
+                AND tb_bc.bCategoryNo = #{bCategoryNo}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateBoard" parameterType="BoardUpdateDto">
+        <selectKey keyProperty="uptDate" keyColumn="uptDate" order="BEFORE" resultType="java.sql.Date">
+            SELECT NOW()
+        </selectKey>
+
+        UPDATE tb_board
+        SET title=#{title},
+            content=#{content},
+            rating=#{rating},
+            uptDate=#{uptDate}
+        WHERE boardNo=#{boardNo};
+    </update>
+
+    <delete id="deleteBoard">
+        DELETE
+        FROM tb_board
+        WHERE boardNo = #{boardNo}
+    </delete>
+
 </mapper>
 
 

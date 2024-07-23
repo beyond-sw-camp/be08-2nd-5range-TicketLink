@@ -1,0 +1,25 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beyond.ticketLink.board.persistence.mapper.BoardCategoryMapper">
+
+    <resultMap id="boardCategoryResultMap" type="BoardCategory">
+        <id property="bCategoryNo" column="bCategoryNo" javaType="_int"/>
+        <result property="name" column="name" javaType="string"/>
+    </resultMap>
+
+    <sql id="selectBoardCategorySQL">
+        SELECT bCategoryNo,
+               name
+        FROM tb_boardCategory
+    </sql>
+
+
+    <select id="findByNo" resultType="BoardCategory" parameterType="_int">
+        <include refid="selectBoardCategorySQL"/>
+        WHERE bCategoryNo = #{no}
+    </select>
+
+    <select id="findAll" resultType="BoardCategory">
+        <include refid="selectBoardCategorySQL"/>
+        FROM tb_boardCategory;
+    </select>
+</mapper>

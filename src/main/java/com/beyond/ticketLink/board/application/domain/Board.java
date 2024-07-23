@@ -5,8 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.time.LocalDate;
-import java.util.Date;
+import java.sql.Date;
 
 
 /**
@@ -20,12 +19,12 @@ public class Board {
     private String boardNo;
     private String title;
     private String content;
-    private String rating;
-    private LocalDate insDate;
-    private LocalDate uptDate;
+    private Float rating;
+    private Date insDate;
+    private Date uptDate;
     // 외래키들
     private String userNo;
     private String eventNo;
-    private int bCategoryNo;
+    private BoardCategory category;
 
 }

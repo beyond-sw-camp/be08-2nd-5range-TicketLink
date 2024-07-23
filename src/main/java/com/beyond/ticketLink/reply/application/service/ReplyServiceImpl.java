@@ -56,6 +56,8 @@ public class ReplyServiceImpl implements ReplyService{
         Reply reply = retrieveReply(replyNo);
 
         if (hasNoOperationAuthority(userNo, reply)) {
+            // Message Type 분리 이후
+            // BoardMessageType.BOARD_MODIFY_UNAUTHORIZED 로 변경
             throw new TicketLinkException(MessageType.BAD_REQUEST);
         }
 
@@ -88,7 +90,6 @@ public class ReplyServiceImpl implements ReplyService{
     private Reply retrieveReply(String replyNo) {
         return replyRepository.selectReplyByReplyNo(replyNo)
                 .orElseThrow(() -> new TicketLinkException(MessageType.NOT_FOUND));
-
     }
 
     private boolean hasNoOperationAuthority(String userNo, Reply reply) {
