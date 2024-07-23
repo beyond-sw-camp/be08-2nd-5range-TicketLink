@@ -4,7 +4,7 @@ import com.beyond.ticketLink.common.exception.MessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
 import com.beyond.ticketLink.smtp.persistence.entity.VerifiedEmail;
 import com.beyond.ticketLink.smtp.persistence.repository.VerifiedEmailRepository;
-import com.beyond.ticketLink.user.application.domain.JwtToken;
+import com.beyond.ticketLink.user.application.domain.RefreshToken;
 import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
 import com.beyond.ticketLink.user.application.service.UserService.FindJwtResult;
 import com.beyond.ticketLink.user.application.utils.JwtUtil;
@@ -78,7 +78,7 @@ class UserServiceImplTest {
         assertThat(user.get().getPassword()).isNotEqualTo(registerRequest.pw());
         assertThat(user.get().getUsername()).isEqualTo(registerRequest.name());
         assertThat(user.get().getEmail()).isEqualTo(registerRequest.email());
-        assertThat(user.get().getRole()).isEqualTo("일반사용자");
+        assertThat(user.get().getRole().getName()).isEqualTo("일반사용자");
     }
 
     @Test
@@ -112,7 +112,7 @@ class UserServiceImplTest {
 
         String parsedUsername = jwtUtil.getUsername(jwtToken.getAccessToken());
 
-        Optional<JwtToken> savedJwtToken = jwtRepository.findByUserNo(dummyUserNo);
+        Optional<RefreshToken> savedJwtToken = jwtRepository.findByUserNo(dummyUserNo);
         // then
         assertThat(parsedUsername).isEqualTo(loginRequest.id());
         assertThat(savedJwtToken.isPresent()).isTrue();

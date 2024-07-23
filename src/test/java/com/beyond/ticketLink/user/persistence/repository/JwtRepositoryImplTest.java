@@ -26,10 +26,12 @@ class JwtRepositoryImplTest {
         // given
         String dummyUserNo = "DUMMYA";
 
-        JwtCreateDto jwtCreateDto = JwtCreateDto.builder()
-                .refreshToken("testRefreshToken")
-                .userNo(dummyUserNo)
-                .build();
+        JwtCreateDto jwtCreateDto = new JwtCreateDto(
+                "testAccessToken",
+                "testRefreshToken",
+                dummyUserNo
+        );
+
         // when
 
         // then
@@ -42,10 +44,11 @@ class JwtRepositoryImplTest {
         // given
         String notExistDummyNo = "qweqrr2r43";
 
-        JwtCreateDto jwtCreateDto = JwtCreateDto.builder()
-                .refreshToken("testRefreshToken")
-                .userNo(notExistDummyNo)
-                .build();
+        JwtCreateDto jwtCreateDto = new JwtCreateDto(
+                "testAccessToken",
+                "testRefreshToken",
+                notExistDummyNo
+        );
         // when
 
         // then
@@ -59,10 +62,6 @@ class JwtRepositoryImplTest {
         // given
         String dummyUserNo = "DUMMYA";
 
-        JwtCreateDto jwtCreateDto = JwtCreateDto.builder()
-                .refreshToken("testRefreshToken")
-                .userNo(dummyUserNo)
-                .build();
 
         repository.save(jwtCreateDto);
 

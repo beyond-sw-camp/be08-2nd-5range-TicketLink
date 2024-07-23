@@ -1,6 +1,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.beyond.ticketLink.user.persistence.mapper.UserRoleMapper">
-    <select id="findByRoleName" resultType="UserRole">
+
+    <resultMap id="userRoleResultMap" type="UserRole">
+        <id property="id" column="roleNo"/>
+        <result property="name" column="name"/>
+    </resultMap>
+
+
+    <select id="findByRoleName" resultMap="userRoleResultMap">
         select roleNo, name
         from tb_role
         where name = #{name};

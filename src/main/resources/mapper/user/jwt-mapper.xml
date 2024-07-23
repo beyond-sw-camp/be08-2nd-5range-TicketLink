@@ -5,14 +5,9 @@
         values (GET_NO('tb_jwt'), #{refreshToken}, #{userNo})
     </insert>
 
-    <select id="findByUserNo" resultType="JwtToken">
+    <select id="findByUserNo" resultType="RefreshToken">
         select refreshToken
         from tb_jwt
         where userNo = #{userNo}
     </select>
-
-    <delete id="delete">
-        delete from tb_jwt
-        where userNo = #{userNo}
-    </delete>
 </mapper>

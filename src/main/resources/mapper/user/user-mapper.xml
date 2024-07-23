@@ -1,20 +1,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.beyond.ticketLink.user.persistence.mapper.UserMapper">
+
+    <resultMap id="userResultMap" type="TicketLinkUserDetails">
+        <id property="userNo" column="userNo"/>
+        <result property="id" column="id"/>
+        <result property="pw" column="pw"/>
+        <result property="name" column="name"/>
+        <result property="email" column="email"/>
+        <result property="useYn" column="useYn"/>
+        <association property="role"
+                     javaType="UserRole"
+                     columnPrefix="ur_"
+                     resultMap="com.beyond.ticketLink.user.persistence.mapper.UserRoleMapper.userRoleResultMap"
+        />
+    </resultMap>
+
+
     <insert id="save" keyColumn="userNo">
-        insert into tb_user(userNo, id, pw, name, email, useYn, roleNo)
-        values (GET_NO('tb_user'), #{id}, #{pw}, #{name}, #{email}, #{useYn}, #{roleNo})
+        INSERT INTO tb_user(userNo, id, pw, name, email, useYn, roleNo)
+        VALUES (GET_NO('tb_user'), #{id}, #{pw}, #{name}, #{email}, #{useYn}, #{roleNo})
     </insert>
 
-    <select id="findUserById">
-        select u.userNo,
+    <select id="findUserById" resultMap="userResultMap">
+        SELECT u.userNo,
                u.id,
                u.pw,
                u.name,
                u.email,
                u.useYn,
-               r.name as 'role'
-        from tb_user u
-                 inner join tb_role r on u.roleNo = r.roleNo
-        where u.id = #{id};
+               r.roleNo AS 'ur_roleNo',
+               r.name   AS 'ur_name'
+        FROM tb_user u
+                 INNER JOIN tb_role r ON u.roleNo = r.roleNo
+        WHERE u.id = #{id};
     </select>
 </mapper>

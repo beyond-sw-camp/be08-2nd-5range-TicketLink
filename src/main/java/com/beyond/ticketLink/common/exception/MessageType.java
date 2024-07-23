@@ -21,6 +21,12 @@ public enum MessageType {
     USER_ROLE_NOT_FOUND("The role matching the name doesn't exist.", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_PASSWORD("The passwords don't match.", HttpStatus.BAD_REQUEST),
 
+    // board
+    BOARD_NOT_FOUND("", HttpStatus.NOT_FOUND),
+
+    // boardCategory
+    BOARD_CATEGORY_NOT_FOUND("", HttpStatus.NOT_FOUND),
+
     // email
     VERIFICATION_EXPIRED("Your email verification has expired.", HttpStatus.REQUEST_TIMEOUT),
     VERIFICATION_CODE_INVALID("The verification code doesn't match.", HttpStatus.BAD_REQUEST),

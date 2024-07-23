@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beyond.ticketLink.event.persistence.mapper.EventMapper">
+
+    <resultMap id="eventMap" type="Event">
+        <id property="eventNo" column="eventNo" />
+        <result property="name" column="name" />
+        <result property="startDate" column="startDate" />
+        <result property="endDate" column="endDate" />
+        <result property="eTime" column="eTime" />
+        <result property="location" column="location" />
+        <result property="info" column="info" />
+        <result property="saleInfo" column="saleInfo" />
+        <result property="seatInfo" column="seatInfo" />
+        <result property="eCategoryNo" column="eCategoryNo" />
+    </resultMap>
+    
+    <resultMap id="eventMapWithDayEvent" type="Event" extends="eventMap">
+        <collection property="dayEvents" ofType="DailyEvent"
+                    resultMap="com.beyond.ticketLink.event.persistence.mapper.DayEventMapper.dayEventMap" columnPrefix="de_"/>
+    </resultMap>
+
+    <select id="getList" resultMap="eventMap">
+        SELECT e.eventNo,
+        e.name,
+        e.startDate,
+        e.endDate,
+        e.eTime,
+        e.location,
+        e.info,
+        e.saleInfo ,
+        e.seatInfo ,
+        e.eCategoryNo
+        FROM tb_event e
+        <where>
+            <if test="eCategoryNo != null">
+            AND e.eCategoryNo = #{eCategoryNo}
+            </if>
+            <if test="name != null and name != ''">
+            AND e.name LIKE concat('%', #{name}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getData" resultMap="eventMapWithDayEvent">
+        SELECT e.eventNo,
+               e.name,
+               e.startDate,
+               e.endDate,
+               e.eTime,
+               e.location,
+               e.info,
+               e.saleInfo,
+               e.seatInfo,
+               e.timeInfo,
+               e.eCategoryNo,
+               de.dailyEventNo AS de_dailyEventNo,
+               de.eventDate AS de_eventDate,
+               de.day7 AS de_day7,
+               de.cnt AS de_cnt,
+               de.deTime AS de_deTime,
+               de.castInfo AS de_castInfo,
+               de.eventNo AS de_eventNo
+        FROM tb_event e
+        JOIN tb_dailyEvent de ON de.eventNo = e.eventNo
+        WHERE e.eventNo = #{eventNo}
+        /*AND (de.eventDate >= #{sDate} AND de.eventDate &lt;= #{eDate})
+        AND de.day7 IN (5,6)
+        AND de.deTime IN ('14:30','19:30','19:00')*/
+    </select>
+    
+    <insert id="insData">
+        INSERT INTO tb_event(
+            eventNo
+            , name
+            , startDate
+            , endDate
+            , eTime
+            , location
+            , info
+            , saleInfo
+            , seatInfo
+            , timeInfo
+            , eCategoryNo
+        )
+        VALUES(
+                #{eventNo}
+              , #{name}
+              , #{startDate}
+              , #{endDate}
+              , #{eTime}
+              , #{location}
+              , #{info}
+              , #{saleInfo}
+              , #{seatInfo}
+              , #{timeInfo}
+              , #{eCategoryNo}
+              )
+    </insert>
+
+    <update id="uptData">
+        UPDATE tb_event
+        SET NAME = #{updateParam.name},
+            startDate = #{updateParam.startDate},
+            endDate = #{updateParam.endDate},
+            eTime = #{updateParam.eTime},
+            location = #{updateParam.location},
+            info = #{updateParam.info},
+            saleInfo = #{updateParam.saleInfo},
+            seatInfo = #{updateParam.seatInfo},
+            eCategoryNo = #{updateParam.eCategoryNo},
+            uptDate = CURDATE()
+        WHERE eventNo = #{eventNo}
+    </update>
+</mapper>

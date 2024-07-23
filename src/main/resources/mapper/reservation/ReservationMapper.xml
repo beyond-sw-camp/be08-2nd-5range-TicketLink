@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beyond.ticketLink.reservation.persistence.mapper.ReservationMapper">
+
+    <resultMap id="resMap" type="Reservation">
+        <id property="resNo" column="resNo" />
+        <result property="resDate" column="resDate" />
+        <result property="status" column="status" />
+        <result property="ticketNo" column="ticketNo" />
+        <result property="payNo" column="payNo" />
+    </resultMap>
+
+    <select id="getList" resultMap="resMap">
+    </select>
+
+    <select id="getData" resultMap="resMap">
+    </select>
+    
+    <insert id="insData">
+        INSERT INTO tb_ticket(
+               ticketNo
+             , seatRate
+             , seatNum
+             , price
+             , dailyEventNo
+        )
+        VALUES
+            (
+              #{ticketNo}
+            , #{seatRate}
+            , #{seatNum}
+            , #{price}
+            , #{dayEventNo}
+            )
+    </insert>
+</mapper>

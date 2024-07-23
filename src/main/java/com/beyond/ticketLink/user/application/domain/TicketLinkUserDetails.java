@@ -2,6 +2,7 @@ package com.beyond.ticketLink.user.application.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Getter
 @ToString
+@NoArgsConstructor
 @AllArgsConstructor
 public class TicketLinkUserDetails implements UserDetails {
 
@@ -21,7 +23,7 @@ public class TicketLinkUserDetails implements UserDetails {
     private String name;
     private String email;
     private char useYn;
-    private String role;
+    private UserRole role;
 
     @Override
     public String getPassword() {
@@ -42,6 +44,6 @@ public class TicketLinkUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + this.role));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + this.role.getName()));
     }
 }
