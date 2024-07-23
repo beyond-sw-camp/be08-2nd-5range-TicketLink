@@ -49,7 +49,8 @@ public class TicketLinkSecurityConfig {
                     "/api/v1/user/check-duplicate",
                     "/api/v1/user/login",
                     "/api/v1/mail/**",
-                    "/api/v1/board-categories"
+                    "/api/v1/board-categories",
+                    "/swagger-ui/**"
             ).permitAll();
 
             registry.requestMatchers(HttpMethod.GET, "/api/v1/boards", "/api/v1/boards/*").permitAll();
