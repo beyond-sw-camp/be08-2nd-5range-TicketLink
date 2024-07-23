@@ -90,7 +90,7 @@
 <br>
 
 ## :clipboard: ERD
-![TicketLink](https://github.com/user-attachments/assets/dc0404df-acc8-4bd5-a46c-3f9f70319ccc)
+
 
 <br>
 
