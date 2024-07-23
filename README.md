@@ -1,5 +1,6 @@
 # TICKET LINK (BackEnd Project)
-![티켓링크](https://github.com/user-attachments/assets/5a4b6848-cab6-4313-bf1b-d74be25ee2e6)
+![티켓링크](https://github.com/user-attachments/assets/2f0b0b9b-1ac0-43a9-8ab0-b0e27ffb2e33)
+
 
 
 <div align=center><h2>📚 기술 스택</h2></div>
@@ -23,7 +24,7 @@
 
 ## :hand: 팀원 소개
 ### TEAM 5RANGE
-|<img src="https://github.com/user-attachments/assets/73b75f0c-964f-4697-a0e8-65d849e38347" width="150" height="150"/>|<img src="https://github.com/user-attachments/assets/597c1a6e-510d-442b-b2fc-aeb6aa48dbf4" width="150" height="150"/>|<img src="https://github.com/user-attachments/assets/c0b9394d-d27f-4a19-8b40-1ec5a9f99a4c" width="150" height="150"/>|<img src="https://github.com/user-attachments/assets/c5b835f2-8d9d-4848-8b49-fb81e9643d90" width="150" height="150"/>|<img src="https://github.com/user-attachments/assets/bb8dde24-783c-417b-ba38-c379ba636ddd" width="150" height="150"/>|
+|<img src="https://github.com/user-attachments/assets/dd9b844d-df1b-42d1-9710-f3d104d2323e" width="150" height="150"/>|<img src="https://github.com/user-attachments/assets/f2557d8c-9b10-4902-9f87-7936faa55b33" width="150" height="150"/>|<img src="https://github.com/user-attachments/assets/513721fe-1585-4547-897c-69fadb39f40a" width="150" height="150"/>|<img src="https://github.com/user-attachments/assets/1eeac2d7-06ee-48aa-aa01-a322997ae5d1" width="150" height="150"/>|<img src="https://github.com/user-attachments/assets/bc05fb21-d8b5-4698-94d5-532a463d2b80" width="150" height="150"/>|
 |:-:|:-:|:-:|:-:|:-:|
 |장현준(팀장)<br><a href="https://github.com/mabem95"><img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/></a>|계용운<br><a href="https://github.com/yongun2"><img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/></a>|김지원<br><a href="https://github.com/gogowonji"><img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/></a>|전지연<br><a href="https://github.com/jiyeonjeon01"><img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/></a>|조혜인<br><a href="https://github.com/byHyen"><img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/></a>|
 
@@ -33,7 +34,7 @@
 
 
 ## :herb: 프로젝트 배경 및 소개
-![배경](https://github.com/user-attachments/assets/64b89e6d-8a4e-4e4e-8297-41730fe022e4)
+![배경](https://github.com/user-attachments/assets/71b6a504-f2c9-48fc-b847-e3dc959455b5)
 
 * 코로나 거리두기 해제 이후 공연 및 전시 등 티켓 예매 서비스 사용자는 단박에 코로나 이전 수준으로 회복하여
 22년 8월 기준 티켓 예매 서비스 사용률은 34.0% 수준으로 코로나 이전 대비 사용률은
