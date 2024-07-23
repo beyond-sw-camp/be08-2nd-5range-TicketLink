@@ -11,4 +11,6 @@ public interface JwtMapper {
     void save(JwtCreateDto jwtToken);
 
     Optional<RefreshToken> findByUserNo(String userNo);
+
+    void delete(String userNo);
 }

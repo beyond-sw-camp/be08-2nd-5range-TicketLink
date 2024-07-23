@@ -25,14 +25,14 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class TicketLinkSecurityConfig {
 
+    private final JwtAuthenticationProvider jwtAuthenticationProvider;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
-    public SecurityFilterChain apiFilterChain(HttpSecurity http, JwtAuthenticationProvider jwtAuthenticationProvider) throws Exception {
+    public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
         http.httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
-                .logout(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> {
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -54,6 +54,7 @@ public class TicketLinkSecurityConfig {
 
             registry.requestMatchers(HttpMethod.GET, "/api/v1/boards", "/api/v1/boards/*").permitAll();
 
+            registry.requestMatchers("/api/v1/user/logout").hasAnyRole("관리자", "일반사용자");
             registry.requestMatchers("/api/v1/user/**").hasRole("관리자");
 
             registry.anyRequest().authenticated();

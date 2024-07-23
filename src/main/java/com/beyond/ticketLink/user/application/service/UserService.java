@@ -5,7 +5,6 @@ import com.beyond.ticketLink.user.ui.requestbody.UserLoginRequest;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
@@ -14,21 +13,30 @@ public interface UserService extends UserDetailsService {
 
     FindJwtResult login(UserLoginRequest request);
 
+    void logout(LogoutCommand command);
+
     void checkIdDuplicated(String id);
+
 
     @Getter
     @Builder
-    @ToString
     @EqualsAndHashCode
     class FindJwtResult {
         private final String accessToken;
         private final String refreshToken;
 
-        static FindJwtResult findByAll(String accessToken, String refreshToken) {
+        public static FindJwtResult findByAll(String accessToken, String refreshToken) {
             return FindJwtResult.builder()
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
                     .build();
         }
+    }
+
+    @Getter
+    @Builder
+    class LogoutCommand {
+        private final String accessToken;
+        private final String userNo;
     }
 }

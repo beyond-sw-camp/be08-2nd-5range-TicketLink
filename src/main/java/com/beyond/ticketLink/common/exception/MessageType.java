@@ -11,6 +11,9 @@ public enum MessageType {
     NOT_FOUND("No data was found for the server. Please refer  to parameter description.", HttpStatus.NOT_FOUND),
     INTERNAL_SERVER_ERROR("An error occurred inside the server.", HttpStatus.INTERNAL_SERVER_ERROR),
 
+    // jwt
+    TOKEN_EXPIRED("The JWT token has expired.", HttpStatus.FORBIDDEN),
+
     // user
     USER_NOT_FOUND("The user matching the ID doesn't exist.", HttpStatus.NOT_FOUND),
     DUPLICATE_USER_ID("Duplicate id.", HttpStatus.CONFLICT),

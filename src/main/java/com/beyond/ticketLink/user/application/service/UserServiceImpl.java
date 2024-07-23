@@ -10,6 +10,8 @@ import com.beyond.ticketLink.user.application.domain.UserRole;
 import com.beyond.ticketLink.user.application.utils.JwtUtil;
 import com.beyond.ticketLink.user.persistence.dto.JwtCreateDto;
 import com.beyond.ticketLink.user.persistence.dto.UserCreateDto;
+import com.beyond.ticketLink.user.persistence.entity.ExpiredAccessToken;
+import com.beyond.ticketLink.user.persistence.repository.ExpiredAccessTokenRepository;
 import com.beyond.ticketLink.user.persistence.repository.JwtRepository;
 import com.beyond.ticketLink.user.persistence.repository.UserRepository;
 import com.beyond.ticketLink.user.persistence.repository.UserRoleRepository;
@@ -33,6 +35,8 @@ public class UserServiceImpl implements UserService {
     private final UserRoleRepository userRoleRepository;
 
     private final VerifiedEmailRepository verifiedEmailRepository;
+
+    private final ExpiredAccessTokenRepository expiredAccessTokenRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -97,12 +101,30 @@ public class UserServiceImpl implements UserService {
 
         // JwtToken 저장
         jwtRepository.save(
-                new JwtCreateDto(accessToken,refreshToken, loginUser.getUserNo())
+                new JwtCreateDto(refreshToken, loginUser.getUserNo())
         );
 
         return FindJwtResult.findByAll(accessToken, refreshToken);
     }
 
+    @Override
+    @Transactional
+    public void logout(LogoutCommand command) {
+        String accessToken = command.getAccessToken();
+        String userNo = command.getUserNo();
+
+        // 현재 로그아웃 하는 accessToken 만료 토큰으로 등록
+        expiredAccessTokenRepository.save(
+                ExpiredAccessToken.builder()
+                        .accessToken(accessToken)
+                        // 8분으로 지정
+                        .ttl(480L)
+                        .build()
+        );
+
+        // 로그아웃 요청한 유저의 리프레시 토큰 삭제
+        jwtRepository.delete(userNo);
+    }
 
     @Override
     public void checkIdDuplicated(String id) {

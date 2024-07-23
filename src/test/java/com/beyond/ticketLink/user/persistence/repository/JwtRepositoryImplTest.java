@@ -12,8 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 class JwtRepositoryImplTest {
@@ -55,6 +54,23 @@ class JwtRepositoryImplTest {
         // then
         assertThatThrownBy(() -> repository.save(jwtCreateDto))
                 .isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    @Test
+    @Transactional
+    void delete_shouldDeleteSuccessfully() {
+        // given
+        String dummyUserNo = "DUMMYA";
+
+
+        repository.save(jwtCreateDto);
+
+        // when & Then
+        assertThatCode(() -> repository.delete(dummyUserNo))
+                .doesNotThrowAnyException();
+
+        assertThat(repository.findByUserNo(dummyUserNo).isEmpty())
+                .isTrue();
     }
 
 }
