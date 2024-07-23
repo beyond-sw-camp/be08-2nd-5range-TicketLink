@@ -1,17 +1,19 @@
 package com.beyond.ticketLink.user.persistence.dto;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
-@Builder
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserCreateDto {
-    private final String id;
-    private final String pw;
-    private final String name;
-    private final String email;
-    private final char useYn;
-    private final Long roleNo;
+    private String id;
+    private String pw;
+    private String name;
+    private String email;
+    private char useYn;
+    private Integer roleNo;
 }

@@ -7,6 +7,7 @@ import com.beyond.ticketLink.common.security.provider.JwtAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -47,8 +48,11 @@ public class TicketLinkSecurityConfig {
                     "/api/v1/user/register",
                     "/api/v1/user/check-duplicate",
                     "/api/v1/user/login",
-                    "/api/v1/mail/**"
+                    "/api/v1/mail/**",
+                    "/api/v1/board-categories"
             ).permitAll();
+
+            registry.requestMatchers(HttpMethod.GET, "/api/v1/boards", "/api/v1/boards/*").permitAll();
 
             registry.requestMatchers("/api/v1/user/**").hasRole("관리자");
 

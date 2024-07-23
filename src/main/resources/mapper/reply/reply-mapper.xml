@@ -1,0 +1,93 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.beyond.ticketLink.reply.persistence.mapper.ReplyMapper">
+
+    <sql id="selectReplySql">
+        SELECT replyNo,
+               cnt,
+               content,
+               insDate,
+               uptDate,
+               boardNo
+        FROM tb_reply
+    </sql>
+
+    <resultMap id="replyResultMap" type="Reply">
+        <id property="replyNo" column="replyNo"/>
+        <result property="cnt" column="cnt"/>
+        <result property="content" column="content"/>
+        <result property="insDate" column="insDate"/>
+        <result property="uptDate" column="uptDate"/>
+        <result property="boardNo" column="boardNo"/>
+        <association property="user"
+                     columnPrefix="u_"
+                     javaType="TicketLinkUserDetails"
+                     resultMap="com.beyond.ticketLink.user.persistence.mapper.UserMapper.userResultMap"/>
+    </resultMap>
+
+    <insert id="insertReply" parameterType="ReplyCreateDto">
+        <selectKey keyProperty="replyNo,cnt,insDate"
+                   keyColumn="replyNo,cnt,insDate"
+                   resultType="com.beyond.ticketLink.reply.persistence.dto.ReplyCreateDto$SelectKeyResult"
+                   order="BEFORE">
+            SELECT  GET_NO('tb_reply') AS 'replyNo',
+                    IFNULL(cnt + 1, 1) AS 'cnt',
+                    NOW() AS 'insDate'
+            FROM tb_reply
+            WHERE boardNo = #{boardNo}
+            ORDER BY cnt DESC
+            LIMIT 1
+        </selectKey>
+
+        INSERT INTO tb_reply (replyNo, cnt, content, insDate, uptDate, boardNo, userNo)
+        VALUES (#{replyNo},
+                #{cnt},
+                #{content},
+                #{insDate},
+                NOW(),
+                #{boardNo},
+                #{userNo}
+               );
+    </insert>
+
+    <select id="selectReplyByReplyNo" parameterType="string" resultMap="replyResultMap">
+        SELECT tb_r.replyNo,
+               tb_r.cnt,
+               tb_r.content,
+               tb_r.insDate,
+               tb_r.uptDate,
+               tb_r.boardNo,
+               tb_u.userNo  AS 'u_userNo',
+               tb_u.id      AS 'u_id',
+               tb_u.pw      AS 'u_pw',
+               tb_u.name    AS 'u_name',
+               tb_u.email   AS 'u_email',
+               tb_u.useYn   AS 'u_useYn',
+               tb_ur.roleNo AS 'u_ur_roleNo',
+               tb_ur.name   AS 'u_ur_name'
+        FROM tb_reply tb_r
+                 INNER JOIN tb_user tb_u ON tb_r.userNo = tb_u.userNo
+                 INNER JOIN tb_role tb_ur ON tb_u.roleNo = tb_ur.roleNo
+        WHERE tb_r.replyNo = #{replyNo};
+
+    </select>
+
+    <update id="updateReply" parameterType="ReplyUpdateDto">
+        <selectKey keyProperty="uptDate"
+                   keyColumn="uptDate"
+                   resultType="com.beyond.ticketLink.reply.persistence.dto.ReplyUpdateDto$SelectKeyResult"
+                    order="BEFORE">
+            SELECT NOW() AS 'uptDate';
+        </selectKey>
+        UPDATE tb_reply
+        SET content=#{content},
+            uptDate=#{uptDate}
+        WHERE replyNo = #{replyNo}
+    </update>
+
+    <delete id="deleteReply">
+        DELETE FROM tb_reply
+        WHERE replyNo = #{replyNo}
+    </delete>
+
+</mapper>

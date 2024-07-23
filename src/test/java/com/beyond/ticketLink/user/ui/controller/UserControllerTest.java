@@ -4,14 +4,13 @@ import com.beyond.ticketLink.common.exception.MessageType;
 import com.beyond.ticketLink.smtp.persistence.entity.VerifiedEmail;
 import com.beyond.ticketLink.smtp.persistence.repository.VerifiedEmailRepository;
 import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
+import com.beyond.ticketLink.user.application.domain.UserRole;
 import com.beyond.ticketLink.user.application.mock.WithTicketLinkMockUser;
 import com.beyond.ticketLink.user.ui.requestbody.CheckDuplicateIdRequest;
 import com.beyond.ticketLink.user.ui.requestbody.UserCreateRequest;
 import com.beyond.ticketLink.user.ui.requestbody.UserLoginRequest;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -273,7 +272,8 @@ class UserControllerTest {
                 "dummyUserA",
                 "dummyA@beyond.com",
                 'Y',
-                "관리자"
+                new UserRole(1, "관리자")
+
         );
 
         // when
@@ -284,7 +284,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.data.id").value(equalTo(DUMMY_USER_A.getId())))
                 .andExpect(jsonPath("$.data.name").value(equalTo(DUMMY_USER_A.getName())))
                 .andExpect(jsonPath("$.data.email").value(equalTo(DUMMY_USER_A.getEmail())))
-                .andExpect(jsonPath("$.data.role").value(equalTo(DUMMY_USER_A.getRole())));
+                .andExpect(jsonPath("$.data.role").value(equalTo(DUMMY_USER_A.getRole().getName())));
 
     }
 

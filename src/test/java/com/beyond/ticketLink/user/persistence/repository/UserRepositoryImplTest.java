@@ -20,8 +20,8 @@ class UserRepositoryImplTest {
     private static final char ENABLE_USER = 'Y';
     private static final char DISABLE_USER = 'N';
 
-    private static final long ROLE_USER = 2L;
-    private static final long ROLE_ADMIN = 1L;
+    private static final int ROLE_USER = 2;
+    private static final int ROLE_ADMIN = 1;
 
     private static final String DUMMY_USER_A_ID = "dummyUserA";
     private static final String NOT_EXIST_USER_ID = "notExist";
@@ -42,7 +42,7 @@ class UserRepositoryImplTest {
         // then
         assertThat(DUMMY_USER_A.isPresent()).isTrue();
         assertThat(DUMMY_USER_A.get().getId()).isEqualTo(DUMMY_USER_A_ID);
-        assertThat(DUMMY_USER_A.get().getRole()).isEqualTo("관리자");
+        assertThat(DUMMY_USER_A.get().getRole().getName()).isEqualTo("관리자");
 
         assertThat(NOT_EXIST_USER.isEmpty()).isTrue();
     }
@@ -52,14 +52,14 @@ class UserRepositoryImplTest {
     @DisplayName("유저 생성 테스트")
     void save() {
         // given
-        UserCreateDto USER_CREATE_COMMAND = UserCreateDto.builder()
-                .id("userA")
-                .pw("1234")
-                .email("testUserA@beyond.com")
-                .name("테스트유저1")
-                .useYn(ENABLE_USER)
-                .roleNo(ROLE_USER)
-                .build();
+        UserCreateDto USER_CREATE_COMMAND = new UserCreateDto(
+                "userA",
+                "1234",
+                "테스트유저1",
+                "testUserA@beyond.com",
+                ENABLE_USER,
+                ROLE_USER
+        );
         // when
         repository.save(USER_CREATE_COMMAND);
         // then

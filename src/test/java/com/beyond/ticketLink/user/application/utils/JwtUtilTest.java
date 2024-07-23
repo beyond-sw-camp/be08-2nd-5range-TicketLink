@@ -1,6 +1,7 @@
 package com.beyond.ticketLink.user.application.utils;
 
 import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
+import com.beyond.ticketLink.user.application.domain.UserRole;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ class JwtUtilTest {
                 "testUserA",
                 "testUserA@beyond.com",
                 'Y',
-                "일반사용자"
+                new UserRole(2, "일반사용자")
         );
         String accessToken = jwtUtil.createAccessToken(member);
         // when
@@ -42,13 +43,13 @@ class JwtUtilTest {
                 "testUserA",
                 "testUserA@beyond.com",
                 'Y',
-                "일반사용자"
+                new UserRole(2, "일반사용자")
         );
         String accessToken = jwtUtil.createAccessToken(member);
         // when
         String role = jwtUtil.getRole(accessToken);
         // then
-        assertThat(role).isEqualTo(member.getRole());
+        assertThat(role).isEqualTo(member.getRole().getName());
     }
 
 }

@@ -1,9 +1,9 @@
 package com.beyond.ticketLink.user.ui.controller;
 
 import com.beyond.ticketLink.common.view.ApiResponseView;
-import com.beyond.ticketLink.user.application.domain.JwtToken;
 import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
 import com.beyond.ticketLink.user.application.service.UserService;
+import com.beyond.ticketLink.user.application.service.UserService.FindJwtResult;
 import com.beyond.ticketLink.user.ui.requestbody.CheckDuplicateIdRequest;
 import com.beyond.ticketLink.user.ui.requestbody.UserCreateRequest;
 import com.beyond.ticketLink.user.ui.requestbody.UserLoginRequest;
@@ -26,6 +26,8 @@ public class UserController {
     @PostMapping("/user/register")
     ResponseEntity<ApiResponseView<UserView>> registerUser(@RequestBody @Validated UserCreateRequest request) {
 
+        // controller -> postmapping -> view -> request
+
         service.register(request);
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -35,7 +37,7 @@ public class UserController {
     @PostMapping("/user/login")
     ResponseEntity<ApiResponseView<LoginView>> login(@RequestBody @Validated UserLoginRequest request) {
 
-        JwtToken jwtToken = service.login(request);
+        FindJwtResult jwtToken = service.login(request);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponseView<>(new LoginView(jwtToken)));
