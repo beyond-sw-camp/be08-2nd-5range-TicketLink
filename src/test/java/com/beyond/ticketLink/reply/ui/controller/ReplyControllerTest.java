@@ -1,6 +1,6 @@
 package com.beyond.ticketLink.reply.ui.controller;
 
-import com.beyond.ticketLink.common.exception.MessageType;
+import com.beyond.ticketLink.common.exception.CommonMessageType;
 import com.beyond.ticketLink.dummy.DummyBoard;
 import com.beyond.ticketLink.dummy.DummyReply;
 import com.beyond.ticketLink.reply.ui.requestbody.ReplyCreateRequest;
@@ -83,8 +83,8 @@ class ReplyControllerTest {
         );
         // then
         perform400.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors[0].errorType").value(equalTo(MessageType.ARGUMENT_NOT_VALID.name())))
-                .andExpect(jsonPath("$.errors[0].errorMessage").value(equalTo(MessageType.ARGUMENT_NOT_VALID.getMessage())));
+                .andExpect(jsonPath("$.errors[0].errorType").value(equalTo(CommonMessageType.ARGUMENT_NOT_VALID.name())))
+                .andExpect(jsonPath("$.errors[0].errorMessage").value(equalTo(CommonMessageType.ARGUMENT_NOT_VALID.getMessage())));
     }
 
     @Test

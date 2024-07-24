@@ -1,8 +1,9 @@
 package com.beyond.ticketLink.reply.application.service;
 
-import com.beyond.ticketLink.common.exception.MessageType;
+import com.beyond.ticketLink.common.exception.CommonMessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
 import com.beyond.ticketLink.reply.application.domain.Reply;
+import com.beyond.ticketLink.reply.exception.ReplyMessageType;
 import com.beyond.ticketLink.reply.persistence.dto.ReplyCreateDto;
 import com.beyond.ticketLink.reply.persistence.dto.ReplyUpdateDto;
 import com.beyond.ticketLink.reply.persistence.repository.ReplyRepository;
@@ -58,7 +59,7 @@ public class ReplyServiceImpl implements ReplyService{
         if (hasNoOperationAuthority(userNo, reply)) {
             // Message Type 분리 이후
             // BoardMessageType.BOARD_MODIFY_UNAUTHORIZED 로 변경
-            throw new TicketLinkException(MessageType.BAD_REQUEST);
+            throw new TicketLinkException(ReplyMessageType.REPLY_OPERATION_UNAUTHORIZED);
         }
 
         ReplyUpdateDto updateDto = new ReplyUpdateDto(
@@ -81,7 +82,7 @@ public class ReplyServiceImpl implements ReplyService{
         Reply reply = retrieveReply(replyNo);
 
         if (hasNoOperationAuthority(userNo, reply)) {
-            throw new TicketLinkException(MessageType.BAD_REQUEST);
+            throw new TicketLinkException(ReplyMessageType.REPLY_OPERATION_UNAUTHORIZED);
         }
 
         replyRepository.deleteReply(replyNo);
@@ -89,7 +90,7 @@ public class ReplyServiceImpl implements ReplyService{
 
     private Reply retrieveReply(String replyNo) {
         return replyRepository.selectReplyByReplyNo(replyNo)
-                .orElseThrow(() -> new TicketLinkException(MessageType.NOT_FOUND));
+                .orElseThrow(() -> new TicketLinkException(ReplyMessageType.REPLY_NOT_FOUND));
     }
 
     private boolean hasNoOperationAuthority(String userNo, Reply reply) {

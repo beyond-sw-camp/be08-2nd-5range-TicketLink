@@ -1,14 +1,14 @@
 package com.beyond.ticketLink.board.application.service;
 
 import com.beyond.ticketLink.board.application.domain.Board;
+import com.beyond.ticketLink.board.exception.BoardMessageType;
 import com.beyond.ticketLink.board.persistence.dto.BoardCreateDto;
 import com.beyond.ticketLink.board.persistence.dto.BoardFindQuery;
 import com.beyond.ticketLink.board.persistence.dto.BoardUpdateDto;
 import com.beyond.ticketLink.board.persistence.repository.BoardRepository;
 import com.beyond.ticketLink.board.ui.requestbody.BoardCreateRequest;
-import com.beyond.ticketLink.common.exception.MessageType;
+import com.beyond.ticketLink.common.exception.CommonMessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
-import jakarta.mail.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -65,8 +65,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public FindBoardResult getBoardByNo(BoardFindQuery query) {
 
-        Board board = boardRepository.selectBoardByBoardNo(query.getBoardNo())
-                .orElseThrow(() -> new TicketLinkException(MessageType.NOT_FOUND));
+        Board board = retrieveBoard(query.getBoardNo());
 
         return FindBoardResult.findByBoard(board);
     }
@@ -77,7 +76,7 @@ public class BoardServiceImpl implements BoardService {
         Board board = retrieveBoard(command.getBoardNo());
 
         if (hasNoOperationAuthority(command.getUserNo(), board)) {
-            throw new TicketLinkException(MessageType.BAD_REQUEST);
+            throw new TicketLinkException(BoardMessageType.BOARD_OPERATION_UNAUTHORIZED);
         }
 
         BoardUpdateDto boardUpdateDto = new BoardUpdateDto(
@@ -99,7 +98,7 @@ public class BoardServiceImpl implements BoardService {
         Board board = retrieveBoard(command.getBoardNo());
 
         if (hasNoOperationAuthority(command.getUserNo(), board)) {
-            throw new TicketLinkException(MessageType.BAD_REQUEST);
+            throw new TicketLinkException(BoardMessageType.BOARD_OPERATION_UNAUTHORIZED);
         }
 
         boardRepository.deleteBoard(command.getBoardNo());
@@ -108,7 +107,7 @@ public class BoardServiceImpl implements BoardService {
 
     private Board retrieveBoard(String boardNo) {
         return boardRepository.selectBoardByBoardNo(boardNo)
-                        .orElseThrow(() -> new TicketLinkException(MessageType.NOT_FOUND));
+                        .orElseThrow(() -> new TicketLinkException(BoardMessageType.BOARD_NOT_FOUND));
     }
 
     private boolean hasNoOperationAuthority(String userNo, Board board) {

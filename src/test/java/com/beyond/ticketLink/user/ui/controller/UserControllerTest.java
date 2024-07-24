@@ -1,12 +1,14 @@
 package com.beyond.ticketLink.user.ui.controller;
 
-import com.beyond.ticketLink.common.exception.MessageType;
+import com.beyond.ticketLink.common.exception.CommonMessageType;
+import com.beyond.ticketLink.smtp.exception.MailMessageType;
 import com.beyond.ticketLink.smtp.persistence.entity.VerifiedEmail;
 import com.beyond.ticketLink.smtp.persistence.repository.VerifiedEmailRepository;
 import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
 import com.beyond.ticketLink.user.application.domain.UserRole;
 import com.beyond.ticketLink.user.application.mock.WithTicketLinkMockUser;
 import com.beyond.ticketLink.user.application.service.UserService;
+import com.beyond.ticketLink.user.exception.UserMessageType;
 import com.beyond.ticketLink.user.ui.requestbody.CheckDuplicateIdRequest;
 import com.beyond.ticketLink.user.ui.requestbody.UserCreateRequest;
 import com.beyond.ticketLink.user.ui.requestbody.UserLoginRequest;
@@ -89,7 +91,7 @@ class UserControllerTest {
         // then
         perform401.andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.errors[0].errorType")
-                        .value(equalTo(MessageType.EMAIL_UNAUTHORIZED.name()))
+                        .value(equalTo(MailMessageType.EMAIL_UNAUTHORIZED.name()))
                 );
     }
 
@@ -137,22 +139,22 @@ class UserControllerTest {
         // then
         perform400ShortId.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors[0].errorType")
-                        .value(equalTo(MessageType.ARGUMENT_NOT_VALID.name()))
+                        .value(equalTo(CommonMessageType.ARGUMENT_NOT_VALID.name()))
                 );
 
         perform400ShortPw.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors[0].errorType")
-                        .value(equalTo(MessageType.ARGUMENT_NOT_VALID.name()))
+                        .value(equalTo(CommonMessageType.ARGUMENT_NOT_VALID.name()))
                 );
 
         perform400LongId.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors[0].errorType")
-                        .value(equalTo(MessageType.ARGUMENT_NOT_VALID.name()))
+                        .value(equalTo(CommonMessageType.ARGUMENT_NOT_VALID.name()))
                 );
 
         perform400LongPw.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors[0].errorType")
-                        .value(equalTo(MessageType.ARGUMENT_NOT_VALID.name()))
+                        .value(equalTo(CommonMessageType.ARGUMENT_NOT_VALID.name()))
                 );
 
     }
@@ -191,7 +193,7 @@ class UserControllerTest {
         // then
         perform404.andExpect(status().isBadRequest());
         perform404.andExpect(jsonPath("$.errors[0].errorType")
-                .value(equalTo(MessageType.INVALID_PASSWORD.name()))
+                .value(equalTo(UserMessageType.INVALID_PASSWORD.name()))
         );
     }
 
@@ -219,12 +221,12 @@ class UserControllerTest {
         // then
         perform400WithEmptyId.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors[0].errorType")
-                        .value(equalTo(MessageType.ARGUMENT_NOT_VALID.name()))
+                        .value(equalTo(CommonMessageType.ARGUMENT_NOT_VALID.name()))
                 );
 
         perform400WithEmptyPw.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors[0].errorType")
-                        .value(equalTo(MessageType.ARGUMENT_NOT_VALID.name())
+                        .value(equalTo(CommonMessageType.ARGUMENT_NOT_VALID.name())
                         ));
     }
 
@@ -276,7 +278,7 @@ class UserControllerTest {
         // then
         perform409.andExpect(status().isConflict())
                 .andExpect(jsonPath("$.errors[0].errorType")
-                        .value(equalTo(MessageType.DUPLICATE_USER_ID.name()))
+                        .value(equalTo(UserMessageType.DUPLICATE_USER_ID.name()))
                 );
     }
 

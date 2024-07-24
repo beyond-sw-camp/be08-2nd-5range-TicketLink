@@ -1,7 +1,8 @@
 package com.beyond.ticketLink.smtp.application.service;
 
-import com.beyond.ticketLink.common.exception.MessageType;
+import com.beyond.ticketLink.common.exception.CommonMessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
+import com.beyond.ticketLink.smtp.exception.MailMessageType;
 import com.beyond.ticketLink.smtp.persistence.entity.VerificationCode;
 import com.beyond.ticketLink.smtp.persistence.entity.VerifiedEmail;
 import com.beyond.ticketLink.smtp.persistence.repository.VerificationCodeRepository;
@@ -69,7 +70,7 @@ public class MailServiceImpl implements MailService{
             // 메일 전송
             mailSender.send(message);
         } catch (MessagingException e) {
-            throw new TicketLinkException(MessageType.INTERNAL_SERVER_ERROR);
+            throw new TicketLinkException(CommonMessageType.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -79,7 +80,7 @@ public class MailServiceImpl implements MailService{
         String verificationCode = request.verificationCode();
 
         VerificationCode verified = verificationCodeRepository.findByCode(verificationCode)
-                .orElseThrow(() -> new TicketLinkException(MessageType.VERIFICATION_CODE_INVALID));
+                .orElseThrow(() -> new TicketLinkException(MailMessageType.VERIFICATION_CODE_INVALID));
 
         // 이메일 인증 성공 했을 경우
         // 인증된 이메일 저장소에 저장

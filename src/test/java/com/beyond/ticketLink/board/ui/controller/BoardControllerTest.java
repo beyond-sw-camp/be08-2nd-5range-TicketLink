@@ -58,7 +58,7 @@ class BoardControllerTest {
         doNothing().when(boardService).createBoard(boardCreateRequest, userNo);
 
         // POST 요청을 보내고, BoardCreateRequest 객체를 JSON 형식으로 변환하여 요청 본문으로 설정
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/board/create")
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/boards")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(boardCreateRequest))
         );
