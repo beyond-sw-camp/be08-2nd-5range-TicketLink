@@ -27,7 +27,6 @@ class JwtRepositoryImplTest {
         String dummyUserNo = "DUMMYA";
 
         JwtCreateDto jwtCreateDto = new JwtCreateDto(
-                "testAccessToken",
                 "testRefreshToken",
                 dummyUserNo
         );
@@ -45,7 +44,6 @@ class JwtRepositoryImplTest {
         String notExistDummyNo = "qweqrr2r43";
 
         JwtCreateDto jwtCreateDto = new JwtCreateDto(
-                "testAccessToken",
                 "testRefreshToken",
                 notExistDummyNo
         );
@@ -61,6 +59,11 @@ class JwtRepositoryImplTest {
     void delete_shouldDeleteSuccessfully() {
         // given
         String dummyUserNo = "DUMMYA";
+
+        JwtCreateDto jwtCreateDto = new JwtCreateDto(
+                "testRefreshToken",
+                dummyUserNo
+        );
 
 
         repository.save(jwtCreateDto);

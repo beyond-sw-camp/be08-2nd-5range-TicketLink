@@ -1,5 +1,6 @@
 package com.beyond.ticketLink.common.view;
 
+import com.beyond.ticketLink.common.exception.CommonMessageType;
 import com.beyond.ticketLink.common.exception.MessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class ApiErrorView {
         this.errors = Collections.singletonList(Error.errorWithException(exception));
     }
 
-    public ApiErrorView(MessageType messageType, String message) {
+    public ApiErrorView(CommonMessageType messageType, String message) {
         this.errors = Collections.singletonList(Error.errorWithMessageTypeAndMessage(messageType, message));
     }
 

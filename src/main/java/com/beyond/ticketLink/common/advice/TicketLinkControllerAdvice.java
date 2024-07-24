@@ -1,6 +1,6 @@
 package com.beyond.ticketLink.common.advice;
 
-import com.beyond.ticketLink.common.exception.MessageType;
+import com.beyond.ticketLink.common.exception.CommonMessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
 import com.beyond.ticketLink.common.view.ApiErrorView;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.Collections;
 
+
 @Slf4j
 @RestControllerAdvice
 public class TicketLinkControllerAdvice extends ResponseEntityExceptionHandler {
@@ -30,7 +31,7 @@ public class TicketLinkControllerAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ClientAbortException.class)
     public ResponseEntity<?> clientAbortException() {
         log.error("clientAbortException");
-        return new ResponseEntity<>(new ApiErrorView(Collections.singletonList(MessageType.INTERNAL_SERVER_ERROR)),
+        return new ResponseEntity<>(new ApiErrorView(Collections.singletonList(CommonMessageType.INTERNAL_SERVER_ERROR)),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -41,39 +42,39 @@ public class TicketLinkControllerAdvice extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        return new ResponseEntity<>(new ApiErrorView(MessageType.BAD_REQUEST, ex.getMessage()), status);
+        return new ResponseEntity<>(new ApiErrorView(CommonMessageType.BAD_REQUEST, ex.getMessage()), status);
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        return new ResponseEntity<>(new ApiErrorView(MessageType.BAD_REQUEST, ex.getMessage()), status);
+        return new ResponseEntity<>(new ApiErrorView(CommonMessageType.BAD_REQUEST, ex.getMessage()), status);
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        return new ResponseEntity<>(new ApiErrorView(MessageType.BAD_REQUEST, ex.getMessage()), status);
+        return new ResponseEntity<>(new ApiErrorView(CommonMessageType.BAD_REQUEST, ex.getMessage()), status);
     }
 
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        return new ResponseEntity<>(new ApiErrorView(MessageType.BAD_REQUEST, ex.getMessage()), status);
+        return new ResponseEntity<>(new ApiErrorView(CommonMessageType.BAD_REQUEST, ex.getMessage()), status);
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        return new ResponseEntity<>(new ApiErrorView(MessageType.BAD_REQUEST, ex.getMessage()), status);
+        return new ResponseEntity<>(new ApiErrorView(CommonMessageType.BAD_REQUEST, ex.getMessage()), status);
     }
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
 
         if (ex instanceof MethodArgumentNotValidException) {
-            return new ResponseEntity<>(new ApiErrorView(MessageType.ARGUMENT_NOT_VALID,
-                    MessageType.ARGUMENT_NOT_VALID.getMessage()), statusCode);
+            return new ResponseEntity<>(new ApiErrorView(CommonMessageType.ARGUMENT_NOT_VALID,
+                    CommonMessageType.ARGUMENT_NOT_VALID.getMessage()), statusCode);
         }
         log.info("handleExceptionInternal");
         log.info(String.valueOf(ex));
 
-        return new ResponseEntity<>(new ApiErrorView(MessageType.INTERNAL_SERVER_ERROR, ex.getMessage()), statusCode);
+        return new ResponseEntity<>(new ApiErrorView(CommonMessageType.INTERNAL_SERVER_ERROR, ex.getMessage()), statusCode);
     }
 }
