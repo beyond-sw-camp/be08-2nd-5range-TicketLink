@@ -1,7 +1,8 @@
 package com.beyond.ticketLink.board.application.service;
 
 
-import com.beyond.ticketLink.common.exception.MessageType;
+import com.beyond.ticketLink.board.exception.BoardCategoryMessageType;
+import com.beyond.ticketLink.common.exception.CommonMessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ class BoardCategoryServiceImplTest {
         // when & then
         assertThatThrownBy(() -> boardCategoryService.getCategoryByNo(queryWithNo))
                 .isInstanceOf(TicketLinkException.class)
-                .hasMessage(MessageType.BOARD_CATEGORY_NOT_FOUND.getMessage());
+                .hasMessage(BoardCategoryMessageType.BOARD_CATEGORY_NOT_FOUND.getMessage());
     }
 
     @Test

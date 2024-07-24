@@ -1,13 +1,13 @@
 package com.beyond.ticketLink.user.application.service;
 
-import com.beyond.ticketLink.common.exception.MessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
+import com.beyond.ticketLink.smtp.exception.MailMessageType;
 import com.beyond.ticketLink.smtp.persistence.entity.VerifiedEmail;
 import com.beyond.ticketLink.smtp.persistence.repository.VerifiedEmailRepository;
-import com.beyond.ticketLink.user.application.domain.RefreshToken;
 import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
 import com.beyond.ticketLink.user.application.domain.UserRole;
 import com.beyond.ticketLink.user.application.utils.JwtUtil;
+import com.beyond.ticketLink.user.exception.UserMessageType;
 import com.beyond.ticketLink.user.persistence.dto.JwtCreateDto;
 import com.beyond.ticketLink.user.persistence.dto.UserCreateDto;
 import com.beyond.ticketLink.user.persistence.entity.ExpiredAccessToken;
@@ -53,16 +53,16 @@ public class UserServiceImpl implements UserService {
 
         // 아이디가 중복 되었을 경우 404_Error throw
         if (userRepository.findUserById(request.id()).isPresent()) {
-            throw new TicketLinkException(MessageType.DUPLICATE_USER_ID);
+            throw new TicketLinkException(UserMessageType.DUPLICATE_USER_ID);
         }
 
         // db에 user role 설정이 잘못 되어 있을 경우 500_Error throw
         UserRole userRole = userRoleRepository.findByRoleName(ROLE_USER)
-                .orElseThrow(() -> new TicketLinkException(MessageType.USER_ROLE_NOT_FOUND));
+                .orElseThrow(() -> new TicketLinkException(UserMessageType.USER_ROLE_NOT_FOUND));
 
         // 이메일이 인증되지 않았을 경우 401_Error throw
         VerifiedEmail verifiedEmail = verifiedEmailRepository.findById(request.email())
-                .orElseThrow(() -> new TicketLinkException(MessageType.EMAIL_UNAUTHORIZED));
+                .orElseThrow(() -> new TicketLinkException(MailMessageType.EMAIL_UNAUTHORIZED));
 
         // 패스워드 암호화
         String encryptedPassword = encryptPassword(request);
@@ -88,11 +88,11 @@ public class UserServiceImpl implements UserService {
 
         // 로그인 요청한 유저가 존재하지 않을 경우 404_Error throw
         TicketLinkUserDetails loginUser = userRepository.findUserById(request.id())
-                .orElseThrow(() -> new TicketLinkException(MessageType.USER_NOT_FOUND));
+                .orElseThrow(() -> new TicketLinkException(UserMessageType.USER_NOT_FOUND));
 
         // 비밀번호 검증
         if (invalidPassword(request, loginUser)) {
-            throw new TicketLinkException(MessageType.INVALID_PASSWORD);
+            throw new TicketLinkException(UserMessageType.INVALID_PASSWORD);
         }
 
         // JwtToken 생성
@@ -130,7 +130,7 @@ public class UserServiceImpl implements UserService {
     public void checkIdDuplicated(String id) {
 
         if (userRepository.findUserById(id).isPresent()) {
-            throw new TicketLinkException(MessageType.DUPLICATE_USER_ID);
+            throw new TicketLinkException(UserMessageType.DUPLICATE_USER_ID);
         }
 
     }
@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findUserById(username)
-                .orElseThrow(() -> new UsernameNotFoundException(MessageType.USER_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new UsernameNotFoundException(UserMessageType.USER_NOT_FOUND.getMessage()));
     }
 
     private String encryptPassword(UserCreateRequest request) {

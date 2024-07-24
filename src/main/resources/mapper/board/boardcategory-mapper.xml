@@ -20,6 +20,5 @@
 
     <select id="findAll" resultType="BoardCategory">
         <include refid="selectBoardCategorySQL"/>
-        FROM tb_boardCategory;
     </select>
 </mapper>

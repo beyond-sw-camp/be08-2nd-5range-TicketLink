@@ -1,13 +1,14 @@
 package com.beyond.ticketLink.user.application.service;
 
-import com.beyond.ticketLink.common.exception.MessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
+import com.beyond.ticketLink.smtp.exception.MailMessageType;
 import com.beyond.ticketLink.smtp.persistence.entity.VerifiedEmail;
 import com.beyond.ticketLink.smtp.persistence.repository.VerifiedEmailRepository;
 import com.beyond.ticketLink.user.application.domain.RefreshToken;
 import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
 import com.beyond.ticketLink.user.application.service.UserService.FindJwtResult;
 import com.beyond.ticketLink.user.application.utils.JwtUtil;
+import com.beyond.ticketLink.user.exception.UserMessageType;
 import com.beyond.ticketLink.user.persistence.entity.ExpiredAccessToken;
 import com.beyond.ticketLink.user.persistence.repository.ExpiredAccessTokenRepository;
 import com.beyond.ticketLink.user.persistence.repository.JwtRepository;
@@ -24,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static com.beyond.ticketLink.user.application.service.UserService.*;
+import static com.beyond.ticketLink.user.application.service.UserService.LogoutCommand;
 import static org.assertj.core.api.Assertions.*;
 
 @Slf4j
@@ -95,7 +96,7 @@ class UserServiceImplTest {
         // then
         assertThatThrownBy(() -> service.register(registerRequest))
                 .isInstanceOf(TicketLinkException.class)
-                .hasMessage(MessageType.EMAIL_UNAUTHORIZED.getMessage());
+                .hasMessage(MailMessageType.EMAIL_UNAUTHORIZED.getMessage());
     }
 
     @Test
@@ -131,7 +132,7 @@ class UserServiceImplTest {
         // then
         assertThatThrownBy(() -> service.login(loginRequest))
                 .isInstanceOf(TicketLinkException.class)
-                .hasMessage(MessageType.INVALID_PASSWORD.getMessage());
+                .hasMessage(UserMessageType.INVALID_PASSWORD.getMessage());
     }
 
     @Test
@@ -180,7 +181,7 @@ class UserServiceImplTest {
         // then
         assertThatThrownBy(() -> service.checkIdDuplicated(existId))
                 .isInstanceOf(TicketLinkException.class)
-                .hasMessage(MessageType.DUPLICATE_USER_ID.getMessage());
+                .hasMessage(UserMessageType.DUPLICATE_USER_ID.getMessage());
     }
 
     @Test

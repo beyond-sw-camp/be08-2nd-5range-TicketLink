@@ -1,7 +1,8 @@
 package com.beyond.ticketLink.smtp.application.service;
 
-import com.beyond.ticketLink.common.exception.MessageType;
+import com.beyond.ticketLink.common.exception.CommonMessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
+import com.beyond.ticketLink.smtp.exception.MailMessageType;
 import com.beyond.ticketLink.smtp.persistence.entity.VerificationCode;
 import com.beyond.ticketLink.smtp.persistence.entity.VerifiedEmail;
 import com.beyond.ticketLink.smtp.persistence.repository.VerificationCodeRepository;
@@ -10,7 +11,6 @@ import com.beyond.ticketLink.smtp.ui.requestbody.EmailVerificationCodeRequest;
 import com.beyond.ticketLink.smtp.ui.requestbody.EmailVerificationRequest;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,7 +98,7 @@ class MailServiceImplTest {
         // When & Then
         TicketLinkException exception = assertThrows(TicketLinkException.class, () -> mailService.verifyEmail(request));
 
-        assertThat(exception.getType()).isEqualTo(MessageType.VERIFICATION_CODE_INVALID.name());
+        assertThat(exception.getType()).isEqualTo(MailMessageType.VERIFICATION_CODE_INVALID.name());
 
     }
 }
