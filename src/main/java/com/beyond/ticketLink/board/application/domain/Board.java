@@ -25,9 +25,9 @@ public class Board {
     private Date insDate;
     private Date uptDate;
     // 외래키들
-    private String userNo;
-    private String eventNo;
-    private int bCategoryNo;
+//    private String userNo;
+//    private String eventNo;
+//    private int bCategoryNo;
 
     private TicketLinkUserDetails user; //userNo
     private Event event; //eventNo

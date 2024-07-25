@@ -1,5 +1,6 @@
 package com.beyond.ticketLink.user.application.domain;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TicketLinkUserDetails implements UserDetails {
 
     private String userNo;
@@ -44,6 +46,6 @@ public class TicketLinkUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + this.role.getName()));
+            return List.of(new SimpleGrantedAuthority("ROLE_" + this.role.getName()));
     }
 }
