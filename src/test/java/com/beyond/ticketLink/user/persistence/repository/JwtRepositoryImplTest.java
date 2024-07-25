@@ -1,16 +1,13 @@
 package com.beyond.ticketLink.user.persistence.repository;
 
 
-import com.beyond.ticketLink.user.persistence.dto.JwtCreateDto;
-import org.assertj.core.api.Assertions;
+import com.beyond.ticketLink.user.persistence.mariadb.dto.JwtCreateDto;
+import com.beyond.ticketLink.user.persistence.mariadb.repository.JwtRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 
 import static org.assertj.core.api.Assertions.*;
 

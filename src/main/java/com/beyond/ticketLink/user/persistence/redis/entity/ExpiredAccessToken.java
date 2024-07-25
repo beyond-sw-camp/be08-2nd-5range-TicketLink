@@ -1,4 +1,4 @@
-package com.beyond.ticketLink.user.persistence.entity;
+package com.beyond.ticketLink.user.persistence.redis.entity;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;

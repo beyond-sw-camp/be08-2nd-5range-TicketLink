@@ -1,7 +1,8 @@
 package com.beyond.ticketLink.user.persistence.repository;
 
 import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
-import com.beyond.ticketLink.user.persistence.dto.UserCreateDto;
+import com.beyond.ticketLink.user.persistence.mariadb.dto.UserCreateDto;
+import com.beyond.ticketLink.user.persistence.mariadb.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

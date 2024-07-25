@@ -22,7 +22,7 @@
         <association property="user"
                      columnPrefix="u_"
                      javaType="TicketLinkUserDetails"
-                     resultMap="com.beyond.ticketLink.user.persistence.mapper.UserMapper.userResultMap"/>
+                     resultMap="com.beyond.ticketLink.user.persistence.mariadb.mapper.UserMapper.userResultMap"/>
     </resultMap>
 
     <insert id="insertReply" parameterType="ReplyCreateDto">

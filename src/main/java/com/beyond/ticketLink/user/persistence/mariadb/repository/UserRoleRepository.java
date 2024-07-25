@@ -1,11 +1,9 @@
-package com.beyond.ticketLink.user.persistence.mapper;
+package com.beyond.ticketLink.user.persistence.mariadb.repository;
 
 import com.beyond.ticketLink.user.application.domain.UserRole;
-import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Optional;
 
-@Mapper
-public interface UserRoleMapper {
+public interface UserRoleRepository {
     Optional<UserRole> findByRoleName(String name);
 }
