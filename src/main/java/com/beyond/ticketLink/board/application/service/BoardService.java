@@ -49,8 +49,8 @@ public interface BoardService {
                     .rating(board.getRating())
                     .insDate(board.getInsDate())
                     .uptDate(board.getUptDate())
-                    .userNo(board.getUserNo())
-                    .eventNo(board.getEventNo())
+                    .userNo(board.getUser().getUserNo()) // board.getUser() -> TicketUserDetails
+                    .eventNo(board.getEvent().getEventNo()) //board.getEvent() -> Event
                     .category(board.getCategory())
                     .build();
         }

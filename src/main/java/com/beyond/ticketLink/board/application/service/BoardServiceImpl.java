@@ -9,6 +9,7 @@ import com.beyond.ticketLink.board.persistence.repository.BoardRepository;
 import com.beyond.ticketLink.board.ui.requestbody.BoardCreateRequest;
 import com.beyond.ticketLink.common.exception.CommonMessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
+import com.beyond.ticketLink.event.application.service.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +21,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
-
+    // 비즈니스 로직 작성 중 예외 처리할 사항이 생길 경우
+    // com.beyond.ticketLink.common.exception 에 위치한
+    // MessageType 객체에 에러 추가해서 사용하기
 
     private final BoardRepository boardRepository;
+    private final EventService eventService;
 
     private static final LocalDate now = LocalDate.now();
 
@@ -31,9 +35,11 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public void createBoard(BoardCreateRequest request, String userNo) {
 
-        // 비즈니스 로직 작성 중 예외 처리할 사항이 생길 경우
-        // com.beyond.ticketLink.common.exception 에 위치한
-        // MessageType 객체에 에러 추가해서 사용하기
+        // 없는 eventNo로 추가하려고 할 때, NOT_FOUND
+        eventService.getData(request.eventNo()).orElseThrow(
+                () -> new TicketLinkException(CommonMessageType.NOT_FOUND)
+        );
+
 
 
         // insDate, uptDate 는 현재 날짜로 service에서 설정
@@ -111,6 +117,6 @@ public class BoardServiceImpl implements BoardService {
     }
 
     private boolean hasNoOperationAuthority(String userNo, Board board) {
-        return !board.getUserNo().equals(userNo);
+        return !board.getUser().getUserNo().equals(userNo);
     }
 }

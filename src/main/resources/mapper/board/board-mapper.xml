@@ -9,15 +9,27 @@
         <result property="rating" column="rating"/>
         <result property="insDate" column="insDate"/>
         <result property="uptDate" column="uptDate"/>
-        <result property="userNo" column="userNo"/>
-        <result property="eventNo" column="eventNo"/>
-        <result property="title" column="bCategoryNo"/>
 
+
+        <association property="user"
+                     javaType="com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails"
+                     column="userNo"
+                     columnPrefix="u_"
+                     resultMap="com.beyond.ticketLink.user.persistence.mapper.UserMapper.userResultMap"
+        />
+        <association property="event"
+                     javaType="com.beyond.ticketLink.event.application.domain.Event"
+                     column="eventNo"
+                     columnPrefix="e_"
+                     resultMap="com.beyond.ticketLink.event.persistence.mapper.EventMapper.eventMap"
+        />
         <association property="category"
                      javaType="BoardCategory"
+                     column="bCategoryNo"
                      columnPrefix="bc_"
                      resultMap="com.beyond.ticketLink.board.persistence.mapper.BoardCategoryMapper.boardCategoryResultMap"
         />
+
     </resultMap>
 
     <insert id="save" keyColumn="boardNo">
@@ -34,29 +46,37 @@
                tb_b.uptDate,
                tb_b.userNo,
                tb_b.eventNo,
+               tb_u.userNo       AS 'u_userNo',
+               tb_e.eventNo      AS 'e_eventNo',
                tb_bc.bCategoryNo AS 'bc_bCategoryNo',
                tb_bc.name        AS 'bc_name'
         FROM tb_board tb_b
-                 INNER JOIN tb_boardCategory tb_bc ON tb_b.bCategoryNo = tb_bc.bCategoryNo
+            INNER JOIN tb_user tb_u ON tb_b.userNo = tb_u.userNo
+            INNER JOIN tb_event tb_e ON tb_b.eventNo = tb_e.eventNo
+            INNER JOIN tb_boardCategory tb_bc ON tb_b.bCategoryNo = tb_bc.bCategoryNo
         WHERE tb_b.boardNo = #{boardNo};
+
     </select>
 
     <select id="selectBoardAll" parameterType="BoardFindQuery" resultMap="boardResultMap">
         SELECT tb_b.boardNo,
-               tb_b.title,
-               tb_b.content,
-               tb_b.rating,
-               tb_b.insDate,
-               tb_b.uptDate,
-               tb_b.userNo,
-               tb_b.eventNo,
-               tb_bc.bCategoryNo AS 'bc_bCategoryNo',
-               tb_bc.name        AS 'bc_name'
+        tb_b.title,
+        tb_b.content,
+        tb_b.rating,
+        tb_b.insDate,
+        tb_b.uptDate,
+        tb_u.userNo AS 'u_userNo',
+        tb_e.eventNo AS 'e_eventNo',
+        tb_bc.bCategoryNo AS 'bc_bCategoryNo',
+        tb_bc.name AS 'bc_name'
         FROM tb_board tb_b
-                 INNER JOIN tb_boardCategory tb_bc ON tb_b.bCategoryNo = tb_bc.bCategoryNo
+        INNER JOIN tb_user tb_u ON tb_b.userNo = tb_u.userNo
+        INNER JOIN tb_event tb_e ON tb_b.eventNo = tb_e.eventNo
+        INNER JOIN tb_boardCategory tb_bc ON tb_b.bCategoryNo = tb_bc.bCategoryNo
         <where>
             <if test="bCategoryNo != null">
-                AND tb_bc.bCategoryNo = #{bCategoryNo}
+                AND tb_bc.bCategoryNo = #{bCategoryNo};
+
             </if>
         </where>
     </select>
@@ -65,7 +85,6 @@
         <selectKey keyProperty="uptDate" keyColumn="uptDate" order="BEFORE" resultType="java.sql.Date">
             SELECT NOW()
         </selectKey>
-
         UPDATE tb_board
         SET title=#{title},
             content=#{content},
