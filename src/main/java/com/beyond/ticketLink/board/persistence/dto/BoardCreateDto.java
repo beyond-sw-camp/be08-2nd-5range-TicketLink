@@ -1,7 +1,8 @@
 package com.beyond.ticketLink.board.persistence.dto;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDate;
@@ -12,18 +13,18 @@ import java.time.LocalDate;
  * 필요한 데이터만 멤버 변수로 포함된다.
  */
 @Getter
-@Builder
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class BoardCreateDto {
-    private final String boardNo;
-    private final String title;
-    private final String content;
-    private final String rating;
-    private final LocalDate insDate;
-    private final LocalDate uptDate;
-    // 외래키들
-    private final String userNo;
-    private final String eventNo;
-    private final int bCategoryNo;
+    private String boardNo;
+    private String title;
+    private String content;
+    private String rating;
+    private LocalDate insDate;
+    private LocalDate uptDate;
+    private String userNo;
+    private String eventNo;
+    private int bCategoryNo;
 
 }

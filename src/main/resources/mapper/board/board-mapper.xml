@@ -9,15 +9,26 @@
         <result property="rating" column="rating"/>
         <result property="insDate" column="insDate"/>
         <result property="uptDate" column="uptDate"/>
-        <result property="userNo" column="userNo"/>
-        <result property="eventNo" column="eventNo"/>
-        <result property="title" column="bCategoryNo"/>
 
+
+        <association property="user"
+                     javaType="com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails"
+                     columnPrefix="u_"
+                     resultMap="com.beyond.ticketLink.user.persistence.mapper.UserMapper.userResultMap"
+        />
+        <association property="event"
+                     javaType="com.beyond.ticketLink.event.application.domain.Event"
+                     column="eventNo"
+                     columnPrefix="e_"
+                     resultMap="com.beyond.ticketLink.event.persistence.mapper.EventMapper.eventMap"
+        />
         <association property="category"
                      javaType="BoardCategory"
+                     column="bCategoryNo"
                      columnPrefix="bc_"
                      resultMap="com.beyond.ticketLink.board.persistence.mapper.BoardCategoryMapper.boardCategoryResultMap"
         />
+
     </resultMap>
 
     <insert id="save" keyColumn="boardNo">
@@ -34,29 +45,75 @@
                tb_b.uptDate,
                tb_b.userNo,
                tb_b.eventNo,
+               tb_u.userNo       AS 'u_userNo',
+               tb_u.id           AS 'u_id',
+               tb_u.name         AS 'u_name',
+               tb_u.email        AS 'u_email',
+               tb_u.useYn        AS 'u_useYn',
+               tb_u.roleNo       AS 'u_ur_roleNo',
+               tb_r.name         AS 'u_ur_name',
+               tb_e.eventNo      AS 'e_eventNo',
+               tb_e.name         AS 'e_name',
+               tb_e.startDate    AS 'e_startDate',
+               tb_e.endDate      AS 'e_endDate',
+               tb_e.eTime        AS 'e_eTime',
+               tb_e.location     AS 'e_location',
+               tb_e.info         AS 'e_info',
+               tb_e.saleInfo     AS 'e_saleInfo',
+               tb_e.seatInfo     AS 'e_seatInfo',
+               tb_e.eCategoryNo  AS 'e_eCategoryNo',
+               tb_e.insDate      AS 'e_insDate',
+               tb_e.uptDate      AS 'e_uptDate',
                tb_bc.bCategoryNo AS 'bc_bCategoryNo',
                tb_bc.name        AS 'bc_name'
         FROM tb_board tb_b
+                 INNER JOIN tb_user tb_u ON tb_b.userNo = tb_u.userNo
+                 INNER JOIN tb_role tb_r ON tb_u.roleNo = tb_r.roleNo
+                 INNER JOIN tb_event tb_e ON tb_b.eventNo = tb_e.eventNo
                  INNER JOIN tb_boardCategory tb_bc ON tb_b.bCategoryNo = tb_bc.bCategoryNo
         WHERE tb_b.boardNo = #{boardNo};
+
+
+
+
     </select>
 
     <select id="selectBoardAll" parameterType="BoardFindQuery" resultMap="boardResultMap">
         SELECT tb_b.boardNo,
-               tb_b.title,
-               tb_b.content,
-               tb_b.rating,
-               tb_b.insDate,
-               tb_b.uptDate,
-               tb_b.userNo,
-               tb_b.eventNo,
-               tb_bc.bCategoryNo AS 'bc_bCategoryNo',
-               tb_bc.name        AS 'bc_name'
+        tb_b.title,
+        tb_b.content,
+        tb_b.rating,
+        tb_b.insDate,
+        tb_b.uptDate,
+        tb_u.userNo AS 'u_userNo',
+        tb_u.id           AS 'u_id',
+        tb_u.name         AS 'u_name',
+        tb_u.email        AS 'u_email',
+        tb_u.useYn        AS 'u_useYn',
+        tb_u.roleNo       AS 'u_ur_roleNo',
+        tb_r.name         AS 'u_ur_name',
+        tb_e.eventNo      AS 'e_eventNo',
+        tb_e.name         AS 'e_name',
+        tb_e.startDate    AS 'e_startDate',
+        tb_e.endDate      AS 'e_endDate',
+        tb_e.eTime        AS 'e_eTime',
+        tb_e.location     AS 'e_location',
+        tb_e.info         AS 'e_info',
+        tb_e.saleInfo     AS 'e_saleInfo',
+        tb_e.seatInfo     AS 'e_seatInfo',
+        tb_e.eCategoryNo  AS 'e_eCategoryNo',
+        tb_e.insDate      AS 'e_insDate',
+        tb_e.uptDate      AS 'e_uptDate',
+        tb_bc.bCategoryNo AS 'bc_bCategoryNo',
+        tb_bc.name        AS 'bc_name'
         FROM tb_board tb_b
-                 INNER JOIN tb_boardCategory tb_bc ON tb_b.bCategoryNo = tb_bc.bCategoryNo
+        INNER JOIN tb_user tb_u ON tb_b.userNo = tb_u.userNo
+        INNER JOIN tb_role tb_r ON tb_u.roleNo = tb_r.roleNo
+        INNER JOIN tb_event tb_e ON tb_b.eventNo = tb_e.eventNo
+        INNER JOIN tb_boardCategory tb_bc ON tb_b.bCategoryNo = tb_bc.bCategoryNo
         <where>
-            <if test="bCategoryNo != null">
-                AND tb_bc.bCategoryNo = #{bCategoryNo}
+            <if test="query.bCategoryNo != null">
+                AND tb_bc.bCategoryNo = #{query.bCategoryNo}
             </if>
         </where>
     </select>
@@ -65,7 +122,6 @@
         <selectKey keyProperty="uptDate" keyColumn="uptDate" order="BEFORE" resultType="java.sql.Date">
             SELECT NOW()
         </selectKey>
-
         UPDATE tb_board
         SET title=#{title},
             content=#{content},

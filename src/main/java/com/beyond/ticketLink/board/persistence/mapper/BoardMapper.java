@@ -6,6 +6,7 @@ import com.beyond.ticketLink.board.persistence.dto.BoardFindQuery;
 import com.beyond.ticketLink.board.persistence.dto.BoardUpdateDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +19,7 @@ public interface BoardMapper {
 
     Optional<Board> selectBoardByBoardNo(@Param("boardNo") String boardNo);
 
-    List<Board> selectBoardAll(BoardFindQuery query);
+    List<Board> selectBoardAll(@Param("query") BoardFindQuery query, RowBounds rowBounds);
 
     void updateBoard(BoardUpdateDto board);
 

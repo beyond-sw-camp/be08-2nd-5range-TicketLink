@@ -9,7 +9,9 @@ import com.beyond.ticketLink.board.persistence.repository.BoardRepository;
 import com.beyond.ticketLink.board.ui.requestbody.BoardCreateRequest;
 import com.beyond.ticketLink.common.exception.CommonMessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
+import com.beyond.ticketLink.event.application.service.EventService;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -20,9 +22,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
-
+    // 비즈니스 로직 작성 중 예외 처리할 사항이 생길 경우
+    // com.beyond.ticketLink.common.exception 에 위치한
+    // MessageType 객체에 에러 추가해서 사용하기
 
     private final BoardRepository boardRepository;
+    private final EventService eventService;
 
     private static final LocalDate now = LocalDate.now();
 
@@ -31,31 +36,41 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public void createBoard(BoardCreateRequest request, String userNo) {
 
-        // 비즈니스 로직 작성 중 예외 처리할 사항이 생길 경우
-        // com.beyond.ticketLink.common.exception 에 위치한
-        // MessageType 객체에 에러 추가해서 사용하기
+        // 없는 eventNo로 추가하려고 할 때, NOT_FOUND
+        eventService.getData(request.eventNo()).orElseThrow(
+                () -> new TicketLinkException(CommonMessageType.NOT_FOUND)
+        );
+
 
 
         // insDate, uptDate 는 현재 날짜로 service에서 설정
         // userNo 는  Controller session에서 가져오기
         boardRepository.save(
-                BoardCreateDto.builder()
-                        .title(request.title())
-                        .content(request.content())
-                        .rating(request.rating())
-                        .insDate(now)
-                        .uptDate(now)
-                        .userNo(userNo)
-                        .eventNo(request.eventNo())
-                        .bCategoryNo(request.bCategoryNo())
-                        .build()
+                new BoardCreateDto(
+                        null,
+                        request.title(),
+                        request.content(),
+                        request.rating(),
+                        now,
+                        now,
+                        userNo,
+                        request.eventNo(),
+                        request.bCategoryNo()
+                )
         );
+
+
     }
 
     @Override
     public List<FindBoardResult> getAllBoard(BoardFindQuery query) {
 
-        List<Board> boards = boardRepository.selectBoardAll(query);
+        int limit = query.getRow();
+        int offset = (query.getPage() - 1) * limit;
+
+        RowBounds rowBounds = new RowBounds(offset, limit);
+
+        List<Board> boards = boardRepository.selectBoardAll(query, rowBounds);
 
         return boards.stream()
                 .map(FindBoardResult::findByBoard)
@@ -111,6 +126,6 @@ public class BoardServiceImpl implements BoardService {
     }
 
     private boolean hasNoOperationAuthority(String userNo, Board board) {
-        return !board.getUserNo().equals(userNo);
+        return !board.getUser().getUserNo().equals(userNo);
     }
 }
