@@ -112,9 +112,8 @@
         INNER JOIN tb_event tb_e ON tb_b.eventNo = tb_e.eventNo
         INNER JOIN tb_boardCategory tb_bc ON tb_b.bCategoryNo = tb_bc.bCategoryNo
         <where>
-            <if test="bCategoryNo != null">
-                AND tb_bc.bCategoryNo = #{bCategoryNo};
-
+            <if test="query.bCategoryNo != null">
+                AND tb_bc.bCategoryNo = #{query.bCategoryNo}
             </if>
         </where>
     </select>

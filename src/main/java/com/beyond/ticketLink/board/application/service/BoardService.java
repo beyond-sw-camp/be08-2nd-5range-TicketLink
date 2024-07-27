@@ -28,6 +28,7 @@ public interface BoardService {
 
     void deleteBoard(BoardDeleteCommand command);
 
+
     @Getter
     @Builder
     @ToString

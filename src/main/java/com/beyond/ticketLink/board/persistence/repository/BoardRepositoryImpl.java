@@ -7,6 +7,7 @@ import com.beyond.ticketLink.board.persistence.dto.BoardUpdateDto;
 import com.beyond.ticketLink.board.persistence.mapper.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,8 +31,8 @@ public class BoardRepositoryImpl implements BoardRepository {
     }
 
     @Override
-    public List<Board> selectBoardAll(BoardFindQuery query) {
-        return boardMapper.selectBoardAll(query);
+    public List<Board> selectBoardAll(BoardFindQuery query, RowBounds rowBounds) {
+        return boardMapper.selectBoardAll(query, rowBounds);
     }
 
     @Override

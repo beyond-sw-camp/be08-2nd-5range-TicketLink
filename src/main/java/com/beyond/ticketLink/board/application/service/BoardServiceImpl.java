@@ -11,6 +11,7 @@ import com.beyond.ticketLink.common.exception.CommonMessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
 import com.beyond.ticketLink.event.application.service.EventService;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -45,23 +46,31 @@ public class BoardServiceImpl implements BoardService {
         // insDate, uptDate 는 현재 날짜로 service에서 설정
         // userNo 는  Controller session에서 가져오기
         boardRepository.save(
-                BoardCreateDto.builder()
-                        .title(request.title())
-                        .content(request.content())
-                        .rating(request.rating())
-                        .insDate(now)
-                        .uptDate(now)
-                        .userNo(userNo)
-                        .eventNo(request.eventNo())
-                        .bCategoryNo(request.bCategoryNo())
-                        .build()
+                new BoardCreateDto(
+                        null,
+                        request.title(),
+                        request.content(),
+                        request.rating(),
+                        now,
+                        now,
+                        userNo,
+                        request.eventNo(),
+                        request.bCategoryNo()
+                )
         );
+
+
     }
 
     @Override
     public List<FindBoardResult> getAllBoard(BoardFindQuery query) {
 
-        List<Board> boards = boardRepository.selectBoardAll(query);
+        int limit = query.getRow();
+        int offset = (query.getPage() - 1) * limit;
+
+        RowBounds rowBounds = new RowBounds(offset, limit);
+
+        List<Board> boards = boardRepository.selectBoardAll(query, rowBounds);
 
         return boards.stream()
                 .map(FindBoardResult::findByBoard)

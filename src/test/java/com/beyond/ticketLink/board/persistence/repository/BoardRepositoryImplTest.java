@@ -6,6 +6,7 @@ import com.beyond.ticketLink.board.persistence.dto.BoardFindQuery;
 import com.beyond.ticketLink.board.persistence.dto.BoardUpdateDto;
 import com.beyond.ticketLink.dummy.DummyBoard;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.RowBounds;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -83,13 +84,15 @@ class BoardRepositoryImplTest {
     @Test
     void selectBoardAll() {
         // given
-        BoardFindQuery queryCategoryOne = new BoardFindQuery(1);
-        BoardFindQuery queryCategoryTwo = new BoardFindQuery(2);
+        BoardFindQuery queryCategoryOne = new BoardFindQuery(1, 1, 2);
+        BoardFindQuery queryCategoryTwo = new BoardFindQuery(2, 1, 2);
 
+        RowBounds rowBounds = new RowBounds(1, 2);
         // when
-        List<Board> boardsCategoryOne = boardRepository.selectBoardAll(queryCategoryOne);
-        List<Board> boardsCategoryTwo = boardRepository.selectBoardAll(queryCategoryTwo);
+        List<Board> boardsCategoryOne = boardRepository.selectBoardAll(queryCategoryOne, rowBounds);
+        List<Board> boardsCategoryTwo = boardRepository.selectBoardAll(queryCategoryTwo, rowBounds);
         // then
+
         log.info("boardsCategoryOne size = {}", boardsCategoryOne.size());
         log.info("boardsCategoryTwo size = {}", boardsCategoryTwo.size());
     }
