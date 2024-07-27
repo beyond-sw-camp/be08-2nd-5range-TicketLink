@@ -1,6 +1,8 @@
 package com.beyond.ticketLink.board.ui.view;
 
 import com.beyond.ticketLink.board.application.service.BoardService.FindBoardResult;
+import com.beyond.ticketLink.event.application.domain.Event;
+import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.sql.Date;
@@ -19,13 +21,13 @@ public record BoardView (
         Date insDate,
         Date uptDate,
     // 외래키들
-        String userNo,
-        String eventNo
+        TicketLinkUserDetails user,
+        Event event
 //        int bCategoryNo
 
 ){
     public BoardView(FindBoardResult board) {
         this(board.getBoardNo(), board.getTitle(), board.getContent(), board.getRating(),
-                board.getInsDate(), board.getUptDate(), board.getUserNo(), board.getEventNo());
+                board.getInsDate(), board.getUptDate(), board.getUser(), board.getEvent());
     }
 }

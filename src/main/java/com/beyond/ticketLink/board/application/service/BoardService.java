@@ -5,6 +5,8 @@ import com.beyond.ticketLink.board.application.domain.BoardCategory;
 import com.beyond.ticketLink.board.persistence.dto.BoardFindQuery;
 import com.beyond.ticketLink.board.persistence.dto.BoardUpdateDto;
 import com.beyond.ticketLink.board.ui.requestbody.BoardCreateRequest;
+import com.beyond.ticketLink.event.application.domain.Event;
+import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -26,6 +28,7 @@ public interface BoardService {
 
     void deleteBoard(BoardDeleteCommand command);
 
+
     @Getter
     @Builder
     @ToString
@@ -37,8 +40,8 @@ public interface BoardService {
         private final Float rating;
         private final Date insDate;
         private final Date uptDate;
-        private final String userNo;
-        private final String eventNo;
+        private final TicketLinkUserDetails user;
+        private final Event event;
         private final BoardCategory category;
 
         static FindBoardResult findByBoard(Board board) {
@@ -49,8 +52,8 @@ public interface BoardService {
                     .rating(board.getRating())
                     .insDate(board.getInsDate())
                     .uptDate(board.getUptDate())
-                    .userNo(board.getUserNo())
-                    .eventNo(board.getEventNo())
+                    .user(board.getUser()) // board.getUser() -> TicketUserDetails
+                    .event(board.getEvent()) //board.getEvent() -> Event
                     .category(board.getCategory())
                     .build();
         }
