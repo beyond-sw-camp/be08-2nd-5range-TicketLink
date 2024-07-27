@@ -20,7 +20,7 @@ public interface BoardService {
     // 게시판 작성
     void createBoard(BoardCreateRequest request, String userNo);
 
-    List<FindBoardResult> getAllBoard(BoardFindQuery query);
+    List<FindBoardResult> selectAllBoard(BoardFindQuery query);
 
     FindBoardResult getBoardByNo(BoardFindQuery query);
 

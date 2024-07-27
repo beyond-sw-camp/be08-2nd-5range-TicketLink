@@ -28,7 +28,7 @@ public class BoardCategoryServiceImpl implements BoardCategoryService {
     }
 
     @Override
-    public List<FindCategoryResult> getAllCategory() {
+    public List<FindCategoryResult> selectAllCategory() {
         return boardCategoryRepository.findAll()
                 .stream()
                 .map(FindCategoryResult::findByBoardCategory)

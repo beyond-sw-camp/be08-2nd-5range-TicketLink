@@ -63,7 +63,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<FindBoardResult> getAllBoard(BoardFindQuery query) {
+    public List<FindBoardResult> selectAllBoard(BoardFindQuery query) {
 
         int limit = query.getRow();
         int offset = (query.getPage() - 1) * limit;

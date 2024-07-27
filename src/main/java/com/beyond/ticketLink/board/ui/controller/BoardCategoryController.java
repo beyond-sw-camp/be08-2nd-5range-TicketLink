@@ -22,9 +22,9 @@ public class BoardCategoryController {
     private final BoardCategoryService boardCategoryService;
 
     @GetMapping("/board-categories")
-    public ResponseEntity<ApiResponseView<List<BoardCategoryView>>> getAllCategory() {
+    public ResponseEntity<ApiResponseView<List<BoardCategoryView>>> selectAllCategory() {
 
-        List<FindCategoryResult> allCategory = boardCategoryService.getAllCategory();
+        List<FindCategoryResult> allCategory = boardCategoryService.selectAllCategory();
 
         return ResponseEntity.ok()
                 .body(new ApiResponseView<>(allCategory.stream()

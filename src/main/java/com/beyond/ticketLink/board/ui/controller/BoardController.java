@@ -77,7 +77,7 @@ public class BoardController {
 
         // map(BoardView::new) : BoardView의 생성자를 호출하여 Board 객체를 BoardView 객체로 변환하여 매핑
         // stream().collect(Collectors.toList()) : 스트림의 결과를 다시 리스트로
-        List<FindBoardResult> results = boardService.getAllBoard(query);
+        List<FindBoardResult> results = boardService.selectAllBoard(query);
 
         // 클라이언트에게 boardViews를 응답으로 보냄
         return ResponseEntity.status(HttpStatus.OK)
