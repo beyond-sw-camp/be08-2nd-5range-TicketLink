@@ -1,4 +1,4 @@
-package com.beyond.ticketLink.user.persistence.dto;
+package com.beyond.ticketLink.user.persistence.mariadb.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

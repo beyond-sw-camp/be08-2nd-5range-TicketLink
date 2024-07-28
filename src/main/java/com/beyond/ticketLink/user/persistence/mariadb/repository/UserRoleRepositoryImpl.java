@@ -1,7 +1,7 @@
-package com.beyond.ticketLink.user.persistence.repository;
+package com.beyond.ticketLink.user.persistence.mariadb.repository;
 
 import com.beyond.ticketLink.user.application.domain.UserRole;
-import com.beyond.ticketLink.user.persistence.mapper.UserRoleMapper;
+import com.beyond.ticketLink.user.persistence.mariadb.mapper.UserRoleMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
