@@ -1,6 +1,7 @@
 package com.beyond.ticketLink.board.application.domain;
 
 import com.beyond.ticketLink.event.application.domain.Event;
+import com.beyond.ticketLink.reply.application.domain.Reply;
 import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.sql.Date;
+import java.util.List;
 
 
 /**
@@ -24,13 +26,11 @@ public class Board {
     private Float rating;
     private Date insDate;
     private Date uptDate;
-    // 외래키들
-//    private String userNo;
-//    private String eventNo;
-//    private int bCategoryNo;
 
-    private TicketLinkUserDetails user; //userNo
-    private Event event; //eventNo
+    private TicketLinkUserDetails user;
+    private Event event;
     private BoardCategory category;
+
+    private List<Reply> replies;
 
 }
