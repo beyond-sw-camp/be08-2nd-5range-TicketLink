@@ -20,7 +20,7 @@ public class BoardCreateDto {
     private String boardNo;
     private String title;
     private String content;
-    private String rating;
+    private Float rating;
     private LocalDate insDate;
     private LocalDate uptDate;
     private String userNo;
