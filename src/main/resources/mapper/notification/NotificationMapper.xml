@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.beyond.ticketLink.notification.persistence.mapper.NotificationMapper">
+    <resultMap id="notificationResultMap" type="Notification">
+    <id property="notiNo" column="notiNo"/>
+    <result property="message" column="message"/>
+    <result property="notiDate" column="notiDate"/>
+    <result property="notiStatus" column="notiStatus"/>
+    <result property="payNo" column="payNo"/>
+
+        <association property="payinfo"
+                     javaType="PayInfo"
+                     columnPrefix="pi_"
+                     resultMap="com.beyond.ticketLink.notification.persistence.mapper.PayMapper.payMap"/>
+    </resultMap>
+
+    <select id="selectAll" parameterType="string" resultMap="notificationResultMap">
+        SELECT  p.userNo AS '유저 번호',
+                n.message AS '메세지 내용',
+                r.resNo AS '예약번호',
+                DATE_ADD(NOW(), INTERVAL 1 DAY) AS invoceDate,
+                p.payment AS '결제수단',
+                n.notiDate,
+                n.notiStatus
+        FROM tb_payinfo p
+                 LEFT OUTER JOIN tb_reservation r ON r.payNo = p.payNo
+                 LEFT OUTER JOIN tb_notification n ON n.payNo = p.payNo
+        WHERE p.userNo = #{userNo}
+    </select>
+
+
+    <select id="selectNoti" parameterType="string" resultMap="notificationResultMap">
+        SELECT  n.message AS '메세지 내용',
+                r.resNo AS '예약번호',
+                DATE_ADD(NOW(), INTERVAL 1 DAY) AS invoceDate,
+                p.payment AS '결제수단',
+                n.notiDate,
+                n.notiStatus
+        FROM tb_payinfo p
+                 LEFT OUTER JOIN tb_reservation r ON r.payNo = p.payNo
+                 LEFT OUTER JOIN tb_notification n ON n.payNo = p.payNo
+        WHERE r.resNo = {#resNo};
+    </select>
+
+
+
+    <update id="updateNoti" parameterType="string">
+        UPDATE tb_notification
+        SET notiStatus = 'N'
+        WHERE notiNo = #{notiNo}
+    </update>
+
+    <update id="updateSubject" parameterType="string">
+        UPDATE tb_class
+        SET department_no         = #{deptNo},
+            preattending_class_no = #{preattendingNo},
+            class_name            = #{name},
+            class_type            = #{type}
+        WHERE class_no = #{no}
+    </update>
+</mapper>

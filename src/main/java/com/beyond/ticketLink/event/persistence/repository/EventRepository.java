@@ -1,6 +1,7 @@
 package com.beyond.ticketLink.event.persistence.repository;
 
 import com.beyond.ticketLink.event.application.domain.Event;
+import com.beyond.ticketLink.event.persistence.dto.DayEventDto;
 import com.beyond.ticketLink.event.persistence.dto.EventDto;
 import com.beyond.ticketLink.event.persistence.dto.EventSearchCond;
 
@@ -10,7 +11,7 @@ import java.util.Optional;
 public interface EventRepository {
     List<Event> getList(EventSearchCond eventSearch);
 
-    Optional<Event> getData(String eventNo);
+    Optional<Event> getData(String eventNo, DayEventDto dto);
 
     Event insData(Event event);
 

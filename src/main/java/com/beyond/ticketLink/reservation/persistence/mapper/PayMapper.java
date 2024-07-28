@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Mapper
 public interface PayMapper {
-    List<PayInfo> getList();
+    List<PayInfo> getList(String userNo);
 
     Optional<PayInfo> getData(String payNo);
 

@@ -19,8 +19,35 @@
         <collection property="reservations" ofType="Reservation"
                     resultMap="com.beyond.ticketLink.reservation.persistence.mapper.ReservationMapper.resMap" columnPrefix="rs_"/>
     </resultMap>
+    
+    <resultMap id="payListMap" type="PayListDto">
+        <id property="payNo" column="payNo" />
+        <result property="resDate" column="resDate" />
+        <result property="resNo" column="resNo" />
+        <result property="name" column="name" />
+        <result property="eventDate" column="eventDate" />
+        <result property="deTime" column="deTime" />
+        <result property="cnt" column="cnt" />
+        <result property="status" column="status" />
+    </resultMap>
 
-    <select id="getList" resultMap="payMap">
+    <select id="getList" parameterType="string" resultMap="payListMap">
+        SELECT p.payNo,
+               MAX(r.resDate) AS resDate,
+               MAX(r.resNo) AS resNo,
+               e.name,
+               de.eventDate,
+               de.deTime,
+               COUNT(*) AS cnt,
+               p.status
+        FROM tb_payinfo p
+        JOIN tb_reservation r ON r.payNo = p.payNo
+        JOIN tb_ticket t ON t.ticketNo = r.ticketNo
+        JOIN tb_dailyEvent de ON de.dailyEventNo = t.dailyEventNo
+        JOIN tb_event e ON e.eventNo = de.eventNo
+        WHERE p.userNo = #{userNo}
+        GROUP BY p.payNo
+        ORDER BY MAX(r.resDate) DESC
     </select>
 
     <select id="getData" resultMap="payMapWithRes">
@@ -31,7 +58,6 @@
                 payNo
               , payment
               , payDate
-              , status
               , price
               , fee
               , deliveryCost
@@ -40,16 +66,15 @@
               , userNo
         )
         VALUES(
-                payNo
-              , payment
-              , payDate
-              , status
-              , price
-              , fee
-              , deliveryCost
-              , discount
-              , totalAmt
-              , userNo
+               #{payNo}
+              , #{payment}
+              , #{payDate}
+              , #{price}
+              , #{fee}
+              , #{deliveryCost}
+              , #{discount}
+              , #{totalAmt}
+              , #{userNo}
               )
     </insert>
 </mapper>
