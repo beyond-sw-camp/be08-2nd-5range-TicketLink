@@ -62,8 +62,9 @@ public interface ReplyService {
     @ToString
     class ReplyUpdateCommand {
         private final String replyNo;
-        private final String userNo;
         private final String content;
+        private final String boardNo;
+        private final String userNo;
     }
 
     @Getter
@@ -71,6 +72,7 @@ public interface ReplyService {
     @ToString
     class ReplyDeleteCommand {
         private final String replyNo;
+        private final String boardNo;
         private final String userNo;
     }
 }

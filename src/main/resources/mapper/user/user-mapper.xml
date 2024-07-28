@@ -1,6 +1,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.beyond.ticketLink.user.persistence.mariadb.mapper.UserMapper">
 
+
     <resultMap id="userResultMap" type="TicketLinkUserDetails">
         <id property="userNo" column="userNo"/>
         <result property="id" column="id"/>
@@ -8,6 +9,9 @@
         <result property="name" column="name"/>
         <result property="email" column="email"/>
         <result property="useYn" column="useYn"/>
+    </resultMap>
+
+    <resultMap id="userWithUserRoleResultMap" type="TicketLinkUserDetails" extends="userResultMap">
         <association property="role"
                      javaType="UserRole"
                      columnPrefix="ur_"
@@ -21,7 +25,7 @@
         VALUES (GET_NO('tb_user'), #{id}, #{pw}, #{name}, #{email}, #{useYn}, #{roleNo})
     </insert>
 
-    <select id="findUserById" resultMap="userResultMap">
+    <select id="findUserById" resultMap="userWithUserRoleResultMap">
         SELECT u.userNo,
                u.id,
                u.pw,

@@ -7,7 +7,6 @@ import com.beyond.ticketLink.board.persistence.dto.BoardUpdateDto;
 import com.beyond.ticketLink.dummy.DummyBoard;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.RowBounds;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +14,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 @Slf4j
 @SpringBootTest
@@ -55,16 +52,19 @@ class BoardRepositoryImplTest {
     @DisplayName("보드 생성 레포 테스트")
     void save() {
         // given
-        BoardCreateDto createDto = BoardCreateDto.builder()
-                .title("Hello world")
-                .content("content test")
-                .rating("4")
-                .insDate(now)
-                .uptDate(now)
-                .userNo("DUMMYA")
-                .eventNo("EV00000001")
-                .bCategoryNo(1)
-                .build();
+        BoardCreateDto createDto = new BoardCreateDto(
+                null,
+                "Hello World",
+                "content test",
+                4f,
+                now,
+                now,
+                "DUMMYA",
+                "EV00000001",
+                1
+        );
+
+
         // when
         boardRepository.save(createDto);
         // then
@@ -84,8 +84,8 @@ class BoardRepositoryImplTest {
     @Test
     void selectBoardAll() {
         // given
-        BoardFindQuery queryCategoryOne = new BoardFindQuery(1, 1, 2);
-        BoardFindQuery queryCategoryTwo = new BoardFindQuery(2, 1, 2);
+        BoardFindQuery queryCategoryOne = new BoardFindQuery(1, 1);
+        BoardFindQuery queryCategoryTwo = new BoardFindQuery(2, 1);
 
         RowBounds rowBounds = new RowBounds(1, 2);
         // when

@@ -1,6 +1,8 @@
 package com.beyond.ticketLink.reply.application.service;
 
-import com.beyond.ticketLink.common.exception.CommonMessageType;
+import com.beyond.ticketLink.autono.application.domain.AutoNo;
+import com.beyond.ticketLink.autono.persistence.mapper.AutoNoMapper;
+import com.beyond.ticketLink.board.persistence.repository.BoardRepository;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
 import com.beyond.ticketLink.reply.application.domain.Reply;
 import com.beyond.ticketLink.reply.exception.ReplyMessageType;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Slf4j
 @Service
@@ -21,25 +24,34 @@ public class ReplyServiceImpl implements ReplyService{
 
     private final ReplyRepository replyRepository;
 
-    public static final String DB_GENERATED_REPLY_ID = null;
-    public static final Integer DB_GENERATED_CNT = null;
-    public static final Date DB_GENERATED_DATE = null;
+    private final BoardRepository boardRepository;
+
+    private final AutoNoMapper autoNoMapper;
+
+    private static final Date NOW = Date.valueOf(LocalDate.now());
+
 
 
     @Override
     @Transactional
     public FindReplyResult createReply(ReplyCreateCommand command) {
 
-        ReplyCreateDto createDto = new ReplyCreateDto(
-                DB_GENERATED_REPLY_ID,
-                command.getContent(),
-                DB_GENERATED_CNT,
-                DB_GENERATED_DATE,
-                command.getUserNo(),
-                command.getBoardNo()
-        );
+        // 댓글 작성 대상 게시판 검증
+        String validBoardNo = validateBoard(command.getBoardNo());
 
-        // TODO boardNo에 대한 유효성 검사
+        String replyNo = generateReplyNo();
+
+        int nextReplyCnt = replyRepository.selectNextReplyCnt(command.getBoardNo());
+
+        ReplyCreateDto createDto = new ReplyCreateDto(
+                replyNo,
+                command.getContent(),
+                nextReplyCnt,
+                NOW,
+                NOW,
+                command.getUserNo(),
+                validBoardNo
+        );
 
         replyRepository.insertReply(createDto);
 
@@ -50,22 +62,19 @@ public class ReplyServiceImpl implements ReplyService{
     @Transactional
     public FindReplyResult modifyReply(ReplyUpdateCommand command) {
 
-        String replyNo = command.getReplyNo();
-        String content = command.getContent();
-        String userNo = command.getUserNo();
 
-        Reply reply = retrieveReply(replyNo);
+        validateBoard(command.getBoardNo());
 
-        if (hasNoOperationAuthority(userNo, reply)) {
-            // Message Type 분리 이후
-            // BoardMessageType.BOARD_MODIFY_UNAUTHORIZED 로 변경
+        Reply reply = retrieveReply(command.getReplyNo());
+
+        if (hasNoOperationAuthority(command.getUserNo(), reply)) {
             throw new TicketLinkException(ReplyMessageType.REPLY_OPERATION_UNAUTHORIZED);
         }
 
         ReplyUpdateDto updateDto = new ReplyUpdateDto(
-                replyNo,
-                content,
-                DB_GENERATED_DATE
+                reply.getReplyNo(),
+                command.getContent(),
+                NOW
         );
 
         replyRepository.updateReply(updateDto);
@@ -76,16 +85,31 @@ public class ReplyServiceImpl implements ReplyService{
     @Override
     @Transactional
     public void deleteReply(ReplyDeleteCommand command) {
-        String replyNo = command.getReplyNo();
-        String userNo = command.getUserNo();
 
-        Reply reply = retrieveReply(replyNo);
+        validateBoard(command.getBoardNo());
 
-        if (hasNoOperationAuthority(userNo, reply)) {
+        Reply validReply = retrieveReply(command.getReplyNo());
+
+        if (hasNoOperationAuthority(command.getUserNo(), validReply)) {
             throw new TicketLinkException(ReplyMessageType.REPLY_OPERATION_UNAUTHORIZED);
         }
 
-        replyRepository.deleteReply(replyNo);
+        replyRepository.deleteReply(validReply.getReplyNo());
+    }
+
+
+    private String generateReplyNo() {
+        final String TABLE_NAME = "tb_reply";
+
+        AutoNo replyNo = autoNoMapper.getData(TABLE_NAME)
+                .orElseThrow(() -> new TicketLinkException(ReplyMessageType.GENERATE_REPLY_NO_FAILED));
+        return replyNo.getAutoNo();
+    }
+
+    private String validateBoard(String boardNo) {
+        return boardRepository.selectBoardByBoardNo(boardNo)
+                .orElseThrow(() -> new TicketLinkException(ReplyMessageType.REPLY_TARGET_BOARD_NOT_FOUND))
+                .getBoardNo();
     }
 
     private Reply retrieveReply(String replyNo) {

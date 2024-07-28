@@ -44,7 +44,7 @@ class BoardControllerTest {
         //given
         String title = "Title Test";
         String content = "Content Test";
-        String rating = "4.5";
+        float rating = 4.5f;
         String eventNo = "EV00000001";
         int bCategoryNo = 1;
 

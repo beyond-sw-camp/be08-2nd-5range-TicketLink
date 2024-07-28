@@ -1,9 +1,17 @@
 package com.beyond.ticketLink.reply.ui.controller;
 
+import com.beyond.ticketLink.common.view.ApiErrorView;
 import com.beyond.ticketLink.common.view.ApiResponseView;
 import com.beyond.ticketLink.reply.application.service.ReplyService;
+import com.beyond.ticketLink.reply.persistence.dto.ReplyCreateDto;
 import com.beyond.ticketLink.reply.ui.requestbody.ReplyCreateRequest;
 import com.beyond.ticketLink.reply.ui.view.ReplyView;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,13 +31,41 @@ public class ReplyController {
     private final ReplyService replyService;
 
     @PostMapping("/reply")
+    @Operation(summary = "댓글 작성", description = "댓글 작성 API - 로그인한 유저만 가능")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            content = @Content(schema = @Schema(implementation = ReplyCreateDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Request Body 형식이 옳바르지 않을 경우",
+                            content = @Content(schema = @Schema(implementation = ApiErrorView.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "댓글 작성 권한이 없을 경우",
+                            content = @Content(schema = @Schema(implementation = ApiErrorView.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "댓글 작성 대상 게시글이 존재하지 않을 경우",
+                            content = @Content(schema = @Schema(implementation = ApiErrorView.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 내부 에러",
+                            content = @Content(schema = @Schema(implementation = ApiErrorView.class))
+                    ),
+            }
+    )
     public ResponseEntity<ApiResponseView<ReplyView>> addReply(
             @AuthenticationPrincipal String userNo,
-            @PathVariable String boardNo,
-            @RequestBody @Validated ReplyCreateRequest request
+            @Parameter @PathVariable String boardNo,
+            @Parameter @RequestBody @Validated ReplyCreateRequest request
     ) {
 
-        // TODO boardNo 검증
 
         ReplyCreateCommand command = ReplyCreateCommand.builder()
                 .userNo(userNo)
@@ -44,18 +80,46 @@ public class ReplyController {
     }
 
     @PutMapping("reply/{replyNo}")
+    @Operation(summary = "댓글 수정", description = "댓글 수정 API - 로그인한 유저만 가능, 본인이 작성한 댓글만 가능")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = ReplyCreateDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Request Body 형식이 옳바르지 않을 경우",
+                            content = @Content(schema = @Schema(implementation = ApiErrorView.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "댓글 수정 권한이 없을 경우",
+                            content = @Content(schema = @Schema(implementation = ApiErrorView.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "댓글 작성 대상 게시글 또는 댓글이 존재하지 않을 경우",
+                            content = @Content(schema = @Schema(implementation = ApiErrorView.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 내부 에러",
+                            content = @Content(schema = @Schema(implementation = ApiErrorView.class))
+                    ),
+            }
+    )
     public ResponseEntity<ApiResponseView<ReplyView>> modifyReply(
             @AuthenticationPrincipal String userNo,
-            @PathVariable String boardNo,
-            @PathVariable String replyNo,
+            @Parameter @PathVariable String boardNo,
+            @Parameter @PathVariable String replyNo,
             @RequestBody @Validated ReplyCreateRequest request
     ) {
-
-        // TODO boardNo 검증 로직
 
         ReplyUpdateCommand command = ReplyUpdateCommand.builder()
                 .userNo(userNo)
                 .replyNo(replyNo)
+                .boardNo(boardNo)
                 .content(request.content())
                 .build();
 
@@ -66,17 +130,40 @@ public class ReplyController {
     }
 
     @DeleteMapping("reply/{replyNo}")
+    @Operation(summary = "댓글 삭제", description = "댓글 삭제 API - 로그인한 유저만 가능, 본인이 작성한 댓글만 가능")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = ReplyCreateDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "댓글 삭제 권한이 없을 경우",
+                            content = @Content(schema = @Schema(implementation = ApiErrorView.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "댓글 작성 대상 게시글 또는 댓글이 존재하지 않을 경우",
+                            content = @Content(schema = @Schema(implementation = ApiErrorView.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 내부 에러",
+                            content = @Content(schema = @Schema(implementation = ApiErrorView.class))
+                    ),
+            }
+    )
     public ResponseEntity<Void> deleteReply(
             @AuthenticationPrincipal String userNo,
-            @PathVariable String boardNo,
-            @PathVariable String replyNo
+            @Parameter @PathVariable String boardNo,
+            @Parameter @PathVariable String replyNo
     ) {
-
-        // TODO boardNo 검증 로직
 
         ReplyDeleteCommand command = ReplyDeleteCommand.builder()
                 .userNo(userNo)
                 .replyNo(replyNo)
+                .boardNo(boardNo)
                 .build();
 
         replyService.deleteReply(command);

@@ -9,26 +9,14 @@
         <result property="rating" column="rating"/>
         <result property="insDate" column="insDate"/>
         <result property="uptDate" column="uptDate"/>
+    </resultMap>
 
-
+    <resultMap id="boardWithUserResultMap" type="Board">
         <association property="user"
                      javaType="com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails"
                      columnPrefix="u_"
-                     resultMap="com.beyond.ticketLink.user.persistence.mapper.UserMapper.userResultMap"
+                     resultMap="com.beyond.ticketLink.user.persistence.mapper.UserMapper.userWithUserRoleResultMap"
         />
-        <association property="event"
-                     javaType="com.beyond.ticketLink.event.application.domain.Event"
-                     column="eventNo"
-                     columnPrefix="e_"
-                     resultMap="com.beyond.ticketLink.event.persistence.mapper.EventMapper.eventMap"
-        />
-        <association property="category"
-                     javaType="BoardCategory"
-                     column="bCategoryNo"
-                     columnPrefix="bc_"
-                     resultMap="com.beyond.ticketLink.board.persistence.mapper.BoardCategoryMapper.boardCategoryResultMap"
-        />
-
     </resultMap>
 
     <insert id="save" keyColumn="boardNo">
