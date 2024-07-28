@@ -16,12 +16,8 @@ public class ReplyCreateDto {
     private String content;
     private Integer cnt;
     private Date insDate;
+    private Date uptDate;
     private String userNo;
     private String boardNo;
 
-    public static class SelectKeyResult {
-        private String replyNo;
-        private Integer cnt;
-        private Date insDate;
-    }
 }
