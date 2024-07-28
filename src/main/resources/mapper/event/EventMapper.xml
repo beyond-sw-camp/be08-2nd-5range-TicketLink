@@ -63,11 +63,30 @@
                de.castInfo AS de_castInfo,
                de.eventNo AS de_eventNo
         FROM tb_event e
-        JOIN tb_dailyEvent de ON de.eventNo = e.eventNo
+        LEFT OUTER JOIN tb_dailyEvent de ON de.eventNo = e.eventNo
         WHERE e.eventNo = #{eventNo}
-        /*AND (de.eventDate >= #{sDate} AND de.eventDate &lt;= #{eDate})
-        AND de.day7 IN (5,6)
-        AND de.deTime IN ('14:30','19:30','19:00')*/
+          <if test="dto != null">
+              <if test="dto.sDate != null and dto.eDate != null">
+              AND (de.eventDate >= #{dto.sDate} AND de.eventDate &lt;= #{dto.eDate})
+              </if>
+              <if test="dto.dayInfo != null and dto.dayInfo != ''">
+                AND de.day7 IN
+                <foreach collection="dto.days" item="day" open="(" close=")" separator=",">
+                    #{day}
+                </foreach>
+              </if>
+              <if test="dto.timeInfo != null and dto.timeInfo != ''">
+                AND de.deTime IN
+                <foreach collection="dto.times" item="time" open="(" close=")" separator=",">
+                    #{time}
+                </foreach>
+              </if>
+              <if test="dto.castInfo != null and dto.castInfo != ''">
+                <foreach collection="dto.casts" item="cast" open=" AND " separator=" OR ">
+                    de.castInfo LIKE CONCAT('%', #{cast}, '%')
+                </foreach>
+              </if>
+          </if>
     </select>
     
     <insert id="insData">
@@ -101,14 +120,11 @@
 
     <update id="uptData">
         UPDATE tb_event
-        SET NAME = #{updateParam.name},
-            startDate = #{updateParam.startDate},
-            endDate = #{updateParam.endDate},
+        SET name = #{updateParam.name},
             eTime = #{updateParam.eTime},
             location = #{updateParam.location},
             info = #{updateParam.info},
             saleInfo = #{updateParam.saleInfo},
-            seatInfo = #{updateParam.seatInfo},
             eCategoryNo = #{updateParam.eCategoryNo},
             uptDate = CURDATE()
         WHERE eventNo = #{eventNo}

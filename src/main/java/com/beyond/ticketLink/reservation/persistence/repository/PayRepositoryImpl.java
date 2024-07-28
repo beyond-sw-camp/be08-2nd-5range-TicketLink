@@ -14,8 +14,8 @@ public class PayRepositoryImpl implements PayRepository {
     private final PayMapper payMapper;
 
     @Override
-    public List<PayInfo> getList() {
-        return payMapper.getList();
+    public List<PayInfo> getList(String userNo) {
+        return payMapper.getList(userNo);
     }
 
     @Override

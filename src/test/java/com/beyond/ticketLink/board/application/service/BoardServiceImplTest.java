@@ -1,7 +1,6 @@
 package com.beyond.ticketLink.board.application.service;
 
 import com.beyond.ticketLink.board.ui.requestbody.BoardCreateRequest;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ class BoardServiceImplTest {
 //                .bCategoryNo(Integer.parseInt(request.bCategoryNo()))
         String dummyTitle = "hello world";
         String dummyContent = "content testing...";
-        String dummyRating = "4";
+        float dummyRating = 4f;
         String dummyEventNo = "EV00000001";
         int dummyBCategoryNo = 1;
 

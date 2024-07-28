@@ -6,6 +6,7 @@ import com.beyond.ticketLink.board.persistence.dto.BoardFindQuery;
 import com.beyond.ticketLink.board.persistence.dto.BoardUpdateDto;
 import com.beyond.ticketLink.board.ui.requestbody.BoardCreateRequest;
 import com.beyond.ticketLink.event.application.domain.Event;
+import com.beyond.ticketLink.reply.application.domain.Reply;
 import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -43,6 +44,7 @@ public interface BoardService {
         private final TicketLinkUserDetails user;
         private final Event event;
         private final BoardCategory category;
+        private final List<Reply> replies;
 
         static FindBoardResult findByBoard(Board board) {
             return FindBoardResult.builder()
@@ -52,9 +54,10 @@ public interface BoardService {
                     .rating(board.getRating())
                     .insDate(board.getInsDate())
                     .uptDate(board.getUptDate())
-                    .user(board.getUser()) // board.getUser() -> TicketUserDetails
-                    .event(board.getEvent()) //board.getEvent() -> Event
+                    .user(board.getUser())
+                    .event(board.getEvent())
                     .category(board.getCategory())
+                    .replies(board.getReplies())
                     .build();
         }
 

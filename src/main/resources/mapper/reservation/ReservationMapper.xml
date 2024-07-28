@@ -10,28 +10,31 @@
         <result property="ticketNo" column="ticketNo" />
         <result property="payNo" column="payNo" />
     </resultMap>
-
+    
     <select id="getList" resultMap="resMap">
     </select>
 
     <select id="getData" resultMap="resMap">
     </select>
-    
+
+    <select id="getChkRes" parameterType="string" resultType="_int">
+        SELECT COUNT(*) AS preResChk
+        FROM tb_reservation
+        WHERE ticketNo = #{ticketNo}
+          AND status IN ('W','S')
+    </select>
+
     <insert id="insData">
-        INSERT INTO tb_ticket(
-               ticketNo
-             , seatRate
-             , seatNum
-             , price
-             , dailyEventNo
+        INSERT INTO tb_reservation(
+            resNo
+          , ticketNo
+          , payNo
         )
         VALUES
-            (
-              #{ticketNo}
-            , #{seatRate}
-            , #{seatNum}
-            , #{price}
-            , #{dayEventNo}
-            )
+        (
+          #{resNo}
+        , #{ticketNo}
+        , #{payNo}
+        )
     </insert>
 </mapper>

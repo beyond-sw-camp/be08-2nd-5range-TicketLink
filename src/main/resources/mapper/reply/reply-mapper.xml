@@ -18,39 +18,35 @@
         <result property="content" column="content"/>
         <result property="insDate" column="insDate"/>
         <result property="uptDate" column="uptDate"/>
-        <result property="boardNo" column="boardNo"/>
+    </resultMap>
+
+    <resultMap id="replyWithUserResultMap" type="Reply" extends="replyResultMap">
         <association property="user"
                      columnPrefix="u_"
                      javaType="TicketLinkUserDetails"
                      resultMap="com.beyond.ticketLink.user.persistence.mariadb.mapper.UserMapper.userResultMap"/>
     </resultMap>
 
-    <insert id="insertReply" parameterType="ReplyCreateDto">
-        <selectKey keyProperty="replyNo,cnt,insDate"
-                   keyColumn="replyNo,cnt,insDate"
-                   resultType="com.beyond.ticketLink.reply.persistence.dto.ReplyCreateDto$SelectKeyResult"
-                   order="BEFORE">
-            SELECT  GET_NO('tb_reply') AS 'replyNo',
-                    IFNULL(cnt + 1, 1) AS 'cnt',
-                    NOW() AS 'insDate'
-            FROM tb_reply
-            WHERE boardNo = #{boardNo}
-            ORDER BY cnt DESC
-            LIMIT 1
-        </selectKey>
+    <resultMap id="replyWithBoardResultMap" type="Reply" extends="replyResultMap">
+        <association property="board"
+                     columnPrefix="b_"
+                     javaType="Board"
+                     resultMap="com.beyond.ticketLink.board.persistence.mariadb.mapper.BoardMapper.boardResultMap"/>
+    </resultMap>
 
+    <insert id="insertReply" parameterType="ReplyCreateDto">
         INSERT INTO tb_reply (replyNo, cnt, content, insDate, uptDate, boardNo, userNo)
         VALUES (#{replyNo},
                 #{cnt},
                 #{content},
                 #{insDate},
-                NOW(),
+                #{uptDate},
                 #{boardNo},
                 #{userNo}
                );
     </insert>
 
-    <select id="selectReplyByReplyNo" parameterType="string" resultMap="replyResultMap">
+    <select id="selectReplyByReplyNo" parameterType="string" resultMap="replyWithUserResultMap">
         SELECT tb_r.replyNo,
                tb_r.cnt,
                tb_r.content,
@@ -72,13 +68,13 @@
 
     </select>
 
+    <select id="selectNextReplyCnt" parameterType="string" resultType="_int">
+        SELECT COUNT(*) + 1
+        FROM tb_reply
+        WHERE boardNo = #{boardNo}
+    </select>
+
     <update id="updateReply" parameterType="ReplyUpdateDto">
-        <selectKey keyProperty="uptDate"
-                   keyColumn="uptDate"
-                   resultType="com.beyond.ticketLink.reply.persistence.dto.ReplyUpdateDto$SelectKeyResult"
-                    order="BEFORE">
-            SELECT NOW() AS 'uptDate';
-        </selectKey>
         UPDATE tb_reply
         SET content=#{content},
             uptDate=#{uptDate}

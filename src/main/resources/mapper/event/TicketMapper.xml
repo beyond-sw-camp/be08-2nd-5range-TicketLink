@@ -3,10 +3,84 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.beyond.ticketLink.event.persistence.mapper.TicketMapper">
 
-    <select id="getList" resultType="Ticket">
+    <resultMap id="ticketMap" type="Ticket">
+        <id property="ticketNo" column="ticketNo" />
+        <result property="seatRate" column="seatRate" />
+        <result property="seatNum" column="seatNum" />
+        <result property="price" column="price" />
+        <result property="dayEventNo" column="dailyEventNo" />
+    </resultMap>
+
+    <resultMap id="ticketMapWithDayEvent" type="Ticket" extends="ticketMap">
+        <association property="dailyEvent" javaType="DailyEvent"
+                     resultMap="com.beyond.ticketLink.event.persistence.mapper.DayEventMapper.dayEventMap"
+                     columnPrefix="de_"/>
+        <association property="reservation" javaType="Reservation"
+                     resultMap="com.beyond.ticketLink.reservation.persistence.mapper.ReservationMapper.resMap"
+                     columnPrefix="res_"/>
+    </resultMap>
+
+    <resultMap id="ticketCntMap" type="TicketCount">
+        <id property="dayEventNo" column="dailyEventNo" />
+        <result property="seatRate" column="seatRate" />
+        <result property="cnt" column="cnt" />
+        <result property="price" column="price" />
+    </resultMap>
+
+    <select id="getCountList" parameterType="string" resultMap="ticketCntMap">
+        SELECT MAX(t.dailyEventNo) AS dailyEventNo,
+               t.seatRate,
+               COUNT(*) AS cnt,
+               MAX(t.price) AS price
+        FROM
+            (SELECT t.*
+             FROM tb_ticket t
+                      LEFT OUTER JOIN tb_reservation r ON r.ticketNo = t.ticketNo
+             WHERE t.dailyEventNo = #{dayEventNo}
+               AND r.ticketNo IS NULL) t
+        GROUP BY t.seatRate
+        ORDER BY MAX(t.price) DESC
     </select>
 
-    <select id="getData" resultType="Ticket">
+    <select id="getList" parameterType="string" resultMap="ticketMapWithDayEvent">
+        SELECT t.ticketNo,
+               t.seatRate,
+               t.seatNum,
+               t.price,
+               t.dailyEventNo,
+               de.dailyEventNo AS de_dailyEventNo,
+               de.eventDate AS de_eventDate,
+               de.day7 AS de_day7,
+               de.cnt AS de_cnt,
+               de.deTime AS de_deTime,
+               de.castInfo AS de_castInfo,
+               de.eventNo AS de_eventNo,
+               res.resNo AS res_resNo,
+               res.resDate AS res_resDate,
+               res.status AS res_status
+        FROM tb_ticket t
+        JOIN tb_dailyEvent de ON de.dailyEventNo = t.dailyEventNo
+        LEFT OUTER JOIN tb_reservation res ON res.ticketNo = t.ticketNo
+        WHERE t.dailyEventNo = #{dayEventNo}
+        ORDER BY t.ticketNo
+    </select>
+
+    <select id="getData" parameterType="string" resultMap="ticketMapWithDayEvent">
+        SELECT t.ticketNo,
+               t.seatRate,
+               t.seatNum,
+               t.price,
+               t.dailyEventNo,
+               de.dailyEventNo AS de_dailyEventNo,
+               de.eventDate AS de_eventDate,
+               de.day7 AS de_day7,
+               de.cnt AS de_cnt,
+               de.deTime AS de_deTime,
+               de.castInfo AS de_castInfo,
+               de.eventNo AS de_eventNo
+        FROM tb_ticket t
+        JOIN tb_dailyEvent de ON de.dailyEventNo = t.dailyEventNo
+        WHERE t.ticketNo = #{ticketNo}
     </select>
     
     <insert id="insData">

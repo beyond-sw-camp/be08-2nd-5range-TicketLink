@@ -28,6 +28,11 @@ public class ReplyRepositoryMybatisImpl implements ReplyRepository {
     }
 
     @Override
+    public int selectNextReplyCnt(String boardNo) {
+        return replyMapper.selectNextReplyCnt(boardNo);
+    }
+
+    @Override
     public void updateReply(ReplyUpdateDto reply) {
         replyMapper.updateReply(reply);
     }
