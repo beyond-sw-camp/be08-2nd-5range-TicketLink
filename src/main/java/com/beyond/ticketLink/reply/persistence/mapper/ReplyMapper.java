@@ -16,4 +16,6 @@ public interface ReplyMapper {
     void deleteReply(String replyNo);
 
     Optional<Reply> selectReplyByReplyNo(String replyNo);
+
+    int selectNextReplyCnt(String boardNo);
 }
