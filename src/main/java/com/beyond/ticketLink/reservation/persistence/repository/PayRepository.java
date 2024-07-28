@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PayRepository {
-    List<PayInfo> getList();
+    List<PayInfo> getList(String userNo);
 
     Optional<PayInfo> getData(String payNo);
 

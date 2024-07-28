@@ -54,10 +54,11 @@ public class TicketLinkSecurityConfig {
 
             registry.requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**").permitAll();
 
-            registry.requestMatchers(HttpMethod.GET, "/api/v1/boards", "/api/v1/boards/*").permitAll();
+            registry.requestMatchers(HttpMethod.GET, "/api/v1/boards", "/api/v1/boards/*", "/api/v1/events/**").permitAll();
 
-            registry.requestMatchers("/api/v1/user/logout").hasAnyRole("관리자", "일반사용자");
-            registry.requestMatchers("/api/v1/user/**").hasRole("관리자");
+            registry.requestMatchers("/api/v1/user/logout", "/api/v1/res/**").hasAnyRole("관리자", "일반사용자");
+            registry.requestMatchers(HttpMethod.POST, "/api/v1/res/*").hasRole("일반사용자");
+            registry.requestMatchers("/api/v1/user/**", "/api/v1/event/**").hasRole("관리자");
 
             registry.anyRequest().authenticated();
         }));

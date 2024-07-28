@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
 @NoArgsConstructor
@@ -18,4 +17,5 @@ public class DailyEvent {
     private String deTime; // 회차별 시간 정보
     private String castInfo;    // 회차별 캐스팅 정보
     private String eventNo;     // 행사번호, fk
+    private Event event;
 }

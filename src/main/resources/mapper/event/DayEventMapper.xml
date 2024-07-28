@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.beyond.ticketLink.event.persistence.mapper.DayEventMapper">
     <resultMap id="dayEventMap" type="DailyEvent">
-        <id property="dayEventNo" column="dayEventNo" />
+        <id property="dayEventNo" column="dailyEventNo" />
         <result property="eventDate" column="eventDate" />
         <result property="day7" column="day7" />
         <result property="cnt" column="cnt" />
@@ -12,10 +12,47 @@
         <result property="eventNo" column="eventNo" />
     </resultMap>
 
-    <select id="getList" resultType="DailyEvent">
+    <resultMap id="dayEventMapWithEvent" type="DailyEvent" extends="dayEventMap">
+        <association property="event" javaType="Event"
+                     resultMap="com.beyond.ticketLink.event.persistence.mapper.EventMapper.eventMap"
+                     columnPrefix="e_"/>
+    </resultMap>
+
+    <select id="getList" parameterType="string" resultMap="dayEventMapWithEvent">
+        SELECT de.dailyEventNo,
+               de.eventDate,
+               de.day7,
+               de.cnt,
+               de.deTime,
+               de.castInfo,
+               de.eventNo,
+               e.eventNo as e_eventNo,
+               e.name as e_name,
+               e.eTime as e_eTime,
+               e.location as e_location,
+               e.eCategoryNo as e_eCategoryNo
+         FROM tb_dailyEvent de
+         JOIN tb_event e ON e.eventNo = de.eventNo
+        WHERE e.eventNo = #{eventNo}
+          AND de.eventDate = #{eventDate};
     </select>
 
-    <select id="getData" resultType="DailyEvent">
+    <select id="getData" resultMap="dayEventMapWithEvent">
+        SELECT de.dailyEventNo,
+               de.eventDate,
+               de.DAY7,
+               de.cnt,
+               de.deTime,
+               de.castInfo,
+               de.eventNo,
+               e.eventNo as e_eventNo,
+               e.name as e_name,
+               e.eTime as e_eTime,
+               e.location as e_location,
+               e.eCategoryNo as e_eCategoryNo
+        FROM tb_dailyEvent de
+        JOIN tb_event e ON e.eventNo = de.eventNo
+        WHERE de.dailyEventNo = #{dayEventNo}
     </select>
     
     <insert id="insData">

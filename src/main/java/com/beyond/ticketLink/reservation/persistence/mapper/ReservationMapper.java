@@ -12,5 +12,7 @@ public interface ReservationMapper {
 
     Optional<Reservation> getData(String resNo);
 
+    int getChkRes(String ticketNo);
+
     void insData(Reservation reservation);
 }

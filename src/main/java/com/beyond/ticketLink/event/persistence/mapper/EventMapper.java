@@ -1,6 +1,7 @@
 package com.beyond.ticketLink.event.persistence.mapper;
 
 import com.beyond.ticketLink.event.application.domain.Event;
+import com.beyond.ticketLink.event.persistence.dto.DayEventDto;
 import com.beyond.ticketLink.event.persistence.dto.EventDto;
 import com.beyond.ticketLink.event.persistence.dto.EventSearchCond;
 import org.apache.ibatis.annotations.Mapper;
@@ -13,7 +14,7 @@ import java.util.Optional;
 public interface EventMapper {
     List<Event> getList(EventSearchCond eventSearch);
 
-    Optional<Event> getData(String eventNo);
+    Optional<Event> getData(@Param("eventNo") String eventNo, @Param("dto") DayEventDto dto);
 
     void insData(Event event);
 

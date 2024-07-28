@@ -1,5 +1,6 @@
 package com.beyond.ticketLink.event.application.domain;
 
+import com.beyond.ticketLink.reservation.application.domain.Reservation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,4 +14,6 @@ public class Ticket {
     private Integer seatNum;     // 좌석번호
     private Integer price;  // 가격
     private String dayEventNo;  // 일자별 행사번호, fk
+    private DailyEvent dailyEvent;
+    private Reservation reservation;
 }

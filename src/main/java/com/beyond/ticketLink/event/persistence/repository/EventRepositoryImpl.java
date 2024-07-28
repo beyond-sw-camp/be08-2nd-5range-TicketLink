@@ -1,6 +1,7 @@
 package com.beyond.ticketLink.event.persistence.repository;
 
 import com.beyond.ticketLink.event.application.domain.Event;
+import com.beyond.ticketLink.event.persistence.dto.DayEventDto;
 import com.beyond.ticketLink.event.persistence.dto.EventDto;
 import com.beyond.ticketLink.event.persistence.dto.EventSearchCond;
 import com.beyond.ticketLink.event.persistence.mapper.EventMapper;
@@ -21,8 +22,8 @@ public class EventRepositoryImpl implements EventRepository {
     }
 
     @Override
-    public Optional<Event> getData(String eventNo) {
-        return eventMapper.getData(eventNo);
+    public Optional<Event> getData(String eventNo, DayEventDto dto) {
+        return eventMapper.getData(eventNo, dto);
     }
 
     @Override

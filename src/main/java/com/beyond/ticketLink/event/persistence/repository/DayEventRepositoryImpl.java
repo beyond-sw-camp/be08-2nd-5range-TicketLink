@@ -1,7 +1,6 @@
 package com.beyond.ticketLink.event.persistence.repository;
 
 import com.beyond.ticketLink.event.application.domain.DailyEvent;
-import com.beyond.ticketLink.event.persistence.dto.EventSearchCond;
 import com.beyond.ticketLink.event.persistence.mapper.DayEventMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -15,8 +14,8 @@ public class DayEventRepositoryImpl implements DayEventRepository {
     private final DayEventMapper dayEventMapper;
 
     @Override
-    public List<DailyEvent> getList(EventSearchCond eventSearch) {
-        return dayEventMapper.getList(eventSearch);
+    public List<DailyEvent> getList(String eventNo, String eventDate) {
+        return dayEventMapper.getList(eventNo, eventDate);
     }
 
     @Override
