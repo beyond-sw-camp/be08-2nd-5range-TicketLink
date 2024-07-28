@@ -1,7 +1,7 @@
-package com.beyond.ticketLink.user.persistence.repository;
+package com.beyond.ticketLink.user.persistence.mariadb.repository;
 
 import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
-import com.beyond.ticketLink.user.persistence.dto.UserCreateDto;
+import com.beyond.ticketLink.user.persistence.mariadb.dto.UserCreateDto;
 
 import java.util.Optional;
 
