@@ -4,14 +4,12 @@ import com.beyond.ticketLink.common.exception.TicketLinkException;
 import com.beyond.ticketLink.smtp.exception.MailMessageType;
 import com.beyond.ticketLink.smtp.persistence.entity.VerifiedEmail;
 import com.beyond.ticketLink.smtp.persistence.repository.VerifiedEmailRepository;
-import com.beyond.ticketLink.user.application.domain.RefreshToken;
 import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
 import com.beyond.ticketLink.user.application.service.UserService.FindJwtResult;
 import com.beyond.ticketLink.user.application.utils.JwtUtil;
 import com.beyond.ticketLink.user.exception.UserMessageType;
 import com.beyond.ticketLink.user.persistence.redis.entity.ExpiredAccessToken;
 import com.beyond.ticketLink.user.persistence.redis.repository.ExpiredAccessTokenRepository;
-import com.beyond.ticketLink.user.persistence.mariadb.repository.JwtRepository;
 import com.beyond.ticketLink.user.persistence.mariadb.repository.UserRepository;
 import com.beyond.ticketLink.user.ui.requestbody.UserCreateRequest;
 import com.beyond.ticketLink.user.ui.requestbody.UserLoginRequest;
@@ -43,9 +41,6 @@ class UserServiceImplTest {
 
     @Autowired
     JwtUtil jwtUtil;
-
-    @Autowired
-    JwtRepository jwtRepository;
 
     @Autowired
     ExpiredAccessTokenRepository expiredAccessTokenRepository;
@@ -113,11 +108,8 @@ class UserServiceImplTest {
 
         String parsedUsername = jwtUtil.getUsername(jwtToken.getAccessToken());
 
-        Optional<RefreshToken> savedJwtToken = jwtRepository.findByUserNo(dummyUserNo);
         // then
         assertThat(parsedUsername).isEqualTo(loginRequest.id());
-        assertThat(savedJwtToken.isPresent()).isTrue();
-        assertThat(savedJwtToken.get().getRefreshToken()).isEqualTo(jwtToken.getRefreshToken());
     }
 
     @Test
@@ -156,7 +148,7 @@ class UserServiceImplTest {
                 )
         ).doesNotThrowAnyException();
 
-        assertThat(jwtRepository.findByUserNo(dummyUserNo).isEmpty()).isTrue();
+
 
         Optional<ExpiredAccessToken> expiredAccessToken = expiredAccessTokenRepository.findById(accessToken);
         assertThat(expiredAccessToken.isPresent()).isTrue();

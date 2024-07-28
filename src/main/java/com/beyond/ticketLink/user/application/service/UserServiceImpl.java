@@ -8,11 +8,9 @@ import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
 import com.beyond.ticketLink.user.application.domain.UserRole;
 import com.beyond.ticketLink.user.application.utils.JwtUtil;
 import com.beyond.ticketLink.user.exception.UserMessageType;
-import com.beyond.ticketLink.user.persistence.mariadb.dto.JwtCreateDto;
 import com.beyond.ticketLink.user.persistence.mariadb.dto.UserCreateDto;
 import com.beyond.ticketLink.user.persistence.redis.entity.ExpiredAccessToken;
 import com.beyond.ticketLink.user.persistence.redis.repository.ExpiredAccessTokenRepository;
-import com.beyond.ticketLink.user.persistence.mariadb.repository.JwtRepository;
 import com.beyond.ticketLink.user.persistence.mariadb.repository.UserRepository;
 import com.beyond.ticketLink.user.persistence.mariadb.repository.UserRoleRepository;
 import com.beyond.ticketLink.user.ui.requestbody.UserCreateRequest;
@@ -39,8 +37,6 @@ public class UserServiceImpl implements UserService {
     private final ExpiredAccessTokenRepository expiredAccessTokenRepository;
 
     private final PasswordEncoder passwordEncoder;
-
-    private final JwtRepository jwtRepository;
 
     private final JwtUtil jwtUtil;
 
@@ -99,11 +95,6 @@ public class UserServiceImpl implements UserService {
         String accessToken = jwtUtil.createAccessToken(loginUser);
         String refreshToken = jwtUtil.createRefreshToken(loginUser);
 
-        // JwtToken 저장
-        jwtRepository.save(
-                new JwtCreateDto(refreshToken, loginUser.getUserNo())
-        );
-
         return FindJwtResult.findByAll(accessToken, refreshToken);
     }
 
@@ -122,8 +113,6 @@ public class UserServiceImpl implements UserService {
                         .build()
         );
 
-        // 로그아웃 요청한 유저의 리프레시 토큰 삭제
-        jwtRepository.delete(userNo);
     }
 
     @Override
