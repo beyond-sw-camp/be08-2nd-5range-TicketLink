@@ -1,10 +1,10 @@
 package com.beyond.ticketLink.reply.application.service;
 
-import com.beyond.ticketLink.common.exception.CommonMessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
 import com.beyond.ticketLink.dummy.DummyBoard;
 import com.beyond.ticketLink.dummy.DummyReply;
 import com.beyond.ticketLink.dummy.DummyUser;
+import com.beyond.ticketLink.reply.exception.ReplyMessageType;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,7 +113,7 @@ class ReplyServiceImplTest {
         // when & then
         assertThatThrownBy(() -> replyService.modifyReply(replyUpdateCommandWithNotExistReplyNo))
                 .isInstanceOf(TicketLinkException.class)
-                .hasMessage(CommonMessageType.NOT_FOUND.getMessage());
+                .hasMessage(ReplyMessageType.REPLY_NOT_FOUND.getMessage());
     }
 
     @Test
@@ -139,11 +139,11 @@ class ReplyServiceImplTest {
         // when & then
         assertThatThrownBy(() -> replyService.modifyReply(replyUpdateCommandWithNotExistUserNo))
                 .isInstanceOf(TicketLinkException.class)
-                .hasMessage(CommonMessageType.BAD_REQUEST.getMessage());
+                .hasMessage(ReplyMessageType.REPLY_OPERATION_UNAUTHORIZED.getMessage());
 
         assertThatThrownBy(() -> replyService.modifyReply(replyUpdateCommandWithNotMatchUserNo))
                 .isInstanceOf(TicketLinkException.class)
-                .hasMessage(CommonMessageType.BAD_REQUEST.getMessage());
+                .hasMessage(ReplyMessageType.REPLY_OPERATION_UNAUTHORIZED.getMessage());
     }
 
     @Test
@@ -170,7 +170,7 @@ class ReplyServiceImplTest {
         // when & then
         assertThatThrownBy(() -> replyService.deleteReply(replyDeleteCommand))
                 .isInstanceOf(TicketLinkException.class)
-                .hasMessage(CommonMessageType.NOT_FOUND.getMessage());
+                .hasMessage(ReplyMessageType.REPLY_NOT_FOUND.getMessage());
     }
 
     @Test
@@ -189,10 +189,10 @@ class ReplyServiceImplTest {
         // when & then
         assertThatThrownBy(() -> replyService.deleteReply(replyDeleteCommandWithNotExistUserNo))
                 .isInstanceOf(TicketLinkException.class)
-                .hasMessage(CommonMessageType.BAD_REQUEST.getMessage());
+                .hasMessage(ReplyMessageType.REPLY_OPERATION_UNAUTHORIZED.getMessage());
 
         assertThatThrownBy(() -> replyService.deleteReply(replyDeleteCommandWithNotMatchUserNo))
                 .isInstanceOf(TicketLinkException.class)
-                .hasMessage(CommonMessageType.BAD_REQUEST.getMessage());
+                .hasMessage(ReplyMessageType.REPLY_OPERATION_UNAUTHORIZED.getMessage());
     }
 }

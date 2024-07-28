@@ -15,6 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,19 +46,18 @@ class ReplyRepositoryImplTest {
     @Autowired
     private ReplyRepository replyRepository;
 
-    public static final String GENERATED_REPLY_NO = null;
-    public static final Integer GENERATED_CNT = null;
-    public static final Date GENERATED_DATE = null;
+    private final Date NOW = Date.valueOf(LocalDate.now());
 
     @Test
     @Transactional
     void insertReply_shouldInsertReplySetReplyNoCorrectly() {
         // given
         ReplyCreateDto createDto = new ReplyCreateDto(
-                GENERATED_REPLY_NO,
+                "testNo1",
                 "test content",
-                GENERATED_CNT,
-                GENERATED_DATE,
+                1,
+                NOW,
+                NOW,
                 DummyUser.DM_U_01.name(),
                 DummyBoard.DM_B_01.name()
         );
@@ -69,68 +69,58 @@ class ReplyRepositoryImplTest {
 
     @Test
     @Transactional
-    void insertReply_shouldInsertReplyWithCorrectCnt() {
-        // given
-        ReplyCreateDto secondReply = new ReplyCreateDto(
-                GENERATED_REPLY_NO,
-                "test",
-                GENERATED_CNT,
-                GENERATED_DATE,
-                DummyUser.DM_U_03.name(),
-                DummyBoard.DM_B_01.name()
-        );
-
-        ReplyCreateDto thirdReply = new ReplyCreateDto(
-                GENERATED_REPLY_NO,
-                "test",
-                GENERATED_CNT,
-                GENERATED_DATE,
-                DummyUser.DM_U_04.name(),
-                DummyBoard.DM_B_01.name()
-        );
-        // when
-        replyRepository.insertReply(secondReply);
-        replyRepository.insertReply(thirdReply);
-        // then
-        assertThat(secondReply.getCnt()).isNotNull();
-        assertThat(secondReply.getCnt()).isEqualTo(2);
-
-        assertThat(thirdReply.getCnt()).isNotNull();
-        assertThat(thirdReply.getCnt()).isEqualTo(3);
-
-    }
-
-    @Test
-    @Transactional
     void insertReply_shouldInsertReplyThrowErrorWithDataIntegrity() {
         // given
-        String userNo = "DUMMYA";
-        String boardNo = "BD00000001";
+        String userNo = DummyUser.DM_U_04.name();
+        String boardNo = DummyBoard.DM_B_02.name();
         String notExistUserNo = "bvbvbv";
-        String notExistBoardNo = "zxcxczx";
+        String notExistBoardNo = "fdfdcvcv";
 
         ReplyCreateDto createDtoWithInvalidBoardNo = new ReplyCreateDto(
-                GENERATED_REPLY_NO,
+                "failed1",
                 "test",
-                GENERATED_CNT,
-                GENERATED_DATE,
+                1,
+                NOW,
+                NOW,
                 userNo,
                 notExistBoardNo
         );
         ReplyCreateDto createDtoWithInvalidUserNo = new ReplyCreateDto(
-                GENERATED_REPLY_NO,
+                "failed2",
                 "test",
-                GENERATED_CNT,
-                GENERATED_DATE,
+                2,
+                NOW,
+                NOW,
                 notExistUserNo,
                 boardNo
         );
         // when & then
+
         assertThatThrownBy(() -> replyRepository.insertReply(createDtoWithInvalidBoardNo))
                 .isInstanceOf(DataIntegrityViolationException.class);
 
         assertThatThrownBy(() -> replyRepository.insertReply(createDtoWithInvalidUserNo))
                 .isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    @Test
+    void selectNextReplyCnt_shouldReturn1WithFirstReply() {
+        // given
+        String notExistBoard = "dfsf";
+        // when
+        int result = replyRepository.selectNextReplyCnt(notExistBoard);
+        // then
+        assertThat(result).isOne();
+    }
+
+    @Test
+    void selectNextReplyCnt_shouldReturnCorrectCnt() {
+        // given
+        String boardWithOneReply = DummyBoard.DM_B_01.name();
+        // when
+        int result = replyRepository.selectNextReplyCnt(boardWithOneReply);
+        // then
+        assertThat(result).isEqualTo(2);
     }
 
     @Test
@@ -143,7 +133,7 @@ class ReplyRepositoryImplTest {
         ReplyUpdateDto updateDto = new ReplyUpdateDto(
                 before.get().getReplyNo(),
                 "update reply",
-                GENERATED_DATE
+                NOW
         );
 
         // when
