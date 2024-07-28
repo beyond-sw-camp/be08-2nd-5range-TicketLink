@@ -79,6 +79,7 @@ class BoardRepositoryImplTest {
         // then
         assertThat(result.isPresent()).isTrue();
         assertThat(result.get().getBoardNo()).isEqualTo(dummyBoardNo);
+        log.info(result.get().toString());
     }
 
     @Test
@@ -92,7 +93,7 @@ class BoardRepositoryImplTest {
         List<Board> boardsCategoryOne = boardRepository.selectBoardAll(queryCategoryOne, rowBounds);
         List<Board> boardsCategoryTwo = boardRepository.selectBoardAll(queryCategoryTwo, rowBounds);
         // then
-
+        log.info(boardsCategoryOne.toString());
         log.info("boardsCategoryOne size = {}", boardsCategoryOne.size());
         log.info("boardsCategoryTwo size = {}", boardsCategoryTwo.size());
     }
