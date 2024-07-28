@@ -1,7 +1,7 @@
-package com.beyond.ticketLink.user.persistence.mapper;
+package com.beyond.ticketLink.user.persistence.mariadb.mapper;
 
 import com.beyond.ticketLink.user.application.domain.RefreshToken;
-import com.beyond.ticketLink.user.persistence.dto.JwtCreateDto;
+import com.beyond.ticketLink.user.persistence.mariadb.dto.JwtCreateDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Optional;

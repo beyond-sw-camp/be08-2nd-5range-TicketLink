@@ -1,10 +1,9 @@
 package com.beyond.ticketLink.common.security.provider;
 
-import com.beyond.ticketLink.common.exception.CommonMessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
 import com.beyond.ticketLink.user.application.utils.JwtUtil;
 import com.beyond.ticketLink.user.exception.JwtMessageType;
-import com.beyond.ticketLink.user.persistence.repository.ExpiredAccessTokenRepository;
+import com.beyond.ticketLink.user.persistence.redis.repository.ExpiredAccessTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
