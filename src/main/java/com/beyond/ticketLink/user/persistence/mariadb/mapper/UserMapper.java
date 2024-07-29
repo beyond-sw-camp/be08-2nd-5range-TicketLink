@@ -11,5 +11,7 @@ public interface UserMapper {
 
     Optional<TicketLinkUserDetails> findUserById(String id);
 
+    Optional<TicketLinkUserDetails> selectUserByUserNo(String userNo);
+
     void save(UserCreateDto user);
 }

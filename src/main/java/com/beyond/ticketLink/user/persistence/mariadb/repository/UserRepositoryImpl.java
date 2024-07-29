@@ -22,6 +22,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public Optional<TicketLinkUserDetails> selectUserByUserNo(String userNo) {
+        return mapper.selectUserByUserNo(userNo);
+    }
+
+    @Override
     public void save(UserCreateDto user) {
         mapper.save(user);
     }
