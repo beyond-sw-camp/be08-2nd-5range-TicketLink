@@ -60,6 +60,11 @@ public class TicketLinkSecurityConfig {
             registry.requestMatchers(HttpMethod.POST, "/api/v1/res/*").hasRole("일반사용자");
             registry.requestMatchers("/api/v1/user/**", "/api/v1/event/**").hasRole("관리자");
 
+            // coupon config
+            registry.requestMatchers(HttpMethod.POST, "/api/v1/coupons").hasRole("관리자");
+            registry.requestMatchers(HttpMethod.PUT, "/api/v1/coupons/**").hasRole("관리자");
+            registry.requestMatchers(HttpMethod.DELETE, "/api/v1/coupons/**").hasRole("관리자");
+
             registry.anyRequest().authenticated();
         }));
 
