@@ -1,15 +1,18 @@
 package com.beyond.ticketLink.notification.application.service;
 import com.beyond.ticketLink.notification.application.domain.Notification;
-import com.beyond.ticketLink.reservation.application.domain.PayInfo;
+import com.beyond.ticketLink.notification.persistence.dto.NotificationDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface NotificationService {
 
-    Optional<Notification> getNoti(String notiNo);
-    List<Notification> selectAll(String userNo);
+    Notification getNoti(String notiNo);
+
+    List<Notification> getAll(String userNo);
+
     void updateNoti(String notiNo);
+
+    Notification insertNoti(NotificationDto NotiDto);
 
 
 }
