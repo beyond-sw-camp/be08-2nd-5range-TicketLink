@@ -36,13 +36,6 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public void createBoard(BoardCreateRequest request, String userNo) {
 
-        // 없는 eventNo로 추가하려고 할 때, NOT_FOUND
-        eventService.getData(request.eventNo()).orElseThrow(
-                () -> new TicketLinkException(CommonMessageType.NOT_FOUND)
-        );
-
-
-
         // insDate, uptDate 는 현재 날짜로 service에서 설정
         // userNo 는  Controller session에서 가져오기
         boardRepository.save(
