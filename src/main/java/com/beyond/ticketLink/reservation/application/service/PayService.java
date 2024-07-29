@@ -12,4 +12,6 @@ public interface PayService {
     Optional<PayInfo> getData(String payNo);
 
     PayInfo insData(String dayEventNo, PayDto payDto, String userNo);
+
+    PayInfo updateData(String payNo);
 }

@@ -9,8 +9,11 @@ import com.beyond.ticketLink.couponhistory.persistence.dto.CouponUsedHistoryCrea
 import com.beyond.ticketLink.couponhistory.persistence.repository.CouponUsedHistoryRepository;
 import com.beyond.ticketLink.event.application.domain.Ticket;
 import com.beyond.ticketLink.event.persistence.repository.TicketRepository;
+import com.beyond.ticketLink.notification.persistence.dto.NotificationDto;
+import com.beyond.ticketLink.notification.persistence.repository.NotificationRepository;
 import com.beyond.ticketLink.reservation.application.domain.PayInfo;
 import com.beyond.ticketLink.reservation.application.domain.Reservation;
+import com.beyond.ticketLink.reservation.exception.ResMessageType;
 import com.beyond.ticketLink.reservation.persistence.dto.PayDto;
 import com.beyond.ticketLink.reservation.persistence.repository.PayRepository;
 import com.beyond.ticketLink.reservation.persistence.repository.ResRepository;
@@ -20,7 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 
@@ -39,6 +44,8 @@ public class PayServiceImpl implements PayService {
 
     private final TicketRepository ticketRepository;
 
+    private final NotificationRepository notificationRepository;
+
     private final CouponUsedHistoryRepository couponUsedHistoryRepository;
 
     @Override
@@ -54,11 +61,16 @@ public class PayServiceImpl implements PayService {
     @Override
     @Transactional
     public PayInfo insData(String dayEventNo, PayDto dto, String userNo) {
+        // 결제 관련 변수
         PayInfo payInfo = new PayInfo();
         String payNo = autoNoRepository.getData("tb_payinfo");
+        // 예약 관련 변수
         Reservation reservation;
-        String resNo;
-        String status = null;
+        String resNo = null;
+        String status = "W";
+        // 알림 관련 변수
+        NotificationDto notiDto = new NotificationDto();
+        String notiMsg = "";
 
         // 결제 정보 세팅
         payInfo.setPayNo(payNo);
@@ -68,8 +80,9 @@ public class PayServiceImpl implements PayService {
         if (dto.getPayment() != 'T') {
             payInfo.setPayDate(LocalDate.now());
             status = "S";
-            payInfo.setStatus(status.charAt(0));
         }
+
+        payInfo.setStatus(status.charAt(0));
 
         // 쿠폰을 사용했을 경우 할인가 적용하기
         Long price = dto.getPrice();
@@ -106,7 +119,7 @@ public class PayServiceImpl implements PayService {
         String ticketNo;
 
         // 예약 정보 생성 로직
-        for(Ticket ticket : tickets) {
+        for (Ticket ticket : tickets) {
             ticketNo = ticket.getTicketNo();
 
             // 티켓정보가 없는 상시상품일 경우 티켓정보도 동시 생성
@@ -122,8 +135,7 @@ public class PayServiceImpl implements PayService {
             int chk = resRepository.getChkRes(ticketNo);
 
             if (chk > 0) {
-                log.info("예약 정보가 존재하는 티켓({})입니다.", ticketNo);
-                continue;
+                throw new TicketLinkException(ResMessageType.RES_OPERATION_DUPLICATE);
             }
 
             // 중복이 아닐 경우 예약 정보 세팅
@@ -131,7 +143,7 @@ public class PayServiceImpl implements PayService {
             resNo = autoNoRepository.getData("tb_reservation");
             reservation.setResNo(resNo);
 
-            if (status != null){
+            if (status != null) {
                 reservation.setStatus(status.charAt(0));
             }
 
@@ -141,7 +153,49 @@ public class PayServiceImpl implements PayService {
             resRepository.insData(reservation);
         }
 
+        // 알림 정보 생성 로직
+        notiDto.setNotiNo(autoNoRepository.getData("tb_notification"));
+        payInfo = payRepository.getData(payInfo.getPayNo()).get();
+
+        // 메세지 문구 설정
+        if (dto.getPayment() == 'T') {
+            notiMsg += "입금 요청\n\n";
+        } else {
+            notiMsg += "예매 완료\n\n";
+        }
+
+        notiMsg += "상품명 : " + payInfo.getReservations().getFirst().getTicket().getDailyEvent().getEvent().getName() + "\n";
+        notiMsg += "예매번호 : " + resNo + " [총" + tickets.size() + "장]\n";
+
+        if (dto.getPayment() == 'T') {
+            notiMsg += "입금기한 : " + LocalDate.now().plusDays(1) + " (" + LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.KOREAN)
+                    + ") 23시 59분";
+        }
+        notiDto.setMessage(notiMsg);
+        notiDto.setPayNo(payNo);
+        notificationRepository.insertNoti(notiDto);
+
         return payInfo;
+    }
+
+    @Override
+    @Transactional
+    public PayInfo updateData(String payNo) {
+        PayInfo payInfo = payRepository.getData(payNo).get();
+        List<Reservation> reservations = payInfo.getReservations();
+        NotificationDto notiDto = new NotificationDto();
+
+        payRepository.uptData(payNo);
+        resRepository.uptData(payNo);
+
+        // 알림 정보 생성 로직
+        notiDto.setNotiNo(autoNoRepository.getData("tb_notification"));
+        notiDto.setMessage("예매 취소\n\n상품명 : " + reservations.get(0).getTicket().getDailyEvent().getEvent().getName()
+                + "\n예약번호 : " + reservations.get(reservations.size() - 1).getResNo());
+        notiDto.setPayNo(payNo);
+        notificationRepository.insertNoti(notiDto);
+
+        return payRepository.getData(payNo).get();
     }
 
     private boolean couponUsed(Coupon validCoupon) {

@@ -6,7 +6,6 @@ import com.beyond.ticketLink.board.application.service.BoardService;
 import com.beyond.ticketLink.board.persistence.dto.BoardCreateDto;
 import com.beyond.ticketLink.board.persistence.dto.BoardFindQuery;
 import com.beyond.ticketLink.board.ui.requestbody.BoardCreateRequest;
-
 import com.beyond.ticketLink.board.ui.requestbody.BoardUpdateRequest;
 import com.beyond.ticketLink.board.ui.view.BoardView;
 import com.beyond.ticketLink.common.view.ApiErrorView;
@@ -20,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Repository;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 

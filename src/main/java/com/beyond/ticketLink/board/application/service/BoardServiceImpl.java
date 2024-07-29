@@ -7,7 +7,6 @@ import com.beyond.ticketLink.board.persistence.dto.BoardFindQuery;
 import com.beyond.ticketLink.board.persistence.dto.BoardUpdateDto;
 import com.beyond.ticketLink.board.persistence.repository.BoardRepository;
 import com.beyond.ticketLink.board.ui.requestbody.BoardCreateRequest;
-import com.beyond.ticketLink.common.exception.CommonMessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
 import com.beyond.ticketLink.event.application.service.EventService;
 import lombok.RequiredArgsConstructor;

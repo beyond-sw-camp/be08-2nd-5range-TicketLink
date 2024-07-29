@@ -4,7 +4,6 @@ import com.beyond.ticketLink.coupon.application.domain.Coupon;
 import com.beyond.ticketLink.coupon.persistence.dto.CouponCreateDto;
 import com.beyond.ticketLink.coupon.persistence.dto.CouponFindQuery;
 import com.beyond.ticketLink.coupon.persistence.dto.CouponUpdateDto;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 

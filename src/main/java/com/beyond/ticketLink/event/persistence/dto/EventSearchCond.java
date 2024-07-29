@@ -1,10 +1,10 @@
 package com.beyond.ticketLink.event.persistence.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
+@AllArgsConstructor
 @Getter
-@Setter
 public class EventSearchCond {
     private String name;    // 행사이름
     private Integer eCategoryNo;

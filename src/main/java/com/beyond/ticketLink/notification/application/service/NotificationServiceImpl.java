@@ -14,7 +14,6 @@ import java.util.List;
 public class NotificationServiceImpl implements NotificationService {
     private final AutoNoRepository autoNoRepository;
     private final NotificationRepository notificationRepository;
-    //private final NotificationMapper notificationMapper;
 
     @Override
     public Notification getNoti(String notiNo) {

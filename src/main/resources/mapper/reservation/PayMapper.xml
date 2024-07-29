@@ -3,8 +3,46 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.beyond.ticketLink.reservation.persistence.mapper.PayMapper">
 
+    <!-- Event resultMap -->
+    <resultMap id="eventResultMap" type="Event">
+        <id property="eventNo" column="eventNo"/>
+        <result property="name" column="name"/>
+        <result property="startDate" column="startDate"/>
+        <result property="endDate" column="endDate"/>
+        <result property="location" column="location"/>
+    </resultMap>
+
+    <!-- DailyEvent resultMap -->
+    <resultMap id="dailyEventResultMap" type="DailyEvent">
+        <id property="dailyEventNo" column="dailyEventNo"/>
+        <result property="eventDate" column="eventDate"/>
+        <result property="day7" column="day7"/>
+        <result property="deTime" column="deTime"/>
+        <association property="event" column="eventNo" javaType="Event" resultMap="eventResultMap"/>
+    </resultMap>
+
+    <!-- Ticket resultMap -->
+    <resultMap id="ticketResultMap" type="Ticket">
+        <id property="ticketNo" column="ticketNo"/>
+        <result property="seatRate" column="t_seatRate"/>
+        <result property="price" column="t_price"/>
+        <association property="dailyEvent" column="dailyEventNo" javaType="DailyEvent" resultMap="dailyEventResultMap"/>
+    </resultMap>
+
+    <!-- Reservation resultMap -->
+    <resultMap id="reservationResultMap" type="Reservation">
+        <id property="resNo" column="rs_resNo"/>
+        <result property="resDate" column="rs_resDate"/>
+        <result property="status" column="rs_status"/>
+        <result property="payNo" column="rs_payNo"/>
+        <result property="ticketNo" column="rs_ticketNo"/>
+        <association property="ticket" column="ticketNo" javaType="Ticket" resultMap="ticketResultMap"/>
+    </resultMap>
+
+    <!-- Payinfo resultMap -->
     <resultMap id="payMap" type="PayInfo">
         <id property="payNo" column="payNo" />
+        <result property="payment" column="payment" />
         <result property="payDate" column="payDate" />
         <result property="payment" column="payment"/>
         <result property="status" column="status" />
@@ -14,13 +52,13 @@
         <result property="discount" column="discount" />
         <result property="totalAmt" column="totalAmt" />
         <result property="userNo" column="userNo" />
+        <result property="insDate" column="insDate" />
     </resultMap>
 
-    <resultMap id="payMapWithRes" type="PayInfo" extends="payMap">
-        <collection property="reservations" ofType="Reservation"
-                    resultMap="com.beyond.ticketLink.reservation.persistence.mapper.ReservationMapper.resMap" columnPrefix="rs_"/>
+    <resultMap id="payinfoResultMap" type="PayInfo" extends="payMap">
+        <collection property="reservations" column="payNo" javaType="ArrayList" ofType="Reservation" resultMap="reservationResultMap"/>
     </resultMap>
-    
+
     <resultMap id="payListMap" type="PayListDto">
         <id property="payNo" column="payNo" />
         <result property="resDate" column="resDate" />
@@ -37,7 +75,7 @@
                MAX(r.resDate) AS resDate,
                MAX(r.resNo) AS resNo,
                e.name,
-               de.eventDate,
+               IFNULL(de.eventDate, CONCAT(e.startDate, ' ~ ', e.endDate)) AS eventDate,
                de.deTime,
                COUNT(*) AS cnt,
                p.status
@@ -47,11 +85,42 @@
         JOIN tb_dailyEvent de ON de.dailyEventNo = t.dailyEventNo
         JOIN tb_event e ON e.eventNo = de.eventNo
         WHERE p.userNo = #{userNo}
+          AND r.status != 'C'
         GROUP BY p.payNo
         ORDER BY MAX(r.resDate) DESC
     </select>
 
-    <select id="getData" resultMap="payMapWithRes">
+    <!-- Select query -->
+    <select id="getData" parameterType="string" resultMap="payinfoResultMap">
+        SELECT e.name,
+               e.startDate,
+               e.endDate,
+               e.location,
+               de.eventDate,
+               de.day7,
+               de.deTime,
+               p.payNo,
+               p.payment,
+               p.payDate,
+               p.status,
+               p.fee,
+               p.deliveryCost,
+               p.totalAmt,
+               p.insDate,
+               r.resNo AS rs_resNo,
+               r.resDate AS rs_resDate,
+               r.status AS rs_status,
+               r.payNo AS rs_payNo,
+               r.ticketNo AS rs_ticketNo,
+               t.ticketNo AS t_ticketNo,
+               t.seatRate AS t_seatRate,
+               t.price AS t_price
+        FROM tb_payinfo p
+                 JOIN tb_reservation r ON r.payNo = p.payNo
+                 JOIN tb_ticket t ON t.ticketNo = r.ticketNo
+                 JOIN tb_dailyEvent de ON de.dailyEventNo = t.dailyEventNo
+                 JOIN tb_event e ON e.eventNo = de.eventNo
+        WHERE p.payNo = #{payNo}
     </select>
     
     <insert id="insData">
@@ -59,6 +128,7 @@
                 payNo
               , payment
               , payDate
+              , status
               , price
               , fee
               , deliveryCost
@@ -70,6 +140,7 @@
                #{payNo}
               , #{payment}
               , #{payDate}
+              , #{status}
               , #{price}
               , #{fee}
               , #{deliveryCost}
@@ -78,4 +149,11 @@
               , #{userNo}
               )
     </insert>
+    
+    <update id="uptData" parameterType="string">
+        UPDATE tb_payinfo
+        SET status = 'C',
+            uptDate = CURDATE()
+        WHERE payNo = #{payNo}
+    </update>
 </mapper>

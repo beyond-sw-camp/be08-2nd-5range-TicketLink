@@ -13,4 +13,6 @@ public interface ResRepository {
     int getChkRes(String ticketNo);
 
     void insData(Reservation reservation);
+
+    void uptData(String payNo);
 }

@@ -12,7 +12,7 @@ public class PayListDto {
     private LocalDate resDate;
     private String resNo;
     private String name;
-    private LocalDate eventDate;
+    private String eventDate;
     private String deTime;
     private Integer cnt;
     private Character status;

@@ -51,9 +51,9 @@
 
     <insert id="insertNoti">
         INSERT INTO tb_notification(
-                                   notiNo
-                                 , message
-                                 , payNo
+               notiNo
+             , message
+             , payNo
         )
         VALUES
             (

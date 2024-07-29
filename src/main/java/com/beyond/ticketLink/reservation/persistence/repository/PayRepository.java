@@ -11,4 +11,6 @@ public interface PayRepository {
     Optional<PayInfo> getData(String payNo);
 
     void insData(PayInfo payInfo);
+
+    void uptData(String payNo);
 }

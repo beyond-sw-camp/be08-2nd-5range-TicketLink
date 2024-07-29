@@ -1,49 +1,80 @@
 package com.beyond.ticketLink.event.ui.controller;
 
+import com.beyond.ticketLink.board.persistence.dto.BoardCreateDto;
+import com.beyond.ticketLink.common.view.ApiErrorView;
 import com.beyond.ticketLink.event.application.domain.DailyEvent;
 import com.beyond.ticketLink.event.application.domain.Event;
 import com.beyond.ticketLink.event.application.service.DayEventService;
 import com.beyond.ticketLink.event.application.service.EventService;
 import com.beyond.ticketLink.event.application.service.TicketService;
-import com.beyond.ticketLink.event.persistence.dto.DayEventDto;
-import com.beyond.ticketLink.event.persistence.dto.EventDto;
+import com.beyond.ticketLink.event.persistence.dto.DayEventSearchCond;
 import com.beyond.ticketLink.event.persistence.dto.EventSearchCond;
+import com.beyond.ticketLink.event.persistence.dto.EventUpdateDto;
 import com.beyond.ticketLink.event.persistence.dto.TicketCount;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
+@Tag(name = "Event APIs", description = "행사 관련 API 목록")
 public class EventController {
     private final EventService eventService;
     private final DayEventService dayEventService;
     private final TicketService ticketService;
 
-    // 이벤트 전체 리스트(검색조건 : 카테고리, 이름)
     @GetMapping("/events")
+    @Operation(summary = "행사 목록 조회", description = "전체 행사의 목록을 조회한다.(비회원도 가능)")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = Event.class))
+                    )
+            }
+    )
     public ResponseEntity<List<Event>> getList(@ModelAttribute EventSearchCond cond) {
         List<Event> list = eventService.getList(cond);
 
         return ResponseEntity.ok(list);
     }
 
-    // 이벤트 상세 정보
     @GetMapping("/events/{eventNo}")
-    public ResponseEntity<Event> getData(@PathVariable String eventNo, @ModelAttribute DayEventDto dto) {
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = Event.class))
+                    )
+            }
+    )
+    @Operation(summary = "행사 상세 조회", description = "선택한 행사의 상세 정보를 조회한다.(비회원도 가능)")
+    public ResponseEntity<Event> getData(@PathVariable String eventNo, @ModelAttribute DayEventSearchCond dto) {
         Event event = eventService.getData(eventNo, dto).get();
 
         return ResponseEntity.ok(event);
     }
 
-    // 일자별 이벤트 리스트 조회
     @GetMapping("/events/{eventNo}/{eventDate}")
+    @Operation(summary = "일자별 행사 목록 조회", description = "선택한 행사의 일자별 목록을 조회한다.(비회원도 가능)")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = DailyEvent.class))
+                    )
+            }
+    )
     public ResponseEntity<List<DailyEvent>> getDataByDate(@PathVariable String eventNo
             , @PathVariable String eventDate) {
         List<DailyEvent> list = dayEventService.getList(eventNo, eventDate);
@@ -51,8 +82,16 @@ public class EventController {
         return ResponseEntity.ok(list);
     }
 
-    // 이벤트 잔여 티켓(좌석) 조회
     @GetMapping("/events/{eventNo}/{eventDate}/{dayEventNo}")
+    @Operation(summary = "행사 잔여 티켓(좌석) 조회", description = "선택한 행사의 잔여 티켓(좌석)을 조회한다.(비회원도 가능)")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = TicketCount.class))
+                    )
+            }
+    )
     public ResponseEntity<List<TicketCount>> getDataByDate(@PathVariable String eventNo
             , @PathVariable String eventDate, @PathVariable String dayEventNo) {
         List<TicketCount> list = ticketService.getCounts(dayEventNo);
@@ -60,8 +99,26 @@ public class EventController {
         return ResponseEntity.ok(list);
     }
 
-    // 이벤트 등록
     @PostMapping("/event/register")
+    @Operation(summary = "행사 정보 생성", description = "행사 정보를 생성한다.(관리자만 가능)")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            content = @Content(schema = @Schema(implementation = BoardCreateDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "request body 형식이 옳바르지 않을 경우",
+                            content = @Content(schema = @Schema(implementation = ApiErrorView.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "관리자가 아닌 경우",
+                            content = @Content(schema = @Schema(implementation = ApiErrorView.class))
+                    )
+            }
+    )
     public ResponseEntity<Event> register(@RequestBody Event event) {
         //log.info("event: {}", event);
 
@@ -70,9 +127,32 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newEvent);
     }
 
-    // 이벤트 수정
     @PutMapping("/event/{eventNo}")
-    public ResponseEntity<Event> update(@PathVariable String eventNo, @RequestBody EventDto dto) {
+    @Operation(summary = "행사 정보 수정", description = "행사의 정보를 수정한다.(관리자만 가능)")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = Event.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "request body 형식이 옳바르지 않을 경우",
+                            content = @Content(schema = @Schema(implementation = ApiErrorView.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "관리자가 아닌 경우",
+                            content = @Content(schema = @Schema(implementation = ApiErrorView.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "수정하고자 하는 행사가 존재하지 않는 경우",
+                            content = @Content(schema = @Schema(implementation = ApiErrorView.class))
+                    )
+            }
+    )
+    public ResponseEntity<Event> update(@PathVariable String eventNo, @RequestBody EventUpdateDto dto) {
         //log.info("dto : {}", dto);
         eventService.uptData(eventNo, dto);
 
