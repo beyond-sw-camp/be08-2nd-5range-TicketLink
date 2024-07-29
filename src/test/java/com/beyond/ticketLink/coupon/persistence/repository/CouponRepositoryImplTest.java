@@ -87,9 +87,10 @@ class CouponRepositoryImplTest {
     @Test
     void selectAllCoupons_shouldReturnCorrectCoupons() {
         // given
-        CouponFindQuery query = new CouponFindQuery(DummyCoupon.DM_C_01.name(), DummyUser.DM_U_03.name());
+        CouponFindQuery query = new CouponFindQuery(DummyUser.DM_U_03.name());
+        RowBounds rowBounds = new RowBounds(1, 10);
         // when
-        List<Coupon> results = couponRepository.selectAllCoupons(query);
+        List<Coupon> results = couponRepository.selectAllCoupons(query, rowBounds);
         // then
         assertThat(results.isEmpty()).isFalse();
         log.info(results.toString());

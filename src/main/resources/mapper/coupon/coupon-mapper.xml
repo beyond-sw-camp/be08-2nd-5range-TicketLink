@@ -50,9 +50,6 @@
             <if test="userNo != null">
                 AND userNo = #{userNo}
             </if>
-            <if test="couponNo != null">
-                AND couponNo = #{couponNo}
-            </if>
         </where>
     </select>
 
