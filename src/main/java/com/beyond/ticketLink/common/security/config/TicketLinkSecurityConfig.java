@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -61,8 +60,12 @@ public class TicketLinkSecurityConfig {
             registry.requestMatchers(HttpMethod.POST, "/api/v1/res/*").hasRole("일반사용자");
             registry.requestMatchers("/api/v1/user/**", "/api/v1/event/**").hasRole("관리자");
 
-//            registry.anyRequest().authenticated();
-            registry.anyRequest().permitAll();
+            // coupon config
+            registry.requestMatchers(HttpMethod.POST, "/api/v1/coupons").hasRole("관리자");
+            registry.requestMatchers(HttpMethod.PUT, "/api/v1/coupons/**").hasRole("관리자");
+            registry.requestMatchers(HttpMethod.DELETE, "/api/v1/coupons/**").hasRole("관리자");
+
+            registry.anyRequest().authenticated();
         }));
 
         http.exceptionHandling(ex -> {

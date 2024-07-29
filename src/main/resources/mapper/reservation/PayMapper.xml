@@ -6,6 +6,7 @@
     <resultMap id="payMap" type="PayInfo">
         <id property="payNo" column="payNo" />
         <result property="payDate" column="payDate" />
+        <result property="payment" column="payment"/>
         <result property="status" column="status" />
         <result property="price" column="price" />
         <result property="fee" column="fee" />
