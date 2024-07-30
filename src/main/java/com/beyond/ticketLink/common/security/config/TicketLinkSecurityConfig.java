@@ -29,6 +29,9 @@ public class TicketLinkSecurityConfig {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
+    public static final String ADMIN = "관리자";
+    public static final String USER = "일반사용자";
+
     @Bean
     public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
         http.httpBasic(AbstractHttpConfigurer::disable)
@@ -52,18 +55,33 @@ public class TicketLinkSecurityConfig {
                     "/api/v1/board-categories"
             ).permitAll();
 
+            // swagger config
             registry.requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**").permitAll();
 
-            registry.requestMatchers(HttpMethod.GET, "/api/v1/boards", "/api/v1/boards/*", "/api/v1/events/**").permitAll();
+            // user role config
+            registry.requestMatchers(HttpMethod.GET, "/api/v1/user/profile").hasAnyRole(USER, ADMIN);
+            registry.requestMatchers(HttpMethod.POST,"/api/v1/user/logout").hasAnyRole(USER, ADMIN);
+            registry.requestMatchers(HttpMethod.GET, "/api/v1/user/*").hasRole(ADMIN);
 
-            registry.requestMatchers("/api/v1/user/logout", "/api/v1/res/**").hasAnyRole("관리자", "일반사용자");
-            registry.requestMatchers(HttpMethod.POST, "/api/v1/res/*").hasRole("일반사용자");
-            registry.requestMatchers("/api/v1/user/**", "/api/v1/event/**").hasRole("관리자");
+            // board role config
+            registry.requestMatchers(
+                    HttpMethod.GET,
+                    "/api/v1/boards",
+                    "/api/v1/boards/*"
+            ).permitAll();
+
+            // event role config
+            registry.requestMatchers(HttpMethod.GET,"/api/v1/events/**").permitAll();
+            registry.requestMatchers("/api/v1/event/**").hasRole(ADMIN);
+
+            // reservation role config
+            registry.requestMatchers("/api/v1/res/**").hasAnyRole(USER, ADMIN);
+            registry.requestMatchers(HttpMethod.POST, "/api/v1/res/*").hasRole(USER);
 
             // coupon config
-            registry.requestMatchers(HttpMethod.POST, "/api/v1/coupons").hasRole("관리자");
-            registry.requestMatchers(HttpMethod.PUT, "/api/v1/coupons/**").hasRole("관리자");
-            registry.requestMatchers(HttpMethod.DELETE, "/api/v1/coupons/**").hasRole("관리자");
+            registry.requestMatchers(HttpMethod.POST, "/api/v1/coupons").hasRole(ADMIN);
+            registry.requestMatchers(HttpMethod.PUT, "/api/v1/coupons/**").hasRole(ADMIN);
+            registry.requestMatchers(HttpMethod.DELETE, "/api/v1/coupons/**").hasRole(ADMIN);
 
             registry.anyRequest().authenticated();
         }));
