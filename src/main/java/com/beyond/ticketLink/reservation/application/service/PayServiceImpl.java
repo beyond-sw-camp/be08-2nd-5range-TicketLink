@@ -15,6 +15,7 @@ import com.beyond.ticketLink.reservation.application.domain.PayInfo;
 import com.beyond.ticketLink.reservation.application.domain.Reservation;
 import com.beyond.ticketLink.reservation.exception.ResMessageType;
 import com.beyond.ticketLink.reservation.persistence.dto.PayDto;
+import com.beyond.ticketLink.reservation.persistence.dto.PayListDto;
 import com.beyond.ticketLink.reservation.persistence.repository.PayRepository;
 import com.beyond.ticketLink.reservation.persistence.repository.ResRepository;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,7 @@ public class PayServiceImpl implements PayService {
     private final CouponUsedHistoryRepository couponUsedHistoryRepository;
 
     @Override
-    public List<PayInfo> getList(String userNo) {
+    public List<PayListDto> getList(String userNo) {
         return payRepository.getList(userNo);
     }
 
@@ -182,6 +183,7 @@ public class PayServiceImpl implements PayService {
     @Transactional
     public PayInfo updateData(String payNo) {
         PayInfo payInfo = payRepository.getData(payNo).get();
+
         List<Reservation> reservations = payInfo.getReservations();
         NotificationDto notiDto = new NotificationDto();
 

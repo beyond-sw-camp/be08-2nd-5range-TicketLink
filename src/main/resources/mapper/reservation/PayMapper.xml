@@ -90,7 +90,6 @@
         ORDER BY MAX(r.resDate) DESC
     </select>
 
-    <!-- Select query -->
     <select id="getData" parameterType="string" resultMap="payinfoResultMap">
         SELECT e.name,
                e.startDate,

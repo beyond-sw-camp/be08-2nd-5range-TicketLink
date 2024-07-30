@@ -7,10 +7,7 @@ import com.beyond.ticketLink.event.application.domain.Event;
 import com.beyond.ticketLink.event.application.service.DayEventService;
 import com.beyond.ticketLink.event.application.service.EventService;
 import com.beyond.ticketLink.event.application.service.TicketService;
-import com.beyond.ticketLink.event.persistence.dto.DayEventSearchCond;
-import com.beyond.ticketLink.event.persistence.dto.EventSearchCond;
-import com.beyond.ticketLink.event.persistence.dto.EventUpdateDto;
-import com.beyond.ticketLink.event.persistence.dto.TicketCount;
+import com.beyond.ticketLink.event.persistence.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -97,6 +94,27 @@ public class EventController {
         List<TicketCount> list = ticketService.getCounts(dayEventNo);
 
         return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/event/stats")
+    @Operation(summary = "행사 예매 현황 조회", description = "행사 예매 현황을 조회한다.(관리자만 가능)\n상시행사의 경우 전체 티켓을 0으로 표기")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = EventStatsDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "관리자가 아닌 경우",
+                            content = @Content(schema = @Schema(implementation = ApiErrorView.class))
+                    )
+            }
+    )
+    public ResponseEntity<List<EventStatsDto>> getStats(@ModelAttribute EventSearchCond cond) {
+        List<EventStatsDto> list = eventService.getStats(cond);
+
+        return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
     @PostMapping("/event/register")

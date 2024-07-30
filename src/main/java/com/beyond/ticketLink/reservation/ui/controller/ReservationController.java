@@ -8,6 +8,7 @@ import com.beyond.ticketLink.event.application.service.TicketService;
 import com.beyond.ticketLink.reservation.application.domain.PayInfo;
 import com.beyond.ticketLink.reservation.application.service.PayService;
 import com.beyond.ticketLink.reservation.persistence.dto.PayDto;
+import com.beyond.ticketLink.reservation.persistence.dto.PayListDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -87,7 +88,7 @@ public class ReservationController {
             value = {
                     @ApiResponse(
                             responseCode = "200",
-                            content = @Content(schema = @Schema(implementation = PayInfo.class))
+                            content = @Content(schema = @Schema(implementation = PayListDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "401",
@@ -96,7 +97,7 @@ public class ReservationController {
                     )
             }
     )
-    public ResponseEntity<List<PayInfo>> getPayList(@AuthenticationPrincipal String userNo) {
+    public ResponseEntity<List<PayListDto>> getPayList(@AuthenticationPrincipal String userNo) {
         return ResponseEntity.status(HttpStatus.OK).body(payService.getList(userNo));
     }
 
@@ -122,7 +123,7 @@ public class ReservationController {
 
     // 결제(예약) 취소
     @PutMapping("/res/myInfo/{payNo}")
-    @Operation(summary = "예약 취소", description = "선택한 예약을 취소한다.(회원만 가능)")
+    @Operation(summary = "예약 취소", description = "선택한 예약을 취소한다.(회원, 관리자만 가능)")
     @ApiResponses(
             value = {
                     @ApiResponse(
