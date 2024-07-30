@@ -53,10 +53,6 @@
 
    사용자들은 집에서나 어디에서든 인터넷을 통해 티켓을 쉽게 구매할 수 있으며 이는 고객들에게 훨씬 편리하고 접근성이 높은 서비스를 제공합니다.
 
-* **대기 시간 감소**
-  <br>
-
-   온라인 티켓팅 시스템은 실시간으로 티켓을 예약하고 구매할 수 있어서 대기 시간을 최소화하며 고객의 불편을 줄이고, 시스템의 효율성을 높입니다.
 
 * **판매 데이터 분석**
   <br>
@@ -76,7 +72,7 @@
 <br>
 
 ## 📆 WBS 
-[WBS 링크]()
+[WBS 링크](https://docs.google.com/spreadsheets/d/1TseUJVKfn0cBO2hnQomDzu8IzY5YdpwSpocNboIy1AE/edit?gid=1034965942#gid=1034965942)
 
 <br>
 
@@ -86,18 +82,253 @@
 <br>
 
 ## 🔲 테이블 명세서
-[테이블 명세서 링크]()
+[테이블 명세서 링크](https://docs.google.com/spreadsheets/d/1TseUJVKfn0cBO2hnQomDzu8IzY5YdpwSpocNboIy1AE/edit?gid=1741766758#gid=1741766758)
 
 <br>
 
 ## :clipboard: ERD
+![TicketLink](https://github.com/user-attachments/assets/1af0264d-1083-423f-b664-c741551943bf)
 
+<br>
+
+## :triangular_flag_on_post: 테스트 및 기능 시연
+
+[테스트 코드]()
 
 <br>
 
-## :triangular_flag_on_post: 테스트 및 결과
+
+<details>
+  <summary><b>유저 API</b></summary>
+  <div markdown="1">
+    <ul><br>
+      <details>
+      <summary></summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary></summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary></summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary></summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary></summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary></summary>
+      <img src="" width=70%>
+      </details>
+    </ul>
+  </div>
+</details>
 
 <br>
+
+
+<details>
+  <summary><b>메일 인증 API</b></summary>
+  <div markdown="1">
+    <ul><br>
+      <details>
+      <summary></summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary></summary>
+      <img src="" width=70%>
+      </details>
+    </ul>
+  </div>
+</details>
+
+<br>
+
+<details>
+  <summary><b>결제 및 예약 API</b></summary>
+  <div markdown="1">
+    <ul><br>
+      <details>
+      <summary>예약 정보 상세 조회</summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary>예약 정보 조회</summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary>선택한 행사의 티켓 현황 조회회</summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary>행사 결제 및 예약 정보 생성</summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary>예약 취소</summary>
+      </details>
+    </ul>
+  </div>
+</details>
+
+<br>
+
+<details>
+  <summary><b>행사 API</b></summary>
+  <div markdown="1">
+    <ul><br>
+      <details>
+      <summary>행사 목록 조회</summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary>행사 상세 조회</summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary>일자별 행사 목록 조회</summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary>행사 잔여 티켓 조회</summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary>행사 정보 생성</summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary>행사 정보 수정</summary>
+      <img src="" width=70%>
+      </details>
+    </ul>
+  </div>
+</details>
+
+<br>
+
+
+
+<details>
+  <summary><b>쿠폰 API</b></summary>
+  <div markdown="1">
+    <ul><br>
+      <details>
+      <summary>예약 정보 상세 조회</summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary>예약 취소</summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary>선택한 행사의 티켓 현황 조회</summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary>행사 결제 및 예약 정보 생성</summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary>나의 예약 정보 조회</summary>
+      <img src="" width=70%>
+      </details>
+    </ul>
+  </div>
+</details>
+
+<br>
+
+
+<details>
+  <summary><b>게시물 API</b></summary>
+  <div markdown="1">
+    <ul><br>
+      <details>
+      <summary>게시물 전체 조회</summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary>게시물 단일 조회</summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary>게시물 작성</summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary>게시물 수정</summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary>게시물 삭제</summary>
+      <img src="" width=70%>
+      </details>
+    </ul>
+  </div>
+</details>
+
+<br>
+
+<details>
+  <summary><b>댓글 API</b></summary>
+  <div markdown="1">
+    <ul><br>
+      <details>
+      <summary>댓글 생성</summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary>댓글 수정</summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary>댓글 삭제</summary>
+      <img src="" width=70%>
+      </details>  
+    </ul>
+  </div>
+</details>
+
+<br>
+
+<details>
+  <summary><b>알림 API</b></summary>
+  <div markdown="1">
+    <ul><br>
+      <details>
+      <summary>알림 정보 상세 조회</summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary>알림 정보 조회</summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary>알림 생성</summary>
+      <img src="" width=70%>
+      </details>
+      <details>
+      <summary>알림 삭제</summary>
+      <img src="" width=70%>
+      </details>
+    </ul>
+  </div>
+</details>
+
+<br>
+
+
+
+
+
 
 
 ## :tangerine: 회고
