@@ -9,6 +9,8 @@ public interface UserRepository {
 
     Optional<TicketLinkUserDetails> findUserById(String id);
 
+    Optional<TicketLinkUserDetails> selectUserByUserNo(String userNo);
+
     void save(UserCreateDto user);
 
 }

@@ -38,4 +38,15 @@
                  INNER JOIN tb_role r ON u.roleNo = r.roleNo
         WHERE u.id = #{id};
     </select>
+
+    <select id="selectUserByUserNo" parameterType="string" resultMap="userResultMap">
+        SELECT userNO,
+               id,
+               name,
+               email,
+               useYn,
+               roleNo
+        FROM tb_user
+        WHERE userNo = #{userNo}
+    </select>
 </mapper>
