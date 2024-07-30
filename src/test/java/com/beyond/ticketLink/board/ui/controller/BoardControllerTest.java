@@ -23,21 +23,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class BoardControllerTest {
 
-    // HTTP 요청을 시뮬레이션하고 응답을 검증하는 데 사용
     @Autowired
     MockMvc mockMvc;
 
-    // java 객체를 JSON으로 변환하는 데 사용
     @Autowired
     private ObjectMapper objectMapper;
 
-    // 실제 서비스 로직이 실행되지 않도록 BoardService의 모의 객체를 등록
     @MockBean
     private BoardService boardService;
 
 
     @Test
-    // 인증된 사용자로 테스트를 수행 - 인증된 사용자를 따라한 것
     @WithMockUser(username = "user", roles = {"USER"})
     void addBoard() throws Exception {
 

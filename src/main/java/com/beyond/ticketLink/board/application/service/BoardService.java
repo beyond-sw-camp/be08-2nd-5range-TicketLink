@@ -5,7 +5,6 @@ import com.beyond.ticketLink.board.application.service.BoardCategoryService.Find
 import com.beyond.ticketLink.board.persistence.dto.BoardFindQuery;
 import com.beyond.ticketLink.board.persistence.dto.BoardUpdateDto;
 import com.beyond.ticketLink.board.ui.requestbody.BoardCreateRequest;
-import com.beyond.ticketLink.event.application.domain.Event;
 import com.beyond.ticketLink.reply.application.service.ReplyService.FindReplyResult;
 import com.beyond.ticketLink.user.application.service.UserService.FindUserResult;
 import lombok.Builder;
@@ -13,7 +12,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +21,7 @@ public interface BoardService {
     // 게시판 작성
     void createBoard(BoardCreateRequest request, String userNo);
 
-    List<FindBoardResult> selectAllBoard(BoardFindQuery query);
+    List<FindBoardResult> getAllBoard(BoardFindQuery query);
 
     FindBoardResult getBoardByNo(BoardFindQuery query);
 
@@ -40,8 +39,8 @@ public interface BoardService {
         private final String title;
         private final String content;
         private final Float rating;
-        private final Date insDate;
-        private final Date uptDate;
+        private final LocalDate insDate;
+        private final LocalDate uptDate;
 
         // board category
         private final Integer boardCategoryNo;

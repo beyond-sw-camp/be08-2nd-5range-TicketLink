@@ -1,5 +1,6 @@
 package com.beyond.ticketLink.board.application.service;
 
+import com.beyond.ticketLink.autono.persistence.repository.AutoNoRepository;
 import com.beyond.ticketLink.board.application.domain.Board;
 import com.beyond.ticketLink.board.exception.BoardMessageType;
 import com.beyond.ticketLink.board.persistence.dto.BoardCreateDto;
@@ -8,12 +9,14 @@ import com.beyond.ticketLink.board.persistence.dto.BoardUpdateDto;
 import com.beyond.ticketLink.board.persistence.repository.BoardRepository;
 import com.beyond.ticketLink.board.ui.requestbody.BoardCreateRequest;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
-import com.beyond.ticketLink.event.application.service.EventService;
+import com.beyond.ticketLink.event.application.domain.Event;
+import com.beyond.ticketLink.event.exception.EventMessageType;
+import com.beyond.ticketLink.event.persistence.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,41 +24,43 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
-    // 비즈니스 로직 작성 중 예외 처리할 사항이 생길 경우
-    // com.beyond.ticketLink.common.exception 에 위치한
-    // MessageType 객체에 에러 추가해서 사용하기
+
+    private final AutoNoRepository autoNoRepository;
 
     private final BoardRepository boardRepository;
-    private final EventService eventService;
 
-    private static final LocalDate now = LocalDate.now();
+    private final EventRepository eventRepository;
 
-    public static final Date DB_GENERATED_DATE = null;
+    private static final LocalDate NOW = LocalDate.now();
+
 
     @Override
+    @Transactional
     public void createBoard(BoardCreateRequest request, String userNo) {
 
-        // insDate, uptDate 는 현재 날짜로 service에서 설정
-        // userNo 는  Controller session에서 가져오기
+        Event event = validateEvent(request);
+
+        String boardNo = autoNoRepository.getData("tb_board");
+
         boardRepository.save(
                 new BoardCreateDto(
-                        null,
+                        boardNo,
                         request.title(),
                         request.content(),
                         request.rating(),
-                        now,
-                        now,
+                        NOW,
+                        NOW,
                         userNo,
-                        request.eventNo(),
+                        event.getEventNo(),
                         request.bCategoryNo()
                 )
         );
 
-
     }
 
+
     @Override
-    public List<FindBoardResult> selectAllBoard(BoardFindQuery query) {
+    public List<FindBoardResult> getAllBoard(BoardFindQuery query) {
 
         int limit = query.getRow();
         int offset = (query.getPage() - 1) * limit;
@@ -91,7 +96,7 @@ public class BoardServiceImpl implements BoardService {
                 command.getContent(),
                 command.getTitle(),
                 command.getRating(),
-                DB_GENERATED_DATE
+                NOW
         );
 
         boardRepository.updateBoard(boardUpdateDto);
@@ -109,6 +114,12 @@ public class BoardServiceImpl implements BoardService {
         }
 
         boardRepository.deleteBoard(command.getBoardNo());
+
+    }
+
+    private Event validateEvent(BoardCreateRequest request) {
+        return eventRepository.getData(request.eventNo(), null)
+                .orElseThrow(() -> new TicketLinkException(EventMessageType.EVENT_NOT_FOUND));
 
     }
 

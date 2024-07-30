@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Getter
 @ToString
@@ -16,5 +16,5 @@ public class BoardUpdateDto {
     private String content;
     private String title;
     private float rating;
-    private Date uptDate;
+    private LocalDate uptDate;
 }
