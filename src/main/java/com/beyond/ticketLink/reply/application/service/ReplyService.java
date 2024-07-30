@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.sql.Date;
+import java.util.Optional;
 
 import static com.beyond.ticketLink.board.application.service.BoardService.FindBoardResult.*;
 import static com.beyond.ticketLink.user.application.service.UserService.FindUserResult.*;
@@ -43,14 +44,26 @@ public interface ReplyService {
         private final FindUserResult user;
 
         public static FindReplyResult findByReply(Reply reply) {
+            FindReplyResultBuilder builder = initDefault(reply);
+
+            Optional.ofNullable(reply.getUser())
+                    .map(FindUserResult::findByUser)
+                    .ifPresent(builder::user);
+
+            Optional.ofNullable(reply.getBoard())
+                    .map(FindBoardResult::findByBoard)
+                    .ifPresent(builder::board);
+
+            return builder.build();
+        }
+
+        private static FindReplyResultBuilder initDefault(Reply reply) {
             return FindReplyResult.builder()
                     .replyNo(reply.getReplyNo())
                     .cnt(reply.getCnt())
                     .content(reply.getContent())
                     .insDate(reply.getInsDate())
-                    .uptDate(reply.getUptDate())
-                    .user(findByUser(reply.getUser()))
-                    .build();
+                    .uptDate(reply.getUptDate());
         }
 
         public static FindReplyResult findByCreateDto(ReplyCreateDto dto) {

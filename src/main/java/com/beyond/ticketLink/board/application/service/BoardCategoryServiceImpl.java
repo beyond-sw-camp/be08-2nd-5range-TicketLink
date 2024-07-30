@@ -17,20 +17,20 @@ public class BoardCategoryServiceImpl implements BoardCategoryService {
     private final BoardCategoryRepository boardCategoryRepository;
 
     @Override
-    public FindCategoryResult getCategoryByNo(BoardCategoryFindQuery query) {
+    public FindBoardCategoryResult getCategoryByNo(BoardCategoryFindQuery query) {
         int bCategoryNo = query.getBCategoryNo();
 
-        return FindCategoryResult.findByBoardCategory(
+        return FindBoardCategoryResult.findByBoardCategory(
                 boardCategoryRepository.findByNo(bCategoryNo)
                         .orElseThrow(() -> new TicketLinkException(BoardCategoryMessageType.BOARD_CATEGORY_NOT_FOUND))
         );
     }
 
     @Override
-    public List<FindCategoryResult> selectAllCategory() {
+    public List<FindBoardCategoryResult> selectAllCategory() {
         return boardCategoryRepository.findAll()
                 .stream()
-                .map(FindCategoryResult::findByBoardCategory)
+                .map(FindBoardCategoryResult::findByBoardCategory)
                 .toList();
     }
 

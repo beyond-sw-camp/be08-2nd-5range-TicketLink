@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.ToString;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import java.util.Optional;
+
 public interface UserService extends UserDetailsService {
 
     void register(UserCreateRequest request);
@@ -33,14 +35,22 @@ public interface UserService extends UserDetailsService {
         private final UserRole role;
 
         public static FindUserResult findByUser(TicketLinkUserDetails user) {
+
+            FindUserResultBuilder builder = initDefault(user);
+
+            Optional.ofNullable(user.getRole())
+                    .ifPresent(builder::role);
+
+            return builder.build();
+        }
+
+        private static FindUserResultBuilder initDefault(TicketLinkUserDetails user) {
             return FindUserResult.builder()
                     .userNo(user.getUserNo())
                     .id(user.getId())
                     .name(user.getUsername())
                     .email(user.getEmail())
-                    .useYn(user.getUseYn())
-                    .role(user.getRole())
-                    .build();
+                    .useYn(user.getUseYn());
         }
     }
 

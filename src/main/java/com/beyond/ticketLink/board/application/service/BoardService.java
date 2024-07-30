@@ -1,16 +1,12 @@
 package com.beyond.ticketLink.board.application.service;
 
 import com.beyond.ticketLink.board.application.domain.Board;
-import com.beyond.ticketLink.board.application.domain.BoardCategory;
+import com.beyond.ticketLink.board.application.service.BoardCategoryService.FindBoardCategoryResult;
 import com.beyond.ticketLink.board.persistence.dto.BoardFindQuery;
 import com.beyond.ticketLink.board.persistence.dto.BoardUpdateDto;
 import com.beyond.ticketLink.board.ui.requestbody.BoardCreateRequest;
 import com.beyond.ticketLink.event.application.domain.Event;
-import com.beyond.ticketLink.reply.application.domain.Reply;
-import com.beyond.ticketLink.reply.application.service.ReplyService;
 import com.beyond.ticketLink.reply.application.service.ReplyService.FindReplyResult;
-import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
-import com.beyond.ticketLink.user.application.service.UserService;
 import com.beyond.ticketLink.user.application.service.UserService.FindUserResult;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -19,8 +15,7 @@ import lombok.ToString;
 
 import java.sql.Date;
 import java.util.List;
-
-import static com.beyond.ticketLink.user.application.service.UserService.FindUserResult.*;
+import java.util.Optional;
 
 public interface BoardService {
 
@@ -49,27 +44,40 @@ public interface BoardService {
         private final Date uptDate;
         private final FindUserResult user;
         private final Event event;
-        private final BoardCategory category;
+        private final FindBoardCategoryResult category;
         private final List<FindReplyResult> replies;
 
         public static FindBoardResult findByBoard(Board board) {
+            FindBoardResultBuilder builder = initDefault(board);
+
+            Optional.ofNullable(board.getUser())
+                    .map(FindUserResult::findByUser)
+                    .ifPresent(builder::user);
+
+            Optional.ofNullable(board.getEvent())
+                    .ifPresent(builder::event);
+
+            Optional.ofNullable(board.getCategory())
+                    .map(FindBoardCategoryResult::findByBoardCategory)
+                    .ifPresent(builder::category);
+
+            Optional.ofNullable(board.getReplies())
+                    .map(replies -> replies.stream()
+                            .map(FindReplyResult::findByReply)
+                            .toList())
+                    .ifPresent(builder::replies);
+
+            return builder.build();
+        }
+
+        private static FindBoardResultBuilder initDefault(Board board) {
             return FindBoardResult.builder()
                     .boardNo(board.getBoardNo())
                     .title(board.getTitle())
-                    .content(board.getTitle())
+                    .content(board.getContent())
                     .rating(board.getRating())
                     .insDate(board.getInsDate())
-                    .uptDate(board.getUptDate())
-                    .user(findByUser(board.getUser()))
-                    .event(board.getEvent())
-                    .category(board.getCategory())
-                    .replies(
-                            board.getReplies()
-                            .stream()
-                            .map(FindReplyResult::findByReply)
-                            .toList()
-                    )
-                    .build();
+                    .uptDate(board.getUptDate());
         }
 
         public static FindBoardResult findByBoardUpdateDto(BoardUpdateDto boardUpdateDto) {
