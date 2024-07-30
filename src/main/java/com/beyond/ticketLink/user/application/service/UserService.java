@@ -18,6 +18,8 @@ public interface UserService extends UserDetailsService {
 
     FindJwtResult login(UserLoginRequest request);
 
+    FindUserResult getUserByUserNo(String userNo);
+
     void logout(LogoutCommand command);
 
     void checkIdDuplicated(String id);
@@ -32,14 +34,16 @@ public interface UserService extends UserDetailsService {
         private final String name;
         private final String email;
         private final char useYn;
-        private final UserRole role;
+        private final String role;
 
         public static FindUserResult findByUser(TicketLinkUserDetails user) {
 
             FindUserResultBuilder builder = initDefault(user);
 
             Optional.ofNullable(user.getRole())
-                    .ifPresent(builder::role);
+                    .ifPresent(role -> {
+                        builder.role(role.getName());
+                    });
 
             return builder.build();
         }
