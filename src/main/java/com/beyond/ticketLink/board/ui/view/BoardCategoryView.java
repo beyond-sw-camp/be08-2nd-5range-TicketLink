@@ -1,6 +1,6 @@
 package com.beyond.ticketLink.board.ui.view;
 
-import com.beyond.ticketLink.board.application.service.BoardCategoryService.FindCategoryResult;
+import com.beyond.ticketLink.board.application.service.BoardCategoryService.FindBoardCategoryResult;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -14,7 +14,7 @@ public class BoardCategoryView {
 
     private final String name;
 
-    public BoardCategoryView(FindCategoryResult boardCategory) {
+    public BoardCategoryView(FindBoardCategoryResult boardCategory) {
         this.bCategoryNo = boardCategory.getBCategoryNo();
         this.name = boardCategory.getName();
     }

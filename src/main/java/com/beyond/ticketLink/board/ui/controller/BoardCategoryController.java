@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.beyond.ticketLink.board.application.service.BoardCategoryService.FindCategoryResult;
+import static com.beyond.ticketLink.board.application.service.BoardCategoryService.FindBoardCategoryResult;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -23,7 +23,7 @@ public class BoardCategoryController {
     @GetMapping("/board-categories")
     public ResponseEntity<ApiResponseView<List<BoardCategoryView>>> selectAllCategory() {
 
-        List<FindCategoryResult> allCategory = boardCategoryService.selectAllCategory();
+        List<FindBoardCategoryResult> allCategory = boardCategoryService.selectAllCategory();
 
         return ResponseEntity.ok()
                 .body(new ApiResponseView<>(allCategory.stream()

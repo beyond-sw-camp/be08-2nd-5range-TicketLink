@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.sql.Date;
+import java.util.Optional;
 
 import static com.beyond.ticketLink.board.application.service.BoardService.FindBoardResult.*;
 import static com.beyond.ticketLink.user.application.service.UserService.FindUserResult.*;
@@ -31,26 +32,38 @@ public interface ReplyService {
     @ToString
     @EqualsAndHashCode
     class FindReplyResult {
+        // reply
         private final String replyNo;
         private final Integer cnt;
         private final String content;
         private final Date insDate;
         private final Date uptDate;
-        private final String boardNo;
-        private final String userNo;
 
-        private final FindBoardResult board;
-        private final FindUserResult user;
+        // reply user
+        private final String username;
+        private final String email;
 
         public static FindReplyResult findByReply(Reply reply) {
+            FindReplyResultBuilder builder = initDefault(reply);
+
+            Optional.ofNullable(reply.getUser())
+                    .map(FindUserResult::findByUser)
+                    .ifPresent((user -> {
+                        builder.username(user.getName())
+                                .email(user.getEmail());
+                    }));
+
+
+            return builder.build();
+        }
+
+        private static FindReplyResultBuilder initDefault(Reply reply) {
             return FindReplyResult.builder()
                     .replyNo(reply.getReplyNo())
                     .cnt(reply.getCnt())
                     .content(reply.getContent())
                     .insDate(reply.getInsDate())
-                    .uptDate(reply.getUptDate())
-                    .user(findByUser(reply.getUser()))
-                    .build();
+                    .uptDate(reply.getUptDate());
         }
 
         public static FindReplyResult findByCreateDto(ReplyCreateDto dto) {

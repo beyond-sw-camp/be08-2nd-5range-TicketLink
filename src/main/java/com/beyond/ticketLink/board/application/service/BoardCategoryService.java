@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface BoardCategoryService {
 
-    FindCategoryResult getCategoryByNo(BoardCategoryFindQuery query);
+    FindBoardCategoryResult getCategoryByNo(BoardCategoryFindQuery query);
 
-    List<FindCategoryResult> selectAllCategory();
+    List<FindBoardCategoryResult> selectAllCategory();
 
     @Getter
     @ToString
@@ -33,12 +33,12 @@ public interface BoardCategoryService {
     @Builder
     @ToString
     @EqualsAndHashCode
-    class FindCategoryResult {
+    class FindBoardCategoryResult {
         private int bCategoryNo;
         private String name;
 
-        static FindCategoryResult findByBoardCategory(BoardCategory boardCategory) {
-            return FindCategoryResult.builder()
+        static FindBoardCategoryResult findByBoardCategory(BoardCategory boardCategory) {
+            return FindBoardCategoryResult.builder()
                     .bCategoryNo(boardCategory.getBCategoryNo())
                     .name(boardCategory.getName())
                     .build();
