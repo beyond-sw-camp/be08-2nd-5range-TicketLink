@@ -32,19 +32,19 @@ public class CouponController {
             @ApiResponse(responseCode = "201", content = @Content(schema = @Schema(implementation = CouponCreateRequest.class))),
             @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ApiErrorView.class)))
     })
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Void> createCoupon(@RequestBody CouponCreateRequest request) {
         couponService.createCoupon(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     // 쿠폰 번호로 쿠폰 조회
-    @Operation(summary = "쿠폰 조회", description = "쿠폰 번호로 쿠폰 조회 API")
+    @Operation(summary = "쿠폰 번호로 쿠폰 조회", description = "쿠폰 번호로 쿠폰 조회 API")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Coupon.class))),
             @ApiResponse(responseCode = "404", description = "쿠폰을 찾을 수 없는 경우", content = @Content(schema = @Schema(implementation = ApiErrorView.class)))
     })
-    @GetMapping("/{couponNo}")
+    @GetMapping("/callCouponNo/{couponNo}")
     public ResponseEntity<Coupon> getCouponByNo(@PathVariable String couponNo) {
         return couponService.getCouponByNo(couponNo)
                 .map(ResponseEntity::ok)
@@ -52,12 +52,12 @@ public class CouponController {
     }
 
     // 사용자 쿠폰 목록 조회
-    @Operation(summary = "사용자 쿠폰 목록 조회", description = "사용자 쿠폰 목록 조회 API - 로그인한 사용자만 가능")
+    @Operation(summary = "사용자 번호로 쿠폰 목록 조회", description = "사용자 쿠폰 목록 조회 API - 로그인한 사용자만 가능")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Coupon.class))),
             @ApiResponse(responseCode = "404", description = "쿠폰을 찾을 수 없는 경우", content = @Content(schema = @Schema(implementation = ApiErrorView.class)))
     })
-    @GetMapping
+    @GetMapping("/callUserNo/{userNo}")
     public ResponseEntity<List<Coupon>> getCouponsByUserNo(
             @RequestParam String userNo,
             @RequestParam(defaultValue = "1") int page,
@@ -73,7 +73,7 @@ public class CouponController {
             @ApiResponse(responseCode = "400", description = "요청 형식이 올바르지 않은 경우", content = @Content(schema = @Schema(implementation = ApiErrorView.class))),
             @ApiResponse(responseCode = "404", description = "쿠폰을 찾을 수 없는 경우", content = @Content(schema = @Schema(implementation = ApiErrorView.class)))
     })
-    @PutMapping("/{couponNo}")
+    @PutMapping("/update/{couponNo}")
     public ResponseEntity<Void> updateCoupon(@PathVariable String couponNo, @RequestBody CouponUpdateRequest request) {
         couponService.updateCoupon(couponNo, request);
         return ResponseEntity.ok().build();
@@ -85,7 +85,7 @@ public class CouponController {
             @ApiResponse(responseCode = "200"),
             @ApiResponse(responseCode = "404", description = "쿠폰을 찾을 수 없는 경우", content = @Content(schema = @Schema(implementation = ApiErrorView.class)))
     })
-    @DeleteMapping("/{couponNo}")
+    @DeleteMapping("/delete/{couponNo}")
     public ResponseEntity<Void> deleteCoupon(@PathVariable String couponNo) {
         couponService.deleteCoupon(couponNo);
         return ResponseEntity.ok().build();
