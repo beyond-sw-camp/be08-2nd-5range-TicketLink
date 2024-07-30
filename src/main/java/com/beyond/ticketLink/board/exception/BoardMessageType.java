@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 public enum BoardMessageType implements MessageType {
 
     // board
-    BOARD_OPERATION_UNAUTHORIZED("You don't have permission to manipulate board.", HttpStatus.UNAUTHORIZED),
+    BOARD_OPERATION_UNAUTHORIZED("You don't have permission to manipulate board.", HttpStatus.BAD_REQUEST),
     BOARD_NOT_FOUND("No Boards were found for your request.", HttpStatus.NOT_FOUND)
     ;
 
