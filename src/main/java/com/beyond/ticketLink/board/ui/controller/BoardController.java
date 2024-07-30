@@ -49,8 +49,6 @@ public class BoardController {
     )
     @PostMapping("/boards")
     public ResponseEntity<Void> addBoard(@RequestBody BoardCreateRequest request, @AuthenticationPrincipal String userNo) {
-        // 실제 서비스 로직을 호출하여 BoardView 객체를 생성하는 부분이 필요
-        // 예: BoardView boardView = boardService.createBoard(...);
 
         boardService.createBoard(request, userNo);
 
@@ -73,11 +71,9 @@ public class BoardController {
     ) {
         BoardFindQuery query = new BoardFindQuery(category, page);
 
-        // map(BoardView::new) : BoardView의 생성자를 호출하여 Board 객체를 BoardView 객체로 변환하여 매핑
-        // stream().collect(Collectors.toList()) : 스트림의 결과를 다시 리스트로
-        List<FindBoardResult> results = boardService.selectAllBoard(query);
+        List<FindBoardResult> results = boardService.getAllBoard(query);
         System.out.println(results.toString());
-        // 클라이언트에게 boardViews를 응답으로 보냄
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponseView<>(
                         results.stream()
