@@ -62,7 +62,7 @@ public class BoardController {
             value = {
                     @ApiResponse(
                             responseCode = "200",
-                            content = @Content(schema = @Schema(implementation = Board.class))
+                            content = @Content(schema = @Schema(implementation = FindBoardResult.class))
                     ),
             }
     )
@@ -76,7 +76,7 @@ public class BoardController {
         // map(BoardView::new) : BoardView의 생성자를 호출하여 Board 객체를 BoardView 객체로 변환하여 매핑
         // stream().collect(Collectors.toList()) : 스트림의 결과를 다시 리스트로
         List<FindBoardResult> results = boardService.selectAllBoard(query);
-
+        System.out.println(results.toString());
         // 클라이언트에게 boardViews를 응답으로 보냄
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponseView<>(
@@ -91,7 +91,7 @@ public class BoardController {
             value = {
                     @ApiResponse(
                             responseCode = "200",
-                            content = @Content(schema = @Schema(implementation = Board.class))
+                            content = @Content(schema = @Schema(implementation = FindBoardResult.class))
                     ),
             }
     )
@@ -102,7 +102,7 @@ public class BoardController {
         BoardFindQuery query = new BoardFindQuery(boardNo);
 
         FindBoardResult result = boardService.getBoardByNo(query);
-
+        System.out.println(result.toString());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponseView<>(new BoardView(result)));
     }

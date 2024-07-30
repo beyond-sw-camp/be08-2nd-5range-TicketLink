@@ -48,8 +48,6 @@
                tb_b.rating,
                tb_b.insDate,
                tb_b.uptDate,
-               tb_b.userNo,
-               tb_b.eventNo,
                tb_u.userNo       AS 'u_userNo',
                tb_u.id           AS 'u_id',
                tb_u.name         AS 'u_name',
@@ -71,18 +69,21 @@
                tb_e.uptDate      AS 'e_uptDate',
                tb_bc.bCategoryNo AS 'bc_bCategoryNo',
                tb_bc.name        AS 'bc_name',
+               tb_br.replyNo     AS 'br_replyNo',
                tb_br.content     AS 'br_content',
-               tb_br.insDate     AS 'br_insDate',
                tb_br.cnt         AS 'br_cnt',
+               tb_br.uptDate     AS 'br_uptDate',
+               reply_u.id        AS 'br_u_id',
                reply_u.name      AS 'br_u_name',
-               reply_u.email     AS 'br_u_email'
+               reply_u.email     AS 'br_u_email',
+               reply_u.useYn     AS 'br_u_useYn'
         FROM tb_board tb_b
                  INNER JOIN tb_user tb_u ON tb_b.userNo = tb_u.userNo
                  INNER JOIN tb_role tb_r ON tb_u.roleNo = tb_r.roleNo
-                 LEFT JOIN tb_event tb_e ON tb_b.eventNo = tb_e.eventNo
-                 LEFT JOIN tb_boardCategory tb_bc ON tb_b.bCategoryNo = tb_bc.bCategoryNo
-                 LEFT JOIN tb_reply tb_br ON tb_b.boardNo = tb_br.boardNo
-                 LEFT JOIN tb_user reply_u ON tb_br.userNo = reply_u.userNo
+                 INNER JOIN tb_event tb_e ON tb_b.eventNo = tb_e.eventNo
+                 INNER JOIN tb_boardCategory tb_bc ON tb_b.bCategoryNo = tb_bc.bCategoryNo
+                 INNER JOIN tb_reply tb_br ON tb_b.boardNo = tb_br.boardNo
+                 INNER JOIN tb_user reply_u ON tb_br.userNo = reply_u.userNo
         WHERE tb_b.boardNo = #{boardNo};
     </select>
 
@@ -116,18 +117,25 @@
                tb_bc.name        AS 'bc_name',
                tb_br.replyNo     AS 'br_replyNo',
                tb_br.content     AS 'br_content',
-               tb_br.cnt         AS 'br_cnt'
+               tb_br.cnt         AS 'br_cnt',
+               tb_br.uptDate     AS 'br_uptDate',
+               reply_u.id        AS 'br_u_id',
+               reply_u.name      AS 'br_u_name',
+               reply_u.email     AS 'br_u_email',
+               reply_u.useYn     AS 'br_u_useYn'
         FROM tb_board tb_b
                  INNER JOIN tb_user tb_u ON tb_b.userNo = tb_u.userNo
                  INNER JOIN tb_role tb_r ON tb_u.roleNo = tb_r.roleNo
                  INNER JOIN tb_event tb_e ON tb_b.eventNo = tb_e.eventNo
                  INNER JOIN tb_boardCategory tb_bc ON tb_b.bCategoryNo = tb_bc.bCategoryNo
                  INNER JOIN tb_reply tb_br ON tb_b.boardNo = tb_br.boardNo
+                 INNER JOIN tb_user reply_u ON tb_br.userNo = reply_u.userNo
         <where>
             <if test="query.bCategoryNo != null">
                 AND tb_bc.bCategoryNo = #{query.bCategoryNo}
             </if>
         </where>
+
     </select>
 
     <update id="updateBoard" parameterType="BoardUpdateDto">

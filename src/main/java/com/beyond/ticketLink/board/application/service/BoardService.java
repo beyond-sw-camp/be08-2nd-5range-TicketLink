@@ -7,7 +7,11 @@ import com.beyond.ticketLink.board.persistence.dto.BoardUpdateDto;
 import com.beyond.ticketLink.board.ui.requestbody.BoardCreateRequest;
 import com.beyond.ticketLink.event.application.domain.Event;
 import com.beyond.ticketLink.reply.application.domain.Reply;
+import com.beyond.ticketLink.reply.application.service.ReplyService;
+import com.beyond.ticketLink.reply.application.service.ReplyService.FindReplyResult;
 import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
+import com.beyond.ticketLink.user.application.service.UserService;
+import com.beyond.ticketLink.user.application.service.UserService.FindUserResult;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -15,6 +19,8 @@ import lombok.ToString;
 
 import java.sql.Date;
 import java.util.List;
+
+import static com.beyond.ticketLink.user.application.service.UserService.FindUserResult.*;
 
 public interface BoardService {
 
@@ -41,12 +47,12 @@ public interface BoardService {
         private final Float rating;
         private final Date insDate;
         private final Date uptDate;
-        private final TicketLinkUserDetails user;
+        private final FindUserResult user;
         private final Event event;
         private final BoardCategory category;
-        private final List<Reply> replies;
+        private final List<FindReplyResult> replies;
 
-        static FindBoardResult findByBoard(Board board) {
+        public static FindBoardResult findByBoard(Board board) {
             return FindBoardResult.builder()
                     .boardNo(board.getBoardNo())
                     .title(board.getTitle())
@@ -54,14 +60,19 @@ public interface BoardService {
                     .rating(board.getRating())
                     .insDate(board.getInsDate())
                     .uptDate(board.getUptDate())
-                    .user(board.getUser())
+                    .user(findByUser(board.getUser()))
                     .event(board.getEvent())
                     .category(board.getCategory())
-                    .replies(board.getReplies())
+                    .replies(
+                            board.getReplies()
+                            .stream()
+                            .map(FindReplyResult::findByReply)
+                            .toList()
+                    )
                     .build();
         }
 
-        static FindBoardResult findByBoardUpdateDto(BoardUpdateDto boardUpdateDto) {
+        public static FindBoardResult findByBoardUpdateDto(BoardUpdateDto boardUpdateDto) {
             return FindBoardResult.builder()
                     .boardNo(boardUpdateDto.getBoardNo())
                     .title(boardUpdateDto.getTitle())

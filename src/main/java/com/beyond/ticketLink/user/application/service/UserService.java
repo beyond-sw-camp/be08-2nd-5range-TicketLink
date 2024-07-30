@@ -1,10 +1,13 @@
 package com.beyond.ticketLink.user.application.service;
 
+import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
+import com.beyond.ticketLink.user.application.domain.UserRole;
 import com.beyond.ticketLink.user.ui.requestbody.UserCreateRequest;
 import com.beyond.ticketLink.user.ui.requestbody.UserLoginRequest;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
@@ -17,6 +20,29 @@ public interface UserService extends UserDetailsService {
 
     void checkIdDuplicated(String id);
 
+    @Getter
+    @Builder
+    @ToString
+    @EqualsAndHashCode
+    class FindUserResult {
+        private final String userNo;
+        private final String id;
+        private final String name;
+        private final String email;
+        private final char useYn;
+        private final UserRole role;
+
+        public static FindUserResult findByUser(TicketLinkUserDetails user) {
+            return FindUserResult.builder()
+                    .userNo(user.getUserNo())
+                    .id(user.getId())
+                    .name(user.getUsername())
+                    .email(user.getEmail())
+                    .useYn(user.getUseYn())
+                    .role(user.getRole())
+                    .build();
+        }
+    }
 
     @Getter
     @Builder
