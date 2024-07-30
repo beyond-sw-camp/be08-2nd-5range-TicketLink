@@ -47,7 +47,7 @@ class BoardCategoryServiceImplTest {
         // given
         int currentCategorySize = 3;
         // when
-        List<FindBoardCategoryResult> allCategory = boardCategoryService.getAllCategory();
+        List<FindBoardCategoryResult> allCategory = boardCategoryService.selectAllCategory();
         // then
         assertThat(allCategory.size()).isEqualTo(currentCategorySize);
     }

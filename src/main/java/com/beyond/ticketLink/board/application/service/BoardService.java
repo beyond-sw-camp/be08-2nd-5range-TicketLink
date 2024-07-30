@@ -42,24 +42,32 @@ public interface BoardService {
         private final Float rating;
         private final Date insDate;
         private final Date uptDate;
-        private final FindUserResult user;
-        private final Event event;
-        private final FindBoardCategoryResult category;
+
+        // board category
+        private final Integer boardCategoryNo;
+        private final String boardCategoryName;
+
+        // board writer
+        private final String username;
+
         private final List<FindReplyResult> replies;
+
 
         public static FindBoardResult findByBoard(Board board) {
             FindBoardResultBuilder builder = initDefault(board);
 
             Optional.ofNullable(board.getUser())
                     .map(FindUserResult::findByUser)
-                    .ifPresent(builder::user);
-
-            Optional.ofNullable(board.getEvent())
-                    .ifPresent(builder::event);
+                    .ifPresent(user -> {
+                        builder.username(user.getName());
+                    });
 
             Optional.ofNullable(board.getCategory())
                     .map(FindBoardCategoryResult::findByBoardCategory)
-                    .ifPresent(builder::category);
+                    .ifPresent(boardCategory -> {
+                        builder.boardCategoryNo(boardCategory.getBCategoryNo())
+                                .boardCategoryName(boardCategory.getName());
+                    });
 
             Optional.ofNullable(board.getReplies())
                     .map(replies -> replies.stream()

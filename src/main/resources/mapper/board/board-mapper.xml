@@ -80,10 +80,10 @@
         FROM tb_board tb_b
                  INNER JOIN tb_user tb_u ON tb_b.userNo = tb_u.userNo
                  INNER JOIN tb_role tb_r ON tb_u.roleNo = tb_r.roleNo
-                 INNER JOIN tb_event tb_e ON tb_b.eventNo = tb_e.eventNo
-                 INNER JOIN tb_boardCategory tb_bc ON tb_b.bCategoryNo = tb_bc.bCategoryNo
-                 INNER JOIN tb_reply tb_br ON tb_b.boardNo = tb_br.boardNo
-                 INNER JOIN tb_user reply_u ON tb_br.userNo = reply_u.userNo
+                 LEFT JOIN tb_event tb_e ON tb_b.eventNo = tb_e.eventNo
+                 LEFT JOIN tb_boardCategory tb_bc ON tb_b.bCategoryNo = tb_bc.bCategoryNo
+                 LEFT JOIN tb_reply tb_br ON tb_b.boardNo = tb_br.boardNo
+                 LEFT JOIN tb_user reply_u ON tb_br.userNo = reply_u.userNo
         WHERE tb_b.boardNo = #{boardNo};
     </select>
 
@@ -126,10 +126,10 @@
         FROM tb_board tb_b
                  INNER JOIN tb_user tb_u ON tb_b.userNo = tb_u.userNo
                  INNER JOIN tb_role tb_r ON tb_u.roleNo = tb_r.roleNo
-                 INNER JOIN tb_event tb_e ON tb_b.eventNo = tb_e.eventNo
-                 INNER JOIN tb_boardCategory tb_bc ON tb_b.bCategoryNo = tb_bc.bCategoryNo
-                 INNER JOIN tb_reply tb_br ON tb_b.boardNo = tb_br.boardNo
-                 INNER JOIN tb_user reply_u ON tb_br.userNo = reply_u.userNo
+                 LEFT JOIN tb_event tb_e ON tb_b.eventNo = tb_e.eventNo
+                 LEFT JOIN tb_boardCategory tb_bc ON tb_b.bCategoryNo = tb_bc.bCategoryNo
+                 LEFT JOIN tb_reply tb_br ON tb_b.boardNo = tb_br.boardNo
+                 LEFT JOIN tb_user reply_u ON tb_br.userNo = reply_u.userNo
         <where>
             <if test="query.bCategoryNo != null">
                 AND tb_bc.bCategoryNo = #{query.bCategoryNo}

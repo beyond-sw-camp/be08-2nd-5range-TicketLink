@@ -32,27 +32,27 @@ public interface ReplyService {
     @ToString
     @EqualsAndHashCode
     class FindReplyResult {
+        // reply
         private final String replyNo;
         private final Integer cnt;
         private final String content;
         private final Date insDate;
         private final Date uptDate;
-        private final String boardNo;
-        private final String userNo;
 
-        private final FindBoardResult board;
-        private final FindUserResult user;
+        // reply user
+        private final String username;
+        private final String email;
 
         public static FindReplyResult findByReply(Reply reply) {
             FindReplyResultBuilder builder = initDefault(reply);
 
             Optional.ofNullable(reply.getUser())
                     .map(FindUserResult::findByUser)
-                    .ifPresent(builder::user);
+                    .ifPresent((user -> {
+                        builder.username(user.getName())
+                                .email(user.getEmail());
+                    }));
 
-            Optional.ofNullable(reply.getBoard())
-                    .map(FindBoardResult::findByBoard)
-                    .ifPresent(builder::board);
 
             return builder.build();
         }
