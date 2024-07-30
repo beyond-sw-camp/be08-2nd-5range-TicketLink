@@ -19,4 +19,5 @@ public class PayDto {
     private Long discount;
     private Long totalAmt;
     private Character payment;
+    private String couponNo;
 }

@@ -27,4 +27,9 @@ public class PayRepositoryImpl implements PayRepository {
     public void insData(PayInfo payInfo) {
         payMapper.insData(payInfo);
     }
+
+    @Override
+    public void uptData(String payNo) {
+        payMapper.uptData(payNo);
+    }
 }

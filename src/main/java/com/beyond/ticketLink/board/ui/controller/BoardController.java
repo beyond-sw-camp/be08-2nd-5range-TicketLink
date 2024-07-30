@@ -6,7 +6,6 @@ import com.beyond.ticketLink.board.application.service.BoardService;
 import com.beyond.ticketLink.board.persistence.dto.BoardCreateDto;
 import com.beyond.ticketLink.board.persistence.dto.BoardFindQuery;
 import com.beyond.ticketLink.board.ui.requestbody.BoardCreateRequest;
-
 import com.beyond.ticketLink.board.ui.requestbody.BoardUpdateRequest;
 import com.beyond.ticketLink.board.ui.view.BoardView;
 import com.beyond.ticketLink.common.view.ApiErrorView;
@@ -20,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Repository;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -77,7 +75,7 @@ public class BoardController {
 
         // map(BoardView::new) : BoardView의 생성자를 호출하여 Board 객체를 BoardView 객체로 변환하여 매핑
         // stream().collect(Collectors.toList()) : 스트림의 결과를 다시 리스트로
-        List<FindBoardResult> results = boardService.getAllBoard(query);
+        List<FindBoardResult> results = boardService.selectAllBoard(query);
 
         // 클라이언트에게 boardViews를 응답으로 보냄
         return ResponseEntity.status(HttpStatus.OK)

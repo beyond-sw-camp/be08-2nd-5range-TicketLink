@@ -21,5 +21,6 @@ public class PayInfo {
     private Long discount;  // 할인금액
     private Long totalAmt;  // 총 금액
     private String userNo;
+    private LocalDate insDate;
     private List<Reservation> reservations;
 }

@@ -2,7 +2,6 @@ package com.beyond.ticketLink.board.application.service;
 
 import com.beyond.ticketLink.board.exception.BoardCategoryMessageType;
 import com.beyond.ticketLink.board.persistence.repository.BoardCategoryRepository;
-import com.beyond.ticketLink.common.exception.CommonMessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +27,7 @@ public class BoardCategoryServiceImpl implements BoardCategoryService {
     }
 
     @Override
-    public List<FindCategoryResult> getAllCategory() {
+    public List<FindCategoryResult> selectAllCategory() {
         return boardCategoryRepository.findAll()
                 .stream()
                 .map(FindCategoryResult::findByBoardCategory)

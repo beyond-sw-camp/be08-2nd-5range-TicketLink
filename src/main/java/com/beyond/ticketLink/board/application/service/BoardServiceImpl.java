@@ -7,7 +7,6 @@ import com.beyond.ticketLink.board.persistence.dto.BoardFindQuery;
 import com.beyond.ticketLink.board.persistence.dto.BoardUpdateDto;
 import com.beyond.ticketLink.board.persistence.repository.BoardRepository;
 import com.beyond.ticketLink.board.ui.requestbody.BoardCreateRequest;
-import com.beyond.ticketLink.common.exception.CommonMessageType;
 import com.beyond.ticketLink.common.exception.TicketLinkException;
 import com.beyond.ticketLink.event.application.service.EventService;
 import lombok.RequiredArgsConstructor;
@@ -56,7 +55,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<FindBoardResult> getAllBoard(BoardFindQuery query) {
+    public List<FindBoardResult> selectAllBoard(BoardFindQuery query) {
 
         int limit = query.getRow();
         int offset = (query.getPage() - 1) * limit;

@@ -1,13 +1,13 @@
 package com.beyond.ticketLink.event.persistence.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
+@AllArgsConstructor
 @Getter
-@Setter
 @ToString
-public class EventDto {
+public class EventUpdateDto {
     private String name;    // 행사이름
     private String eTime;   // 시각
     private String location;    // 장소

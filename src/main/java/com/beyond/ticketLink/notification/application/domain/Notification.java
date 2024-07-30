@@ -1,5 +1,6 @@
 package com.beyond.ticketLink.notification.application.domain;
 
+import com.beyond.ticketLink.reservation.application.domain.PayInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,9 @@ public class Notification {
 
     private LocalDate notiDate;
 
-    private Character notiStaus;
+    private Character notiStatus;
 
     private String payNo; // 외래키
+
+    private PayInfo payInfo;
 }

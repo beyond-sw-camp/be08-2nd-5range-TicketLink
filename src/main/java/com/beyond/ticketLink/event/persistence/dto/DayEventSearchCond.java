@@ -1,5 +1,6 @@
 package com.beyond.ticketLink.event.persistence.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -7,10 +8,11 @@ import lombok.ToString;
 import java.time.LocalDate;
 import java.util.List;
 
+@AllArgsConstructor
 @Getter
 @Setter
 @ToString
-public class DayEventDto {
+public class DayEventSearchCond {
     private LocalDate sDate;
     private LocalDate eDate;
     private String dayInfo;

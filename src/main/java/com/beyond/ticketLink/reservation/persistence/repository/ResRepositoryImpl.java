@@ -32,4 +32,9 @@ public class ResRepositoryImpl implements ResRepository {
     public void insData(Reservation reservation) {
         reservationMapper.insData(reservation);
     }
+
+    @Override
+    public void uptData(String payNo) {
+        reservationMapper.uptData(payNo);
+    }
 }

@@ -1,0 +1,54 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.beyond.ticketLink.couponhistory.persistence.mapper.CouponUsedHistoryMapper">
+
+    <resultMap id="couponUsedHistoryResultMap" type="CouponUsedHistory">
+        <id property="useHistoryNo" column="useHistoryNo"/>
+        <result property="useDate" column="useDate"/>
+    </resultMap>
+
+    <resultMap id="couponUsedHistoryWithAllResultMap" type="CouponUsedHistory" extends="couponUsedHistoryResultMap">
+        <association property="coupon"
+                     columnPrefix="c_"
+                     resultMap="com.beyond.ticketLink.coupon.persistence.mapper.CouponMapper.couponResultMap"/>
+        <association property="payInfo"
+                     columnPrefix="pi_"
+                     resultMap="com.beyond.ticketLink.reservation.persistence.mapper.PayMapper.payMap"/>
+    </resultMap>
+
+
+    <insert id="saveCouponUsedHistory" parameterType="CouponUsedHistoryCreateDto">
+        INSERT INTO tb_couponUsedHistory(useHistoryNo, useDate, couponNo, payNo)
+        VALUES (#{useHistoryNo},
+                #{useDate},
+                #{couponNo},
+                #{payNo}
+               )
+    </insert>
+
+    <select id="selectCouponUsedHistoryByCouponNo" resultMap="couponUsedHistoryWithAllResultMap">
+        SELECT cpuh.useDate,
+               cp.couponNo     AS 'c_couponNo',
+               cp.name         AS 'c_name',
+               cp.expireDate   AS 'c_expireDate',
+               cp.dcPercent    AS 'c_dcPercent',
+               cp.code         AS 'c_code',
+               cp.insDate      AS 'c_insDate',
+               pi.payNo        AS 'pi_payNo',
+               pi.payment      AS 'pi_payment',
+               pi.payDate      AS 'pi_payDate',
+               pi.status       AS 'pi_status',
+               pi.price        AS 'pi_price',
+               pi.fee          AS 'pi_fee',
+               pi.deliveryCost AS 'pi_deliveryCost',
+               pi.discount     AS 'pi_discount',
+               pi.totalAmt     AS 'pi_totalAmt',
+               pi.userNo       AS 'pi_userNo',
+               pi.insDate      AS 'pi_insDate',
+               pi.insDate      AS 'pi_uptDate'
+        FROM tb_couponUsedHistory cpuh
+                 INNER JOIN tb_coupon cp on cpuh.couponNo = cp.couponNo
+                 INNER JOIN tb_payinfo pi on cpuh.payNo = pi.payNo
+        WHERE cpuh.couponNo = #{couponNo}
+    </select>
+</mapper>

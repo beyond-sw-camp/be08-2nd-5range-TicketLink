@@ -35,9 +35,10 @@
         FROM
             (SELECT t.*
              FROM tb_ticket t
-                      LEFT OUTER JOIN tb_reservation r ON r.ticketNo = t.ticketNo
+             LEFT OUTER JOIN tb_reservation r ON r.ticketNo = t.ticketNo AND r.status != 'C'
              WHERE t.dailyEventNo = #{dayEventNo}
-               AND r.ticketNo IS NULL) t
+               AND r.ticketNo IS NULL
+               ) t
         GROUP BY t.seatRate
         ORDER BY MAX(t.price) DESC
     </select>
@@ -60,7 +61,7 @@
                res.status AS res_status
         FROM tb_ticket t
         JOIN tb_dailyEvent de ON de.dailyEventNo = t.dailyEventNo
-        LEFT OUTER JOIN tb_reservation res ON res.ticketNo = t.ticketNo
+        LEFT OUTER JOIN tb_reservation res ON res.ticketNo = t.ticketNo AND res.status != 'C'
         WHERE t.dailyEventNo = #{dayEventNo}
         ORDER BY t.ticketNo
     </select>

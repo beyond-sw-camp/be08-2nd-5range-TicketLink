@@ -4,9 +4,9 @@ import com.beyond.ticketLink.autono.persistence.repository.AutoNoRepository;
 import com.beyond.ticketLink.event.application.domain.DailyEvent;
 import com.beyond.ticketLink.event.application.domain.Event;
 import com.beyond.ticketLink.event.application.domain.Ticket;
-import com.beyond.ticketLink.event.persistence.dto.DayEventDto;
-import com.beyond.ticketLink.event.persistence.dto.EventDto;
+import com.beyond.ticketLink.event.persistence.dto.DayEventSearchCond;
 import com.beyond.ticketLink.event.persistence.dto.EventSearchCond;
+import com.beyond.ticketLink.event.persistence.dto.EventUpdateDto;
 import com.beyond.ticketLink.event.persistence.repository.DayEventRepository;
 import com.beyond.ticketLink.event.persistence.repository.EventRepository;
 import com.beyond.ticketLink.event.persistence.repository.TicketRepository;
@@ -35,7 +35,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Optional<Event> getData(String eventNo, DayEventDto dto) {
+    public Optional<Event> getData(String eventNo, DayEventSearchCond dto) {
         if (dto != null) {
             if (dto.getDayInfo() != null) {
                 dto.setDays(Arrays.asList(dto.getDayInfo().split(",")));
@@ -189,7 +189,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public void uptData(String eventNo, EventDto updateParam) {
+    public void uptData(String eventNo, EventUpdateDto updateParam) {
         eventRepository.uptData(eventNo, updateParam);
     }
 

@@ -9,39 +9,59 @@
     <result property="notiStatus" column="notiStatus"/>
     <result property="payNo" column="payNo"/>
 
-        <association property="payinfo"
+        <association property="payInfo"
                      javaType="PayInfo"
-                     columnPrefix="pi_"
-                     resultMap="com.beyond.ticketLink.notification.persistence.mapper.PayMapper.payMap"/>
+                     columnPrefix="p_"
+                     resultMap="com.beyond.ticketLink.reservation.persistence.mapper.PayMapper.payMap"/>
+
+
     </resultMap>
 
     <select id="selectAll" parameterType="string" resultMap="notificationResultMap">
-        SELECT  p.userNo AS '유저 번호',
-                n.message AS '메세지 내용',
-                r.resNo AS '예약번호',
-                DATE_ADD(NOW(), INTERVAL 1 DAY) AS invoceDate,
-                p.payment AS '결제수단',
+        SELECT  p.userNo as p_userNo,
+                n.message,
+                r.resNo,
+                n.notiDate ,
+                p.payment as p_payment,
                 n.notiDate,
                 n.notiStatus
-        FROM tb_payinfo p
-                 LEFT OUTER JOIN tb_reservation r ON r.payNo = p.payNo
-                 LEFT OUTER JOIN tb_notification n ON n.payNo = p.payNo
+        FROM tb_notification n
+                 LEFT OUTER JOIN tb_payinfo p ON p.payNo = n.payNo
+                 LEFT OUTER JOIN tb_reservation r ON r.payNo = n.payNo
         WHERE p.userNo = #{userNo}
     </select>
 
 
     <select id="selectNoti" parameterType="string" resultMap="notificationResultMap">
-        SELECT  n.message AS '메세지 내용',
-                r.resNo AS '예약번호',
-                DATE_ADD(NOW(), INTERVAL 1 DAY) AS invoceDate,
-                p.payment AS '결제수단',
+        SELECT  n.notiNo,
+                n.message,
+                r.resNo,
                 n.notiDate,
-                n.notiStatus
-        FROM tb_payinfo p
-                 LEFT OUTER JOIN tb_reservation r ON r.payNo = p.payNo
-                 LEFT OUTER JOIN tb_notification n ON n.payNo = p.payNo
-        WHERE r.resNo = {#resNo};
+                n.notiDate,
+                n.notiStatus,
+                n.payNo,
+                p.payNo AS p_payNo,
+                p.payment AS p_payment,
+                p.price AS p_price
+        FROM tb_notification n
+                 LEFT OUTER JOIN tb_payinfo p ON p.payNo = n.payNo
+                 LEFT OUTER JOIN tb_reservation r ON r.payNo = n.payNo
+        WHERE n.notiNo = #{notiNo}
     </select>
+
+    <insert id="insertNoti">
+        INSERT INTO tb_notification(
+               notiNo
+             , message
+             , payNo
+        )
+        VALUES
+            (
+              #{notiNo}
+            , #{message}
+            , #{payNo}
+            )
+    </insert>
 
 
 
@@ -51,12 +71,5 @@
         WHERE notiNo = #{notiNo}
     </update>
 
-    <update id="updateSubject" parameterType="string">
-        UPDATE tb_class
-        SET department_no         = #{deptNo},
-            preattending_class_no = #{preattendingNo},
-            class_name            = #{name},
-            class_type            = #{type}
-        WHERE class_no = #{no}
-    </update>
+
 </mapper>

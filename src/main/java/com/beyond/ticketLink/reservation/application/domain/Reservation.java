@@ -1,5 +1,6 @@
 package com.beyond.ticketLink.reservation.application.domain;
 
+import com.beyond.ticketLink.event.application.domain.Ticket;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,4 +16,5 @@ public class Reservation {
     private Character status;   // 예약상태
     private String ticketNo;
     private String payNo;
+    private Ticket ticket;
 }

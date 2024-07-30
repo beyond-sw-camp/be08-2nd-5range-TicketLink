@@ -1,9 +1,9 @@
 package com.beyond.ticketLink.event.persistence.repository;
 
 import com.beyond.ticketLink.event.application.domain.Event;
-import com.beyond.ticketLink.event.persistence.dto.DayEventDto;
-import com.beyond.ticketLink.event.persistence.dto.EventDto;
+import com.beyond.ticketLink.event.persistence.dto.DayEventSearchCond;
 import com.beyond.ticketLink.event.persistence.dto.EventSearchCond;
+import com.beyond.ticketLink.event.persistence.dto.EventUpdateDto;
 import com.beyond.ticketLink.event.persistence.mapper.EventMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -22,7 +22,7 @@ public class EventRepositoryImpl implements EventRepository {
     }
 
     @Override
-    public Optional<Event> getData(String eventNo, DayEventDto dto) {
+    public Optional<Event> getData(String eventNo, DayEventSearchCond dto) {
         return eventMapper.getData(eventNo, dto);
     }
 
@@ -34,7 +34,7 @@ public class EventRepositoryImpl implements EventRepository {
     }
 
     @Override
-    public void uptData(String eventNo, EventDto updateParam) {
+    public void uptData(String eventNo, EventUpdateDto updateParam) {
         eventMapper.uptData(eventNo, updateParam);
     }
 }

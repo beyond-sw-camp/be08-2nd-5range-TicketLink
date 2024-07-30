@@ -13,4 +13,6 @@ public interface PayMapper {
     Optional<PayInfo> getData(String payNo);
 
     void insData(PayInfo payInfo);
+
+    void uptData(String payNo);
 }

@@ -10,6 +10,12 @@
         <result property="ticketNo" column="ticketNo" />
         <result property="payNo" column="payNo" />
     </resultMap>
+
+    <resultMap id="resMapWithTicket" type="Reservation" extends="resMap">
+        <association property="ticket" javaType="Ticket"
+                     resultMap="com.beyond.ticketLink.event.persistence.mapper.TicketMapper.ticketMapWithDayEvent2"
+                     columnPrefix="t_"/>
+    </resultMap>
     
     <select id="getList" resultMap="resMap">
     </select>
@@ -27,14 +33,23 @@
     <insert id="insData">
         INSERT INTO tb_reservation(
             resNo
+          , status
           , ticketNo
           , payNo
         )
         VALUES
         (
           #{resNo}
+        , #{status}
         , #{ticketNo}
         , #{payNo}
         )
     </insert>
+
+    <update id="uptData" parameterType="string">
+        UPDATE tb_reservation
+        SET status = 'C',
+            uptDate = CURDATE()
+        WHERE payNo = #{payNo}
+    </update>
 </mapper>

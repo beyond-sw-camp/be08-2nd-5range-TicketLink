@@ -9,7 +9,7 @@ public interface BoardCategoryService {
 
     FindCategoryResult getCategoryByNo(BoardCategoryFindQuery query);
 
-    List<FindCategoryResult> getAllCategory();
+    List<FindCategoryResult> selectAllCategory();
 
     @Getter
     @ToString
