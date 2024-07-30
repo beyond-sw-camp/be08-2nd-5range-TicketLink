@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -24,8 +24,8 @@ public class Board {
     private String title;
     private String content;
     private Float rating;
-    private Date insDate;
-    private Date uptDate;
+    private LocalDate insDate;
+    private LocalDate uptDate;
 
     private TicketLinkUserDetails user;
     private Event event;
