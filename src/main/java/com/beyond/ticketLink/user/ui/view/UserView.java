@@ -1,6 +1,6 @@
 package com.beyond.ticketLink.user.ui.view;
 
-import com.beyond.ticketLink.user.application.domain.TicketLinkUserDetails;
+import com.beyond.ticketLink.user.application.service.UserService.FindUserResult;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -11,7 +11,7 @@ public record UserView(
         char useYn,
         String role
 ) {
-    public UserView(TicketLinkUserDetails user) {
-        this(user.getId(), user.getName(), user.getEmail(), user.getUseYn(), user.getRole().getName());
+    public UserView(FindUserResult user) {
+        this(user.getId(), user.getName(), user.getEmail(), user.getUseYn(), user.getRole());
     }
 }

@@ -6,6 +6,7 @@ import com.beyond.ticketLink.common.view.ApiErrorView;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.ClientAbortException;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.sql.SQLException;
 import java.util.Collections;
 
 
@@ -39,6 +41,25 @@ public class TicketLinkControllerAdvice extends ResponseEntityExceptionHandler {
     public ResponseEntity<?> onMessageException(TicketLinkException ex) {
         return new ResponseEntity<>(new ApiErrorView(ex), ex.getStatus());
     }
+
+    @ExceptionHandler({SQLException.class, DataAccessException.class})
+    public ResponseEntity<Object> handleSQLException(SQLException ex) {
+        log.warn("SQL Exception >>>> " + ex.getMessage());
+        return new ResponseEntity<>(
+                new ApiErrorView(CommonMessageType.SQL_EXCEPTION_ERROR, ex.getMessage()),
+                HttpStatus.INTERNAL_SERVER_ERROR
+        );
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handlerException(Exception ex) {
+        log.warn("Global Exception >>>> " + ex.getMessage());
+        return new ResponseEntity<>(
+                new ApiErrorView(CommonMessageType.INTERNAL_SERVER_ERROR, ex.getMessage()),
+                HttpStatus.INTERNAL_SERVER_ERROR
+        );
+    }
+
 
     @Override
     protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {

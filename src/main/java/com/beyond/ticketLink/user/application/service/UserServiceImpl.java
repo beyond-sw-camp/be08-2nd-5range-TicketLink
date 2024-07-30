@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
         final char ENABLE_USER = 'Y';
         final String ROLE_USER = "일반사용자";
 
-        // 아이디가 중복 되었을 경우 404_Error throw
+        // 아이디가 중복 되었을 경우 409_Error throw
         if (userRepository.findUserById(request.id()).isPresent()) {
             throw new TicketLinkException(UserMessageType.DUPLICATE_USER_ID);
         }
@@ -96,6 +96,14 @@ public class UserServiceImpl implements UserService {
         String refreshToken = jwtUtil.createRefreshToken(loginUser);
 
         return FindJwtResult.findByAll(accessToken, refreshToken);
+    }
+
+    @Override
+    public FindUserResult getUserByUserNo(String userNo) {
+        return FindUserResult.findByUser(
+                userRepository.selectUserByUserNo(userNo)
+                        .orElseThrow(() -> new TicketLinkException(UserMessageType.USER_NOT_FOUND))
+        );
     }
 
     @Override

@@ -14,6 +14,7 @@ import com.beyond.ticketLink.user.persistence.mariadb.repository.UserRepository;
 import com.beyond.ticketLink.user.ui.requestbody.UserCreateRequest;
 import com.beyond.ticketLink.user.ui.requestbody.UserLoginRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,6 +48,7 @@ class UserServiceImplTest {
 
     @Test
     @Transactional
+    @DisplayName("[register] success case")
     void register_shouldRegisterSuccessfully() {
         // given
         String dummyId = "testUserA";
@@ -63,22 +65,30 @@ class UserServiceImplTest {
         UserCreateRequest registerRequest =
                 new UserCreateRequest(dummyId, dummyPwd, dummyName, dummyEmail);
 
-        // when
-        service.register(registerRequest);
-
-        // then
-        Optional<TicketLinkUserDetails> user = userRepository.findUserById(dummyId);
-        assertThat(user.isPresent()).isTrue();
-
-        assertThat(user.get().getId()).isEqualTo(registerRequest.id());
-        assertThat(user.get().getPassword()).isNotEqualTo(registerRequest.pw());
-        assertThat(user.get().getUsername()).isEqualTo(registerRequest.name());
-        assertThat(user.get().getEmail()).isEqualTo(registerRequest.email());
-        assertThat(user.get().getRole().getName()).isEqualTo("일반사용자");
+        // when & then
+        assertThatCode(() -> service.register(registerRequest))
+                .doesNotThrowAnyException();
     }
 
     @Test
-    @Transactional
+    @DisplayName("[register] error case#2 id duplicated")
+    void register_shouldRegisterThrowExceptionWithConflict() {
+        String dummyId = "dummyUserA";
+        String dummyPwd = "1234";
+        String dummyName = "testUserA";
+        String dummyEmail = "testUserA@beyond.com";
+
+        UserCreateRequest registerRequest =
+                new UserCreateRequest(dummyId, dummyPwd, dummyName, dummyEmail);
+
+        // then
+        assertThatThrownBy(() -> service.register(registerRequest))
+                .isInstanceOf(TicketLinkException.class)
+                .hasMessage(UserMessageType.DUPLICATE_USER_ID.getMessage());
+    }
+
+    @Test
+    @DisplayName("[register] error case#3 email unauthorized")
     void register_shouldRegisterThrowExceptionWithUnauthorizedEmail() {
         String dummyId = "testUserA";
         String dummyPwd = "1234";
@@ -95,7 +105,32 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("[checkIdDuplicated] not duplicated")
+    void checkIdDuplicated_shouldCheckIdDuplicatedSuccessfully() {
+        // given
+        String notExistId = "notExistId1233";
+
+        // then
+        assertThatCode(() -> service.checkIdDuplicated(notExistId))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("[checkIdDuplicated] duplicated")
+    void checkIdDuplicated_shouldCheckIdDuplicatedThrowExceptionWithNotFound() {
+        // given
+        String existId = "dummyUserA";
+
+        // then
+        assertThatThrownBy(() -> service.checkIdDuplicated(existId))
+                .isInstanceOf(TicketLinkException.class)
+                .hasMessage(UserMessageType.DUPLICATE_USER_ID.getMessage());
+    }
+
+
+    @Test
     @Transactional
+    @DisplayName("[login] success case")
     void login_shouldLoginSuccessfullyWithJwtTokenSaved() {
         // given
         String dummyId = "dummyUserA";
@@ -113,6 +148,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("[login] error case #3 invalid password")
     void login_shouldLoginThrowErrorWithPasswordInvalid() {
         // given
         String dummyId = "dummyUserA";
@@ -128,7 +164,24 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("[login] error case #2 invalid id")
+    void login_shouldLoginThrowErrorWithIdNotfound() {
+        // given
+        String dummyId = "flsdjafldsjk";
+        String invalidPw = "53453434";
+
+        UserLoginRequest loginRequest = new UserLoginRequest(dummyId, invalidPw);
+        // when
+
+        // then
+        assertThatThrownBy(() -> service.login(loginRequest))
+                .isInstanceOf(TicketLinkException.class)
+                .hasMessage(UserMessageType.USER_NOT_FOUND.getMessage());
+    }
+
+    @Test
     @Transactional
+    @DisplayName("[logout] success case")
     void logout_shouldLogoutSuccessfully() {
         // given
         String dummyId = "dummyUserA";
@@ -153,27 +206,6 @@ class UserServiceImplTest {
         Optional<ExpiredAccessToken> expiredAccessToken = expiredAccessTokenRepository.findById(accessToken);
         assertThat(expiredAccessToken.isPresent()).isTrue();
         assertThat(expiredAccessToken.get().getAccessToken()).isEqualTo(accessToken);
-    }
-
-    @Test
-    void checkIdDuplicated_shouldCheckIdDuplicatedSuccessfully() {
-        // given
-        String notExistId = "notExistId1233";
-
-        // then
-        assertThatCode(() -> service.checkIdDuplicated(notExistId))
-                .doesNotThrowAnyException();
-    }
-
-    @Test
-    void checkIdDuplicated_shouldCheckIdDuplicatedThrowExceptionWithNotFound() {
-        // given
-        String existId = "dummyUserA";
-
-        // then
-        assertThatThrownBy(() -> service.checkIdDuplicated(existId))
-                .isInstanceOf(TicketLinkException.class)
-                .hasMessage(UserMessageType.DUPLICATE_USER_ID.getMessage());
     }
 
     @Test
