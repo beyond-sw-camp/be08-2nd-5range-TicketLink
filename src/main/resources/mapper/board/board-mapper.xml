@@ -131,23 +131,22 @@
                  LEFT JOIN tb_reply tb_br ON tb_b.boardNo = tb_br.boardNo
                  LEFT JOIN tb_user reply_u ON tb_br.userNo = reply_u.userNo
         <where>
-            <if test="query.bCategoryNo != null">
-                AND tb_bc.bCategoryNo = #{query.bCategoryNo}
+            <if test="query != null">
+                <if test="query.bCategoryNo != null">
+                    AND tb_bc.bCategoryNo = #{query.bCategoryNo}
+                </if>
             </if>
         </where>
 
     </select>
 
     <update id="updateBoard" parameterType="BoardUpdateDto">
-        <selectKey keyProperty="uptDate" keyColumn="uptDate" order="BEFORE" resultType="java.sql.Date">
-            SELECT NOW()
-        </selectKey>
         UPDATE tb_board
         SET title=#{title},
-        content=#{content},
-        rating=#{rating},
-        uptDate=#{uptDate}
-        WHERE boardNo=#{boardNo};
+            content=#{content},
+            rating=#{rating},
+            uptDate=#{uptDate}
+        WHERE boardNo = #{boardNo};
     </update>
 
     <delete id="deleteBoard">
