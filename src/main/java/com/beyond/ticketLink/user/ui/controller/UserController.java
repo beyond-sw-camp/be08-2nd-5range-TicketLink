@@ -18,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import static com.beyond.ticketLink.user.application.service.UserService.*;
 import static com.beyond.ticketLink.user.application.service.UserService.LogoutCommand;
 
 
@@ -75,13 +76,21 @@ public class UserController {
                 .build();
     }
 
-    @GetMapping("/user/{id}")
-    ResponseEntity<ApiResponseView<UserView>> getUser(@PathVariable String id) {
+    @GetMapping("/user/profile")
+    ResponseEntity<ApiResponseView<UserView>> getUser(@AuthenticationPrincipal String userNo) {
 
-        TicketLinkUserDetails userDetails =
-                (TicketLinkUserDetails) service.loadUserByUsername(id);
+        FindUserResult result = service.getUserByUserNo(userNo);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new ApiResponseView<>(new UserView(userDetails)));
+                .body(new ApiResponseView<>(new UserView(result)));
+    }
+
+    @GetMapping("/user/{userNo}")
+    ResponseEntity<ApiResponseView<UserView>> getUserByAdmin(@PathVariable String userNo) {
+
+        FindUserResult result = service.getUserByUserNo(userNo);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponseView<>(new UserView(result)));
     }
 }
