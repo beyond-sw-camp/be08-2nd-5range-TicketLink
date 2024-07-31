@@ -13,12 +13,23 @@
         <result property="info" column="info" />
         <result property="saleInfo" column="saleInfo" />
         <result property="seatInfo" column="seatInfo" />
+        <result property="useYn" column="useYn" />
         <result property="eCategoryNo" column="eCategoryNo" />
     </resultMap>
     
     <resultMap id="eventMapWithDayEvent" type="Event" extends="eventMap">
         <collection property="dayEvents" ofType="DailyEvent"
                     resultMap="com.beyond.ticketLink.event.persistence.mapper.DayEventMapper.dayEventMap" columnPrefix="de_"/>
+    </resultMap>
+
+    <resultMap id="eventStatsMap" type="EventStatsDto">
+        <id property="eventNo" column="eventNo" />
+        <result property="name" column="name" />
+        <result property="startDate" column="startDate" />
+        <result property="endDate" column="endDate" />
+        <result property="resCnt" column="resCnt" />
+        <result property="allCnt" column="allCnt" />
+        <result property="eCategoryNo" column="eCategoryNo" />
     </resultMap>
 
     <select id="getList" resultMap="eventMap">
@@ -33,14 +44,13 @@
         e.seatInfo ,
         e.eCategoryNo
         FROM tb_event e
-        <where>
-            <if test="eCategoryNo != null">
+        WHERE e.useYn = 'Y'
+            <if test="eCategoryNo != null and eCategoryNo > 0">
             AND e.eCategoryNo = #{eCategoryNo}
             </if>
             <if test="name != null and name != ''">
             AND e.name LIKE concat('%', #{name}, '%')
             </if>
-        </where>
     </select>
 
     <select id="getData" resultMap="eventMapWithDayEvent">
@@ -54,6 +64,7 @@
                e.saleInfo,
                e.seatInfo,
                e.timeInfo,
+               e.useYn,
                e.eCategoryNo,
                de.dailyEventNo AS de_dailyEventNo,
                de.eventDate AS de_eventDate,
@@ -88,6 +99,44 @@
               </if>
           </if>
     </select>
+
+    <select id="getStatsList" resultMap="eventStatsMap">
+        SELECT e.eventNo,
+               e.name,
+               e.startDate,
+               e.endDate,
+               IFNULL(t1.cnt, 0) AS resCnt,
+               IFNULL(t2.cnt, 0) AS allCnt,
+               e.eCategoryNo
+        FROM tb_event e
+                 LEFT OUTER JOIN
+             (SELECT e.eventNo,
+                     COUNT(*) AS cnt
+              FROM tb_event e
+               JOIN tb_dailyEvent de ON e.eventNo = de.eventNo
+               JOIN tb_ticket t ON t.dailyEventNo = de.dailyEventNo
+               JOIN tb_reservation r ON r.ticketNo = t.ticketNo
+              WHERE r.status != 'C'
+              GROUP BY e.eventNo) t1 ON t1.eventNo = e.eventNo
+                 LEFT OUTER JOIN
+             (SELECT e.eventNo,
+                     CASE
+                         WHEN de.eventDate IS NULL THEN 0
+                         ELSE COUNT(*)
+                     END AS cnt
+              FROM tb_event e
+                       JOIN tb_dailyEvent de ON de.eventNo = e.eventNo
+                       LEFT OUTER JOIN tb_ticket t ON t.dailyEventNo = de.dailyEventNo
+              GROUP BY e.eventNo) t2 ON t2.eventNo = e.eventNo
+        <where>
+          <if test="name != null and name != ''">
+            AND e.name LIKE concat('%', #{name}, '%')
+          </if>
+          <if test="eCategoryNo != null and eCategoryNo > 0">
+            AND e.eCategoryNo = #{eCategoryNo}
+          </if>
+        </where>
+    </select>
     
     <insert id="insData">
         INSERT INTO tb_event(
@@ -120,13 +169,30 @@
 
     <update id="uptData">
         UPDATE tb_event
-        SET name = #{updateParam.name},
-            eTime = #{updateParam.eTime},
-            location = #{updateParam.location},
-            info = #{updateParam.info},
-            saleInfo = #{updateParam.saleInfo},
-            eCategoryNo = #{updateParam.eCategoryNo},
+        <trim prefix="SET">
+            <if test="updateParam.name != null and updateParam.name != ''">
+                name = #{updateParam.name},
+            </if>
+            <if test="updateParam.eTime != null and updateParam.eTime != ''">
+                eTime = #{updateParam.eTime},
+            </if>
+            <if test="updateParam.location != null and updateParam.location != ''">
+                location = #{updateParam.location},
+            </if>
+            <if test="updateParam.info != null and updateParam.info != ''">
+                info = #{updateParam.info},
+            </if>
+            <if test="updateParam.saleInfo != null and updateParam.saleInfo != ''">
+                saleInfo = #{updateParam.saleInfo},
+            </if>
+            <if test="updateParam.useYn != null">
+                useYn = #{updateParam.useYn},
+            </if>
+            <if test="updateParam.eCategoryNo != null and updateParam.eCategoryNo > 0">
+                eCategoryNo = #{updateParam.eCategoryNo},
+            </if>
             uptDate = CURDATE()
+        </trim>
         WHERE eventNo = #{eventNo}
     </update>
 </mapper>

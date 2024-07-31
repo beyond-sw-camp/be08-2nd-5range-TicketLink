@@ -1,6 +1,8 @@
 package com.beyond.ticketLink.reservation.persistence.repository;
 
+import com.beyond.ticketLink.common.exception.TicketLinkException;
 import com.beyond.ticketLink.reservation.application.domain.Reservation;
+import com.beyond.ticketLink.reservation.exception.ResMessageType;
 import com.beyond.ticketLink.reservation.persistence.mapper.ReservationMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -20,6 +22,9 @@ public class ResRepositoryImpl implements ResRepository {
 
     @Override
     public Optional<Reservation> getData(String resNo) {
+        if (reservationMapper.getData(resNo).isEmpty()) {
+            throw new TicketLinkException(ResMessageType.RES_NOT_FOUND);
+        }
         return reservationMapper.getData(resNo);
     }
 

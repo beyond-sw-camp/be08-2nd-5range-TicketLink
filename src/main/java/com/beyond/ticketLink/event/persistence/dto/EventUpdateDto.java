@@ -13,5 +13,6 @@ public class EventUpdateDto {
     private String location;    // 장소
     private String info;    // 행사정보
     private String saleInfo;    // 판매정보
+    private Character useYn;
     private Integer eCategoryNo;
 }

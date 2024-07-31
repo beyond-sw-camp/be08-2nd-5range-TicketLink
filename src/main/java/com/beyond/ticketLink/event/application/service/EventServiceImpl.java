@@ -6,6 +6,7 @@ import com.beyond.ticketLink.event.application.domain.Event;
 import com.beyond.ticketLink.event.application.domain.Ticket;
 import com.beyond.ticketLink.event.persistence.dto.DayEventSearchCond;
 import com.beyond.ticketLink.event.persistence.dto.EventSearchCond;
+import com.beyond.ticketLink.event.persistence.dto.EventStatsDto;
 import com.beyond.ticketLink.event.persistence.dto.EventUpdateDto;
 import com.beyond.ticketLink.event.persistence.repository.DayEventRepository;
 import com.beyond.ticketLink.event.persistence.repository.EventRepository;
@@ -30,8 +31,8 @@ public class EventServiceImpl implements EventService {
     private final TicketRepository ticketRepository;
 
     @Override
-    public List<Event> getList(EventSearchCond eventSearch) {
-        return eventRepository.getList(eventSearch);
+    public List<Event> getList(EventSearchCond cond) {
+        return eventRepository.getList(cond);
     }
 
     @Override
@@ -49,6 +50,11 @@ public class EventServiceImpl implements EventService {
         }
 
         return eventRepository.getData(eventNo, dto);
+    }
+
+    @Override
+    public List<EventStatsDto> getStats(EventSearchCond cond) {
+        return eventRepository.getStats(cond);
     }
 
     @Override

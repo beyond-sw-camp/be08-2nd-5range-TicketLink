@@ -21,6 +21,7 @@ public class Event {
     private String saleInfo;    // 판매정보
     private String seatInfo;    // 좌석정보
     private String timeInfo;    // 시간정보
+    private Character useYn;    // 사용여부 
     private Integer eCategoryNo;    // 행사 카테고리
     private List<DailyEvent> dayEvents;
 }
