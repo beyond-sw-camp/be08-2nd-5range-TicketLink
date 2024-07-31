@@ -91,6 +91,11 @@
 
 ## 🔲 테이블 명세서
 [테이블 명세서 링크](https://docs.google.com/spreadsheets/d/1TseUJVKfn0cBO2hnQomDzu8IzY5YdpwSpocNboIy1AE/edit?gid=1741766758#gid=1741766758)
+<br>
+![image](https://github.com/user-attachments/assets/2ae7ea1e-a2a0-406e-a14d-1c67f54d0169)
+![image](https://github.com/user-attachments/assets/5b6240c2-826d-4f14-8f52-16f986003bbd)
+![image](https://github.com/user-attachments/assets/8c0ee7e8-ff2b-4f21-a213-db466ea89211)
+
 
 <br>
 
@@ -104,252 +109,24 @@
 
 <br>
 
-## :triangular_flag_on_post: 테스트
+
+![image](https://github.com/user-attachments/assets/ece6574f-b248-431b-a74c-e12d6dd1552e)
+![image](https://github.com/user-attachments/assets/68aec306-6079-4ca4-b86e-ccbf93ec220b)
+![image](https://github.com/user-attachments/assets/06cef89e-9871-428a-850f-203522925dc3)
+![image](https://github.com/user-attachments/assets/5173ff5d-619b-4413-bf5a-e123ef225376)
+![image](https://github.com/user-attachments/assets/ca700d3f-864c-4b65-9cc7-43792c3bfcb1)
+![image](https://github.com/user-attachments/assets/84bc5a84-448f-4a56-9091-d3295cee5f0e)
+![image](https://github.com/user-attachments/assets/07247d9d-70ec-40f8-9738-362c2796cf0f)
+![image](https://github.com/user-attachments/assets/3e7d78ec-dc68-44dc-8330-762227677076)
 
 
-[유저](https://github.com/beyond-sw-camp/be08-2nd-5range-TicketLink/wiki/%EC%9C%A0%EC%A0%80)
 
 
+
+## :bookmark_tabs: 테스트 케이스 정의서
+
+[테스트 케이스 정의서](https://docs.google.com/spreadsheets/d/1TseUJVKfn0cBO2hnQomDzu8IzY5YdpwSpocNboIy1AE/edit?gid=157484188#gid=157484188)
 <br>
-
-
-<details>
-  <summary><b>메일 인증 API</b></summary>
-  <div markdown="1">
-    <ul><br>
-      <details>
-      <summary>이메일 중복확인</summary>
-      <img src="https://github.com/user-attachments/assets/198ae399-1e5f-4569-be3d-2427b98ddb1c" width=70%>
-      
-      </details>
-      <details>
-      <summary></summary>
-      <img src="" width=70%>
-      </details>
-    </ul>
-  </div>
-</details>
-
-<br>
-
-<details>
-  <summary><b>결제 및 예약 API</b></summary>
-  <div markdown="1">
-    <ul><br>
-      <details>
-      <summary>예약 정보 상세 조회</summary>
-      <img src="https://github.com/user-attachments/assets/04048daf-d16e-4a1e-9e2b-4682a49b7d8a" width=70%>
-      <br>
-      <img src="" width=70%> 
-      </details>
-      <details>
-      <summary>예약 정보 조회</summary>
-      <img src="https://github.com/user-attachments/assets/04048daf-d16e-4a1e-9e2b-4682a49b7d8a" width=70%>
-      <br>
-      <img src="" width=70%> 
-      </details>
-      <details>
-      <summary>선택한 행사의 티켓 현황 조회회</summary>
-      <img src="https://github.com/user-attachments/assets/04048daf-d16e-4a1e-9e2b-4682a49b7d8a" width=70%>
-      <br>
-      <img src="https://github.com/user-attachments/assets/fa628d9b-6121-4296-9283-0687b60e3572" width=70%>
-      <br>
-      <img src="https://github.com/user-attachments/assets/0111ebea-2d9b-4d4c-9b94-11e0b2b52ba2" width=70%>
-      </details>
-      <details>
-      <summary>행사 결제 및 예약 정보 생성</summary>
-      <img src="https://github.com/user-attachments/assets/04048daf-d16e-4a1e-9e2b-4682a49b7d8a" width=70%>
-      <br>
-      <img src="" width=70%> 
-      </details>
-      <details>
-      <summary>예약 취소</summary>
-      <img src="https://github.com/user-attachments/assets/04048daf-d16e-4a1e-9e2b-4682a49b7d8a" width=70%>
-      <br>
-      <img src="" width=70%> 
-      </details>
-    </ul>
-  </div>
-</details>
-
-<br>
-
-<details>
-  <summary><b>행사 API</b></summary>
-  <div markdown="1">
-    <ul><br>
-      <details>
-      <summary>행사 목록 조회</summary>
-      <img src="https://github.com/user-attachments/assets/c4f95cc3-b3b2-40b4-9c37-f33a05a7ddac" width=70%>
-        <br>
-      <img src="https://github.com/user-attachments/assets/979485d8-72e3-47d4-b353-d5a27ca4534f" width=70%>
-      </details>
-      <details>
-      <summary>행사 상세 조회</summary>
-      <img src="" width=70%>
-      </details>
-      <details>
-      <summary>일자별 행사 목록 조회</summary>
-      <img src="" width=70%>
-      </details>
-      <details>
-      <summary>행사 잔여 티켓 조회</summary>
-      <img src="" width=70%>
-      </details>
-      <details>
-      <summary>행사 정보 생성</summary>
-      <img src="" width=70%>
-      </details>
-      <details>
-      <summary>행사 정보 수정</summary>
-      <img src="" width=70%>
-      </details>
-    </ul>
-  </div>
-</details>
-
-<br>
-
-
-
-<details>
-  <summary><b>쿠폰 API</b></summary>
-  <div markdown="1">
-    <ul><br>
-      <details>
-      <summary>쿠폰 조회</summary>
-      <img src="https://github.com/user-attachments/assets/b8e26511-f04a-4087-a848-b1203e1c7db3" width=70%>
-      <br>
-      <img src="">
-      </details>
-      <details>
-      <summary>쿠폰 업데이트</summary>
-      <img src="https://github.com/user-attachments/assets/b8e26511-f04a-4087-a848-b1203e1c7db3" width=70%>
-      <br>
-      <img src="">
-      </details>
-      <details>
-      <summary>쿠폰 삭제</summary>
-      <img src="https://github.com/user-attachments/assets/b8e26511-f04a-4087-a848-b1203e1c7db3" width=70%>
-      <br>
-      <img src="">
-      </details>
-      <details>
-      <summary>사용자 쿠폰 목록 조회</summary>
-      <img src="https://github.com/user-attachments/assets/b8e26511-f04a-4087-a848-b1203e1c7db3" width=70%>
-      <br>
-      <img src="https://github.com/user-attachments/assets/cdd4e1de-9ab3-40e9-80cd-14198e22e8da">
-      </details>
-      <details>
-      <summary>쿠폰 생성</summary>
-      <img src="https://github.com/user-attachments/assets/b8e26511-f04a-4087-a848-b1203e1c7db3" width=70%>
-      <br>
-      <img src="">
-      </details>
-    </ul>
-  </div>
-</details>
-
-<br>
-
-
-<details>
-  <summary><b>게시물 API</b></summary>
-  <div markdown="1">
-    <ul><br>
-      <details>
-      <summary>게시물 전체 조회</summary>
-      <img src="https://github.com/user-attachments/assets/038642b9-f898-4dad-a63b-8fee8fa2572e" width=70%>
-      <br>
-      <img src="https://github.com/user-attachments/assets/958d4f5e-cf19-4f06-908b-941d5040f0c9" width=70%>
-      <br>
-      <img src="https://github.com/user-attachments/assets/ecba05b0-42ff-4149-971c-3191c58e5001" width=70%>
-      </details>
-      <details>
-      <summary>게시물 단일 조회</summary>
-      <img src="https://github.com/user-attachments/assets/4e6519da-c08f-4dc5-bd02-fbea97273c79" width=70%>
-      <br>
-      <img src="https://github.com/user-attachments/assets/ef5e070a-0bfc-4139-af0a-05cf3fdb2778" width=70%>
-      </details>
-      <details>
-      <summary>게시물 작성</summary>
-      <img src="https://github.com/user-attachments/assets/3d157daa-c4d1-4d71-966f-3779bc98c8f8" width=70%>
-      <br>
-      <img src="https://github.com/user-attachments/assets/87466cc5-917f-4a4b-bc6d-7506287fc3de" width=70%>
-      </details>
-      <details>
-      <summary>게시물 수정</summary>
-      <img src="https://github.com/user-attachments/assets/efaa8538-71f6-4b41-9693-7f1d9062efca" width=70%>
-      <br>
-      <img src="https://github.com/user-attachments/assets/b328a5f7-ef5c-48ce-8ddd-597295d94222" width=70%>
-      </details>
-      <details>
-      <summary>게시물 삭제</summary>
-      <img src="https://github.com/user-attachments/assets/5f89bc3d-2e05-41ed-bfbd-c11c51253fca" width=70%>
-      <br>
-      <img src="https://github.com/user-attachments/assets/47603583-6f1f-4873-8165-15f69ac2c686" width=70%>
-      </details>
-    </ul>
-  </div>
-</details>
-
-<br>
-
-<details>
-  <summary><b>댓글 API</b></summary>
-  <div markdown="1">
-    <ul><br>
-      <details>
-      <summary>댓글 생성</summary>
-      <img src="https://github.com/user-attachments/assets/8ad3522e-f5ee-4bd9-a119-36a6d94ffb03" width=70%>
-      <br>
-      <img src="https://github.com/user-attachments/assets/4ec22c14-7fb8-4b4e-b6b0-a4b43e126bb4" width=70%>
-      </details>
-      <details>
-      <summary>댓글 수정</summary>
-      <img src="https://github.com/user-attachments/assets/3a6ce514-a221-4414-9f74-e4fe785104c0" width=70%>
-      <br>
-      <img src="https://github.com/user-attachments/assets/9dda2398-382e-41f3-b9df-1b711aa3970a" width=70%>
-      </details>
-      <details>
-      <summary>댓글 삭제</summary>
-      <img src="https://github.com/user-attachments/assets/f2a7866e-8b8f-43d6-9ffc-3c34de937f5c" width=70%>
-      <br>
-      <img src="https://github.com/user-attachments/assets/20d0d0e2-a041-4c25-86c2-0e1fdb07d51b" width=70%>
-      </details>  
-    </ul>
-  </div>
-</details>
-
-<br>
-
-<details>
-  <summary><b>알림 API</b></summary>
-  <div markdown="1">
-    <ul><br>
-      <details>
-      <summary>알림 정보 상세 조회</summary>
-      <img src="" width=70%>
-      </details>
-      <details>
-      <summary>알림 정보 조회</summary>
-      <img src="" width=70%>
-      </details>
-      <details>
-      <summary>알림 생성</summary>
-      <img src="" width=70%>
-      </details>
-      <details>
-      <summary>알림 삭제</summary>
-      <img src="" width=70%>
-      </details>
-    </ul>
-  </div>
-</details>
-
-<br>
-
-
 
 
 
