@@ -104,6 +104,207 @@
 
 <br>
 
+## ⌨️ SQL
+
+<details>
+  <summary>DDL</summary>
+  
+```sql
+  CREATE TABLE auto_no(
+  	tableName VARCHAR(20) PRIMARY KEY,
+  	prefix VARCHAR(10) NOT NULL,
+  	hypenYn CHAR(1) NOT NULL DEFAULT 'N' CHECK(hypenYn IN ('Y', 'N')),
+  	formmater INT NOT NULL,
+  	insDate DATE DEFAULT CURDATE(),
+  	uptDate DATE DEFAULT CURDATE()
+  );
+
+  CREATE TABLE auto_no_dtl(
+   	tableName VARCHAR(20) NOT NULL,
+   	prefix VARCHAR(10) NOT NULL,
+   	hypenYn CHAR(1) NOT NULL DEFAULT 'N' CHECK(hypenYn IN ('Y', 'N')),
+   	formmater INT NOT NULL,
+   	sequence INT NOT NULL DEFAULT 1,
+   	insDate DATE DEFAULT CURDATE(),
+  	uptDate DATE DEFAULT CURDATE(),
+   	PRIMARY KEY (tableName, prefix, hypenYn, formmater)
+  );
+
+  CREATE TABLE tb_role(
+	  roleNo INT AUTO_INCREMENT PRIMARY KEY,
+	  name VARCHAR(10) UNIQUE
+  );
+
+  CREATE TABLE tb_boardCategory (
+      bCategoryNo INT PRIMARY KEY AUTO_INCREMENT,
+      name VARCHAR(30) NOT NULL
+  );
+
+  CREATE TABLE tb_eventCategory (
+      eCategoryNo INT PRIMARY KEY AUTO_INCREMENT,
+      name VARCHAR(30) NOT NULL
+  );
+  
+  CREATE TABLE tb_event(
+      eventNo VARCHAR(10),
+      name VARCHAR(60) NOT NULL,
+      startDate DATE NOT NULL,
+      endDate DATE NOT NULL,
+      eTime VARCHAR(100),
+      location VARCHAR(100) NOT NULL,
+      info VARCHAR(1000),
+      saleInfo VARCHAR(1000),
+      seatInfo VARCHAR(500),
+      timeInfo VARCHAR(500),
+      eCategoryNo INT,
+      insDate DATE DEFAULT CURDATE(),
+      uptDate DATE DEFAULT CURDATE(),
+      PRIMARY KEY (eventNo),
+      FOREIGN KEY (eCategoryNo) REFERENCES tb_eventCategory
+  );
+  
+  CREATE TABLE tb_dailyEvent(
+  	dailyEventNo VARCHAR(20),
+  	eventDate DATE,
+  	day7 TINYINT,
+  	cnt TINYINT,
+  	deTime VARCHAR(50),
+  	castInfo VARCHAR(1000),
+  	eventNo VARCHAR(10),
+  	insDate DATE DEFAULT CURDATE(),
+  	uptDate DATE DEFAULT CURDATE(),
+  	PRIMARY KEY (dailyEventNo),
+     FOREIGN KEY (eventNo) REFERENCES tb_event
+  );
+  
+  CREATE TABLE tb_ticket(
+  	ticketNo VARCHAR(20),
+  	seatRate VARCHAR(20),
+  	seatNum INT,
+  	price INT NOT NULL,
+  	dailyEventNo VARCHAR(20),
+  	insDate DATE DEFAULT CURDATE(),
+  	uptDate DATE DEFAULT CURDATE(),
+  	PRIMARY KEY (ticketNo),
+     FOREIGN KEY (dailyEventNo) REFERENCES tb_dailyEvent
+  );
+  
+  CREATE TABLE tb_payinfo(
+  	payNo VARCHAR(20),
+  	payment CHAR NOT NULL,
+  	payDate DATE,
+  	status CHAR NOT NULL DEFAULT 'W',
+  	price INT DEFAULT 0,
+  	fee INT DEFAULT 0,
+  	deliveryCost INT DEFAULT 0,
+  	discount INT DEFAULT 0,
+  	totalAmt INT DEFAULT 0,
+  	userNo VARCHAR(10),
+  	insDate DATE DEFAULT CURDATE(),
+  	uptDate DATE DEFAULT CURDATE(),
+  	PRIMARY KEY (payNo),
+  	FOREIGN KEY (userNo) REFERENCES tb_user
+  );
+  
+  CREATE TABLE tb_reservation(
+  	resNo VARCHAR(20),
+  	resDate DATE NOT NULL DEFAULT CURDATE(),
+  	status CHAR NOT NULL DEFAULT 'W',
+  	ticketNo VARCHAR(20),
+  	payNo VARCHAR(20),
+  	insDate DATE DEFAULT CURDATE(),
+  	uptDate DATE DEFAULT CURDATE(),
+  	PRIMARY KEY (resNo),
+     FOREIGN KEY (ticketNo) REFERENCES tb_ticket,
+     FOREIGN KEY (payNo) REFERENCES tb_payinfo
+  );
+  
+  CREATE TABLE tb_notification(
+  	notiNo VARCHAR(20),
+  	message VARCHAR(200),
+  	notiDate DATE DEFAULT CURDATE(),
+  	notiStatus CHAR DEFAULT 'Y',
+  	payNo VARCHAR(20),
+  	PRIMARY KEY (notiNo),
+     FOREIGN KEY (payNo) REFERENCES tb_payinfo
+  );
+  
+  create or replace table tb_user
+  (
+      userNo varchar(10) not null primary key,
+      id     varchar(30) not null,
+      pw     varchar(64) not null,
+      name   varchar(30),
+      email  varchar(30) not null,
+      useYn  char,
+      roleNo int,
+      constraint id unique (id),
+      constraint tb_user_ibfk_1 foreign key (roleNo) references ticketlink.tb_role (roleNo)
+  );
+  
+  create or replace table ticketlink.tb_boardCategory
+  (
+      bCategoryNo int auto_increment primary key,
+      name varchar(30) not null
+  );
+  
+  create or replace table tb_board
+  (
+      boardNo     varchar(10)  not null primary key,
+      title       varchar(100),
+      content     varchar(500),
+      rating      float,
+      insDate     date,
+      uptDate     date,
+      userNo      varchar(10),
+      eventNo     varchar(10),
+      bCategoryNo int,
+      constraint tb_board_ibfk_1 foreign key (userNo) references ticketlink.tb_user (userNo),
+      constraint tb_board_ibfk_2 foreign key (eventNo) references ticketlink.tb_event (eventNo),
+      constraint tb_board_ibfk_3 foreign key (bCategoryNo) references ticketlink.tb_boardCategory (bCategoryNo)
+  );
+  
+  create or replace table tb_reply
+  (
+      replyNo varchar(10) not null primary key,
+      cnt int,
+      content varchar(64),
+      insDate date,
+      uptDate date,
+      boardNo varchar(10),
+      userNo  varchar(10),
+      constraint tb_reply_ibfk_1 foreign key (boardNo) references ticketlink.tb_board (boardNo) on delete cascade,
+      constraint tb_reply_ibfk_2 foreign key (userNo) references ticketlink.tb_user (userNo)
+  );
+  
+  create or replace table tb_coupon
+  (
+      couponNo varchar(10) not null primary key,
+      code varchar(10),
+      name varchar(30),
+      dcPercent int,
+      insDate date,
+      expireDate date,
+      userNo varchar(10) null,
+      constraint code unique (code),
+      constraint tb_coupon_ibfk_1 foreign key (userNo) references ticketlink.tb_user (userNo)
+  );
+  
+  create or replace table tb_couponUsedHistory
+  (
+      useHistoryNo varchar(20) not null primary key,
+      useDate date,
+      couponNo varchar(10),
+      payNo varchar(20),
+      constraint couponNo unique (couponNo),
+      constraint tb_couponUsedHistory_ibfk_1 foreign key (couponNo) references ticketlink.tb_coupon (couponNo),
+      constraint tb_couponUsedHistory_ibfk_2 foreign key (payNo) references ticketlink.tb_payinfo (payNo)
+  );
+```
+</details>
+
+<br>
+
 ## :bookmark_tabs: API 명세서
 [API 명세서 링크](https://docs.google.com/spreadsheets/d/1TseUJVKfn0cBO2hnQomDzu8IzY5YdpwSpocNboIy1AE/edit?gid=851351064#gid=851351064)
 
