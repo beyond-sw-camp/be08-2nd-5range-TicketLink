@@ -73,11 +73,19 @@
 
 ## 📆 WBS 
 [WBS 링크](https://docs.google.com/spreadsheets/d/1TseUJVKfn0cBO2hnQomDzu8IzY5YdpwSpocNboIy1AE/edit?gid=1034965942#gid=1034965942)
+<br>
+![image](https://github.com/user-attachments/assets/c0a2a3ec-279c-44d6-8cef-2e9e906eb63f)
 
 <br>
 
 ## :page_with_curl: 요구사항 명세서
 [요구사항 명세서 링크](https://docs.google.com/spreadsheets/d/1TseUJVKfn0cBO2hnQomDzu8IzY5YdpwSpocNboIy1AE/edit?gid=1691437377#gid=1691437377)
+<br>
+![image](https://github.com/user-attachments/assets/c76a990c-a11b-45da-a866-1aa8da57ea1f) 
+![image](https://github.com/user-attachments/assets/8258922a-5225-4801-95e1-19b3f7149b3d)
+
+
+
 
 <br>
 
@@ -91,44 +99,16 @@
 
 <br>
 
-## :triangular_flag_on_post: 테스트 및 기능 시연
-
-[테스트 코드]()
+## :bookmark_tabs: API 명세서
+[API 명세서 링크](https://docs.google.com/spreadsheets/d/1TseUJVKfn0cBO2hnQomDzu8IzY5YdpwSpocNboIy1AE/edit?gid=851351064#gid=851351064)
 
 <br>
 
+## :triangular_flag_on_post: 테스트
 
-<details>
-  <summary><b>유저 API</b></summary>
-  <div markdown="1">
-    <ul><br>
-      <details>
-      <summary></summary>
-      <img src="" width=70%>
-      </details>
-      <details>
-      <summary></summary>
-      <img src="" width=70%>
-      </details>
-      <details>
-      <summary></summary>
-      <img src="" width=70%>
-      </details>
-      <details>
-      <summary></summary>
-      <img src="" width=70%>
-      </details>
-      <details>
-      <summary></summary>
-      <img src="" width=70%>
-      </details>
-      <details>
-      <summary></summary>
-      <img src="" width=70%>
-      </details>
-    </ul>
-  </div>
-</details>
+
+[유저](https://github.com/beyond-sw-camp/be08-2nd-5range-TicketLink/wiki/%EC%9C%A0%EC%A0%80)
+
 
 <br>
 
@@ -138,8 +118,9 @@
   <div markdown="1">
     <ul><br>
       <details>
-      <summary></summary>
-      <img src="" width=70%>
+      <summary>이메일 중복확인</summary>
+      <img src="https://github.com/user-attachments/assets/198ae399-1e5f-4569-be3d-2427b98ddb1c" width=70%>
+      
       </details>
       <details>
       <summary></summary>
@@ -157,22 +138,35 @@
     <ul><br>
       <details>
       <summary>예약 정보 상세 조회</summary>
-      <img src="" width=70%>
+      <img src="https://github.com/user-attachments/assets/04048daf-d16e-4a1e-9e2b-4682a49b7d8a" width=70%>
+      <br>
+      <img src="" width=70%> 
       </details>
       <details>
       <summary>예약 정보 조회</summary>
-      <img src="" width=70%>
+      <img src="https://github.com/user-attachments/assets/04048daf-d16e-4a1e-9e2b-4682a49b7d8a" width=70%>
+      <br>
+      <img src="" width=70%> 
       </details>
       <details>
       <summary>선택한 행사의 티켓 현황 조회회</summary>
-      <img src="" width=70%>
+      <img src="https://github.com/user-attachments/assets/04048daf-d16e-4a1e-9e2b-4682a49b7d8a" width=70%>
+      <br>
+      <img src="https://github.com/user-attachments/assets/fa628d9b-6121-4296-9283-0687b60e3572" width=70%>
+      <br>
+      <img src="https://github.com/user-attachments/assets/0111ebea-2d9b-4d4c-9b94-11e0b2b52ba2" width=70%>
       </details>
       <details>
       <summary>행사 결제 및 예약 정보 생성</summary>
-      <img src="" width=70%>
+      <img src="https://github.com/user-attachments/assets/04048daf-d16e-4a1e-9e2b-4682a49b7d8a" width=70%>
+      <br>
+      <img src="" width=70%> 
       </details>
       <details>
       <summary>예약 취소</summary>
+      <img src="https://github.com/user-attachments/assets/04048daf-d16e-4a1e-9e2b-4682a49b7d8a" width=70%>
+      <br>
+      <img src="" width=70%> 
       </details>
     </ul>
   </div>
@@ -186,7 +180,9 @@
     <ul><br>
       <details>
       <summary>행사 목록 조회</summary>
-      <img src="" width=70%>
+      <img src="https://github.com/user-attachments/assets/c4f95cc3-b3b2-40b4-9c37-f33a05a7ddac" width=70%>
+        <br>
+      <img src="https://github.com/user-attachments/assets/979485d8-72e3-47d4-b353-d5a27ca4534f" width=70%>
       </details>
       <details>
       <summary>행사 상세 조회</summary>
@@ -221,24 +217,34 @@
   <div markdown="1">
     <ul><br>
       <details>
-      <summary>예약 정보 상세 조회</summary>
-      <img src="" width=70%>
+      <summary>쿠폰 조회</summary>
+      <img src="https://github.com/user-attachments/assets/b8e26511-f04a-4087-a848-b1203e1c7db3" width=70%>
+      <br>
+      <img src="">
       </details>
       <details>
-      <summary>예약 취소</summary>
-      <img src="" width=70%>
+      <summary>쿠폰 업데이트</summary>
+      <img src="https://github.com/user-attachments/assets/b8e26511-f04a-4087-a848-b1203e1c7db3" width=70%>
+      <br>
+      <img src="">
       </details>
       <details>
-      <summary>선택한 행사의 티켓 현황 조회</summary>
-      <img src="" width=70%>
+      <summary>쿠폰 삭제</summary>
+      <img src="https://github.com/user-attachments/assets/b8e26511-f04a-4087-a848-b1203e1c7db3" width=70%>
+      <br>
+      <img src="">
       </details>
       <details>
-      <summary>행사 결제 및 예약 정보 생성</summary>
-      <img src="" width=70%>
+      <summary>사용자 쿠폰 목록 조회</summary>
+      <img src="https://github.com/user-attachments/assets/b8e26511-f04a-4087-a848-b1203e1c7db3" width=70%>
+      <br>
+      <img src="https://github.com/user-attachments/assets/cdd4e1de-9ab3-40e9-80cd-14198e22e8da">
       </details>
       <details>
-      <summary>나의 예약 정보 조회</summary>
-      <img src="" width=70%>
+      <summary>쿠폰 생성</summary>
+      <img src="https://github.com/user-attachments/assets/b8e26511-f04a-4087-a848-b1203e1c7db3" width=70%>
+      <br>
+      <img src="">
       </details>
     </ul>
   </div>
@@ -253,23 +259,35 @@
     <ul><br>
       <details>
       <summary>게시물 전체 조회</summary>
-      <img src="" width=70%>
+      <img src="https://github.com/user-attachments/assets/038642b9-f898-4dad-a63b-8fee8fa2572e" width=70%>
+      <br>
+      <img src="https://github.com/user-attachments/assets/958d4f5e-cf19-4f06-908b-941d5040f0c9" width=70%>
+      <br>
+      <img src="https://github.com/user-attachments/assets/ecba05b0-42ff-4149-971c-3191c58e5001" width=70%>
       </details>
       <details>
       <summary>게시물 단일 조회</summary>
-      <img src="" width=70%>
+      <img src="https://github.com/user-attachments/assets/4e6519da-c08f-4dc5-bd02-fbea97273c79" width=70%>
+      <br>
+      <img src="https://github.com/user-attachments/assets/ef5e070a-0bfc-4139-af0a-05cf3fdb2778" width=70%>
       </details>
       <details>
       <summary>게시물 작성</summary>
-      <img src="" width=70%>
+      <img src="https://github.com/user-attachments/assets/3d157daa-c4d1-4d71-966f-3779bc98c8f8" width=70%>
+      <br>
+      <img src="https://github.com/user-attachments/assets/87466cc5-917f-4a4b-bc6d-7506287fc3de" width=70%>
       </details>
       <details>
       <summary>게시물 수정</summary>
-      <img src="" width=70%>
+      <img src="https://github.com/user-attachments/assets/efaa8538-71f6-4b41-9693-7f1d9062efca" width=70%>
+      <br>
+      <img src="https://github.com/user-attachments/assets/b328a5f7-ef5c-48ce-8ddd-597295d94222" width=70%>
       </details>
       <details>
       <summary>게시물 삭제</summary>
-      <img src="" width=70%>
+      <img src="https://github.com/user-attachments/assets/5f89bc3d-2e05-41ed-bfbd-c11c51253fca" width=70%>
+      <br>
+      <img src="https://github.com/user-attachments/assets/47603583-6f1f-4873-8165-15f69ac2c686" width=70%>
       </details>
     </ul>
   </div>
@@ -283,15 +301,21 @@
     <ul><br>
       <details>
       <summary>댓글 생성</summary>
-      <img src="" width=70%>
+      <img src="https://github.com/user-attachments/assets/8ad3522e-f5ee-4bd9-a119-36a6d94ffb03" width=70%>
+      <br>
+      <img src="https://github.com/user-attachments/assets/4ec22c14-7fb8-4b4e-b6b0-a4b43e126bb4" width=70%>
       </details>
       <details>
       <summary>댓글 수정</summary>
-      <img src="" width=70%>
+      <img src="https://github.com/user-attachments/assets/3a6ce514-a221-4414-9f74-e4fe785104c0" width=70%>
+      <br>
+      <img src="https://github.com/user-attachments/assets/9dda2398-382e-41f3-b9df-1b711aa3970a" width=70%>
       </details>
       <details>
       <summary>댓글 삭제</summary>
-      <img src="" width=70%>
+      <img src="https://github.com/user-attachments/assets/f2a7866e-8b8f-43d6-9ffc-3c34de937f5c" width=70%>
+      <br>
+      <img src="https://github.com/user-attachments/assets/20d0d0e2-a041-4c25-86c2-0e1fdb07d51b" width=70%>
       </details>  
     </ul>
   </div>
